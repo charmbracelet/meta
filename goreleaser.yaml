@@ -1,0 +1,215 @@
+variables:
+  main: ""
+  description: ""
+  github_url: ""
+  maintainer: ""
+  homepage: "https://charm.sh/"
+  commit_author_name: ""
+  commit_author_email: ""
+
+before:
+  hooks:
+    - go mod tidy
+
+gomod:
+  proxy: true
+
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    main: '{{ .main }}'
+    ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit }}
+    goos:
+      - linux
+      - darwin
+      - windows
+      - freebsd
+      - openbsd
+      - netbsd
+    goarch:
+      - amd64
+      - arm64
+      - "386"
+      - arm
+    goarm:
+      - "7"
+    ignore:
+      - goos: windows
+        goarch: arm64
+      - goos: windows
+        goarm: "7"
+
+archives:
+  - format_overrides:
+      - goos: windows
+        format: zip
+    replacements:
+      windows: Windows
+      darwin: Darwin
+      386: i386
+      amd64: x86_64
+
+nfpms:
+  - vendor: charmbracelet
+    homepage: '{{ .homepage }}'
+    maintainer: '{{ .maintainer }}'
+    description: '{{ .description }}'
+    license: MIT
+    formats:
+      - apk
+      - deb
+      - rpm
+
+brews:
+  - tap:
+      owner: charmbracelet
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    commit_author:
+      name: '{{ .commit_author_name }}'
+      email: '{{ .commit_author_email }}'
+    homepage: '{{ .homepage }}'
+    description: '{{ .description }}'
+
+
+checksum:
+  name_template: 'checksums.txt'
+
+source:
+  enabled: true
+
+sboms:
+  - artifacts: archive
+  - id: source
+    artifacts: source
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-devel"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+  groups:
+    - title: 'New Features'
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: 'Bug fixes'
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 10
+    - title: Others
+      order: 999
+
+signs:
+  - cmd: cosign
+    env:
+      - COSIGN_EXPERIMENTAL=1
+    certificate: '${artifact}.pem'
+    args:
+      - sign-blob
+      - '--output-certificate=${certificate}'
+      - '--output-signature=${signature}'
+      - '${artifact}'
+    artifacts: checksum
+    output: true
+
+dockers:
+  - image_templates:
+      - "docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-amd64"
+      - "ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-amd64"
+    goarch: amd64
+    build_flag_templates:
+      - --platform=linux/amd64
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.source={{ .GitURL }}
+      - --label=org.opencontainers.image.version=v{{ .Version }}
+      - --label=org.opencontainers.image.created={{ .Date }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=MIT
+    dockerfile: Dockerfile
+    use: buildx
+  - image_templates:
+      - "docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-arm64"
+      - "ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-arm64"
+    goarch: arm64
+    build_flag_templates:
+      - --platform=linux/arm64
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.source={{ .GitURL }}
+      - --label=org.opencontainers.image.version=v{{ .Version }}
+      - --label=org.opencontainers.image.created={{ .Date }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=MIT
+    dockerfile: Dockerfile
+    use: buildx
+  - image_templates:
+      - "docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-armv7"
+      - "ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-armv7"
+    goarch: arm
+    goarm: "7"
+    build_flag_templates:
+      - --platform=linux/arm/v7
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.source={{ .GitURL }}
+      - --label=org.opencontainers.image.version=v{{ .Version }}
+      - --label=org.opencontainers.image.created={{ .Date }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=MIT
+    dockerfile: Dockerfile
+    use: buildx
+
+docker_manifests:
+  - name_template: docker.io/charmcli/{{ .ProjectName }}:latest
+    image_templates:
+      - docker.io/charmcli/{{ .ProjectName }}:{{ .Version }}-amd64
+      - docker.io/charmcli/{{ .ProjectName }}:{{ .Version }}-arm64
+      - docker.io/charmcli/{{ .ProjectName }}:{{ .Version }}-armv7
+  - name_template: ghcr.io/charmbracelet/{{ .ProjectName }}:latest
+    image_templates:
+      - ghcr.io/charmbracelet/{{ .ProjectName }}:{{ .Version }}-amd64
+      - ghcr.io/charmbracelet/{{ .ProjectName }}:{{ .Version }}-arm64
+      - ghcr.io/charmbracelet/{{ .ProjectName }}:{{ .Version }}-armv7
+  - name_template: docker.io/charmcli/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}
+    image_templates:
+      - docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-amd64
+      - docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-arm64
+      - docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-armv7
+  - name_template: ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}
+    image_templates:
+      - ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-amd64
+      - ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-arm64
+      - ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-armv7
+  - name_template: docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}
+    image_templates:
+      - docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-amd64
+      - docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-arm64
+      - docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-armv7
+  - name_template: ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}
+    image_templates:
+      - ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-amd64
+      - ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-arm64
+      - ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-armv7
+
+docker_signs:
+  - cmd: cosign
+    env:
+     - COSIGN_EXPERIMENTAL=1
+    artifacts: manifests
+    output: true
+    args:
+      - 'sign'
+      - '${artifact}'
+
+release:
+  footer: |
+    * * *
+    Thoughts? Questions? We love hearing from you. Feel free to reach out on [Twitter](https://twitter.com/charmcli) or [The Fediverse](https://mastodon.technology/@charm).
+
+    <a href="https://charm.sh/"><img alt="The Charm logo" src="https://stuff.charm.sh/charm-badge.jpg?1" width="400"></a>
