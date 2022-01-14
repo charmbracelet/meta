@@ -7,6 +7,8 @@ Charm's meta configuration files:
 
 ## Usage
 
+### GoReleaser release
+
 ```yaml
 # .goreleaser.yml
 includes:
@@ -54,3 +56,34 @@ jobs:
 ```
 
 You'll need to set the secrets used.
+
+### GoReleaser nightly
+
+```yaml
+# .github/workflows/nightly.yml
+name: nightly
+
+on: [push, pull_request]
+
+jobs:
+  nightly:
+    uses: charmbracelet/meta/.github/workflows/nightly.yml@main
+    secrets:
+      docker_username: caarlos0
+      docker_token: ${{ secrets.DOCKER_PASSWORD }}
+      goreleaser_key: ${{ secrets.GORELEASER_KEY }}
+```
+
+```yaml
+# .github/workflows/pr-comment.yml
+name: pr-comment
+
+on:
+  workflow_run:
+    workflows: [build]
+    types: [completed]
+
+jobs:
+  pr-comment:
+    uses: charmbracelet/meta/.github/workflows/pr-comment.yml@main
+```
