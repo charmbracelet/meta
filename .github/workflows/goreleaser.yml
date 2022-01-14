@@ -9,7 +9,7 @@ on:
         required: true
       gh_pat:
         required: true
-      goreleaser_token:
+      goreleaser_key:
         required: true
 
 jobs:
@@ -55,4 +55,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.gh_pat }}
-        GORELEASER_TOKEN: ${{ secrets.goreleaser_token }}
+        GORELEASER_KEY: ${{ secrets.goreleaser_key }}
