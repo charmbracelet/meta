@@ -4,8 +4,9 @@ variables:
   github_url: ""
   maintainer: ""
   homepage: "https://charm.sh/"
-  commit_author_name: ""
-  commit_author_email: ""
+  brew_commit_author_name: ""
+  brew_commit_author_email: ""
+  brew_owner: charmbracelet
   docker_io_registry_owner: charmcli
   ghcr_io_egistry_owner: charmbracelet
 
@@ -65,12 +66,12 @@ nfpms:
 
 brews:
   - tap:
-      owner: charmbracelet
+      owner: '{{ .brew_owner }}'
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     commit_author:
-      name: '{{ .commit_author_name }}'
-      email: '{{ .commit_author_email }}'
+      name: '{{ .brew_commit_author_name }}'
+      email: '{{ .brew_commit_author_email }}'
     homepage: '{{ .homepage }}'
     description: '{{ .description }}'
 
