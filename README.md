@@ -53,11 +53,10 @@ jobs:
   goreleaser:
     uses: charmbracelet/meta/.github/workflows/goreleaser.yml@main
     with:
-      secrets:
-        docker_username: ${{ secrets.DOCKERHUB_USERNAME }}
-        docker_token: ${{ secrets.DOCKERHUB_TOKEN }}
-        gh_pat: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        goreleaser_key: ${{ secrets.GORELEASER_KEY }
+      docker_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      docker_token: ${{ secrets.DOCKERHUB_TOKEN }}
+      gh_pat: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      goreleaser_key: ${{ secrets.GORELEASER_KEY }
 ```
 
 You'll need to set the secrets used.
@@ -73,8 +72,8 @@ on: [push, pull_request]
 jobs:
   nightly:
     uses: charmbracelet/meta/.github/workflows/nightly.yml@main
-    secrets:
-      docker_username: caarlos0
+    with:
+      docker_username: ${{ secrets.DOCKERHUB_USERNAME }}
       docker_token: ${{ secrets.DOCKER_PASSWORD }}
       goreleaser_key: ${{ secrets.GORELEASER_KEY }}
 ```
