@@ -21,7 +21,7 @@ gomod:
 builds:
   - env:
       - CGO_ENABLED=0
-    main: '{{ .main }}'
+    # main: '{{ .main }}'
     ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit }}
     goos:
       - linux
