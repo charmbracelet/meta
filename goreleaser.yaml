@@ -6,6 +6,8 @@ variables:
   homepage: "https://charm.sh/"
   commit_author_name: ""
   commit_author_email: ""
+  docker_io_registry_owner: charmcli
+  ghcr_io_egistry_owner: charmbracelet
 
 before:
   hooks:
@@ -119,8 +121,8 @@ signs:
 
 dockers:
   - image_templates:
-      - "docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-amd64"
-      - "ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-amd64"
+      - "docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
+      - "ghcr.io/{{ .ghcr_io_egistry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
     goarch: amd64
     build_flag_templates:
       - --platform=linux/amd64
@@ -134,8 +136,8 @@ dockers:
     dockerfile: Dockerfile
     use: buildx
   - image_templates:
-      - "docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-arm64"
-      - "ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-arm64"
+      - "docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
+      - "ghcr.io/{{ .ghcr_io_egistry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
     goarch: arm64
     build_flag_templates:
       - --platform=linux/arm64
@@ -149,8 +151,8 @@ dockers:
     dockerfile: Dockerfile
     use: buildx
   - image_templates:
-      - "docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-armv7"
-      - "ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-armv7"
+      - "docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
+      - "ghcr.io/{{ .ghcr_io_egistry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
     goarch: arm
     goarm: "7"
     build_flag_templates:
@@ -166,36 +168,36 @@ dockers:
     use: buildx
 
 docker_manifests:
-  - name_template: docker.io/charmcli/{{ .ProjectName }}:latest
+  - name_template: docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:latest
     image_templates:
-      - docker.io/charmcli/{{ .ProjectName }}:{{ .Version }}-amd64
-      - docker.io/charmcli/{{ .ProjectName }}:{{ .Version }}-arm64
-      - docker.io/charmcli/{{ .ProjectName }}:{{ .Version }}-armv7
-  - name_template: ghcr.io/charmbracelet/{{ .ProjectName }}:latest
+      - docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:{{ .Version }}-amd64
+      - docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:{{ .Version }}-arm64
+      - docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:{{ .Version }}-armv7
+  - name_template: ghcr.io/{{ .ghcr_io_egistry_owner }}/{{ .ProjectName }}:latest
     image_templates:
-      - ghcr.io/charmbracelet/{{ .ProjectName }}:{{ .Version }}-amd64
-      - ghcr.io/charmbracelet/{{ .ProjectName }}:{{ .Version }}-arm64
-      - ghcr.io/charmbracelet/{{ .ProjectName }}:{{ .Version }}-armv7
-  - name_template: docker.io/charmcli/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}
+      - ghcr.io/{{ .ghcr_io_egistry_owner }}/{{ .ProjectName }}:{{ .Version }}-amd64
+      - ghcr.io/{{ .ghcr_io_egistry_owner }}/{{ .ProjectName }}:{{ .Version }}-arm64
+      - ghcr.io/{{ .ghcr_io_egistry_owner }}/{{ .ProjectName }}:{{ .Version }}-armv7
+  - name_template: docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}
     image_templates:
-      - docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-amd64
-      - docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-arm64
-      - docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-armv7
-  - name_template: ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}
+      - docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64
+      - docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64
+      - docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7
+  - name_template: ghcr.io/{{ .ghcr_io_egistry_owner }}/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}
     image_templates:
-      - ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-amd64
-      - ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-arm64
-      - ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-armv7
-  - name_template: docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}
+      - ghcr.io/{{ .ghcr_io_egistry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64
+      - ghcr.io/{{ .ghcr_io_egistry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64
+      - ghcr.io/{{ .ghcr_io_egistry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7
+  - name_template: docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}
     image_templates:
-      - docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-amd64
-      - docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-arm64
-      - docker.io/charmcli/{{ .ProjectName }}:v{{ .Version }}-armv7
-  - name_template: ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}
+      - docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64
+      - docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64
+      - docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7
+  - name_template: ghcr.io/{{ .ghcr_io_egistry_owner }}/{{ .ProjectName }}:v{{ .Version }}
     image_templates:
-      - ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-amd64
-      - ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-arm64
-      - ghcr.io/charmbracelet/{{ .ProjectName }}:v{{ .Version }}-armv7
+      - ghcr.io/{{ .ghcr_io_egistry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64
+      - ghcr.io/{{ .ghcr_io_egistry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64
+      - ghcr.io/{{ .ghcr_io_egistry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7
 
 docker_signs:
   - cmd: cosign
