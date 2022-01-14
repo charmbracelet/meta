@@ -22,7 +22,7 @@ builds:
   - binary: '{{ with .binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}'
     env:
       - CGO_ENABLED=0
-    main: '{{ .main }}'
+    main: '{{ with .main }}{{ . }}{{ else }}.{{ end }}'
     ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit }}
     goos:
       - linux
