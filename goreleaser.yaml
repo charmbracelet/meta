@@ -214,6 +214,7 @@ docker_signs:
 release:
   footer: |
     * * *
-    Thoughts? Questions? We love hearing from you. Feel free to reach out on [Twitter](https://twitter.com/charmcli) or [The Fediverse](https://mastodon.technology/@charm).
 
-    <a href="https://charm.sh/"><img alt="The Charm logo" src="https://stuff.charm.sh/charm-badge.jpg?1" width="400"></a>
+    <a href="https://charm.sh/"><img alt="The Charm logo" src="https://stuff.charm.sh/charm-badge.jpg" width="400"></a>
+
+    Thoughts? Questions? We love hearing from you. Feel free to reach out on [Twitter](https://twitter.com/charmcli), [The Fediverse](https://mastodon.technology/@charm), or on [Slack](https://charm.sh/slack).
