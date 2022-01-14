@@ -2,11 +2,9 @@ name: nightly
 
 on:
   workflow_call:
-    inputs:
+    secrets:
       docker_username:
         required: true
-        type: string
-    secrets:
       docker_token:
         required: true
       goreleaser_key:
