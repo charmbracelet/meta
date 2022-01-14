@@ -52,8 +52,8 @@ concurrency:
 jobs:
   goreleaser:
     uses: charmbracelet/meta/.github/workflows/goreleaser.yml@main
-    with:
-      docker_username: charmcli
+    secrets:
+      docker_username: ${{ secrets.DOCKERHUB_USERNAME }}
       docker_token: ${{ secrets.DOCKERHUB_TOKEN }}
       gh_pat: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       goreleaser_key: ${{ secrets.GORELEASER_KEY }
@@ -72,8 +72,8 @@ on: [push, pull_request]
 jobs:
   nightly:
     uses: charmbracelet/meta/.github/workflows/nightly.yml@main
-    with:
-      docker_username: charmcli
+    secrets:
+      docker_username: ${{ secrets.DOCKERHUB_USERNAME }}
       docker_token: ${{ secrets.DOCKER_PASSWORD }}
       goreleaser_key: ${{ secrets.GORELEASER_KEY }}
 ```
