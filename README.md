@@ -5,6 +5,11 @@ Charm's meta configuration files:
 - goreleaser configurations
 - github actions workflows
 
+## Related docs
+
+- [GitHub: Reusing Workflows](https://docs.github.com/en/actions/learn-github-actions/reusing-workflows)
+- [GoReleaser: includes](https://goreleaser.com/customization/includes/)
+
 ## Usage
 
 ### GoReleaser release
