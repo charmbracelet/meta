@@ -19,7 +19,7 @@ gomod:
   proxy: true
 
 builds:
-  - binary: '{{ .binary_name }}'
+  - binary: '{{ with .binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}'
     env:
       - CGO_ENABLED=0
     main: '{{ .main }}'
