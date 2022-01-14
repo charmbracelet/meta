@@ -91,6 +91,9 @@ sboms:
 snapshot:
   name_template: "{{ incpatch .Version }}-devel"
 
+nightly:
+  name_template: "devel-{{ .ShortCommit }}"
+
 changelog:
   sort: asc
   use: github
