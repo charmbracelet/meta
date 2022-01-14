@@ -1,5 +1,6 @@
 variables:
   main: ""
+  binary_name: ""
   description: ""
   github_url: ""
   maintainer: ""
@@ -17,9 +18,9 @@ before:
 gomod:
   proxy: true
 
-
 builds:
-  - env:
+  - binary: '{{ .binary_name }}'
+    env:
       - CGO_ENABLED=0
     main: '{{ .main }}'
     ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit }}
