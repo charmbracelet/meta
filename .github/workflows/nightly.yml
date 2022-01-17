@@ -13,6 +13,8 @@ on:
 jobs:
   nightly:
     runs-on: ubuntu-latest
+    # dependabot-created PRs cant see any secrets, so this workflow wont work anyway https://github.com/dependabot/dependabot-core/issues/3253
+    if: ${{ github.actor != 'dependabot[bot]' }}
     permissions:
       contents: write
       id-token: write
