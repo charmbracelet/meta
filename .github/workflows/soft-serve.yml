@@ -6,7 +6,7 @@ on:
       server:
         type: string
         default: "git.charm.sh"
-        required: true
+        required: false
     secrets:
       ssh-key:
         required: true
