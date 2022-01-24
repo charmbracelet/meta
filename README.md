@@ -64,14 +64,16 @@ You'll need to set the secrets used.
 ### GoReleaser snapshot
 
 ```yaml
-# .github/workflows/nightly.yml
-name: nightly
+# .github/workflows/snapshot.yml
+name: snapshot
 
 on: [push, pull_request]
 
 jobs:
   snapshot:
     uses: charmbracelet/meta/.github/workflows/snapshot.yml@main
+    secrets:
+      goreleaser_key: ${{ secrets.GORELEASER_KEY }}
 ```
 
 ### GoReleaser nightly
@@ -80,7 +82,7 @@ jobs:
 # .github/workflows/nightly.yml
 name: nightly
 
-on: [push, pull_request]
+on: push
 
 jobs:
   nightly:

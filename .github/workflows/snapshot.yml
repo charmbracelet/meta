@@ -1,7 +1,10 @@
-name: nightly
+name: snapshot
 
 on:
   workflow_call:
+    secrets:
+      goreleaser_key:
+        required: true
 
 jobs:
   snapshot:
@@ -32,3 +35,4 @@ jobs:
         args: release --rm-dist --snapshot --skip-sign --skip-sbom
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GORELEASER_KEY: ${{ secrets.goreleaser_key }}
