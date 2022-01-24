@@ -1,0 +1,25 @@
+name: soft-serve
+
+on:
+  workflow_call:
+    inputs:
+      server:
+        type: string
+        default: "git.charm.sh"
+        required: true
+    secrets:
+      ssh-key:
+        required: true
+
+jobs:
+  soft-serve:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Push to Soft-Serve
+        uses: charmbracelet/soft-serve-action@master
+        with:
+          server: "${{ inputs.server }}"
+          ssh-key: "${{ secrets.ssh-key }}"
