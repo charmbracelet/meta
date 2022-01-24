@@ -200,9 +200,9 @@ docker_manifests:
       - "docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
   - name_template: "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}"
     image_templates:
-      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
-      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
-      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
+      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-amd64"
+      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-arm64"
+      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-armv7"
 
 docker_signs:
   - cmd: cosign
