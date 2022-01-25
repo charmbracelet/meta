@@ -23,3 +23,4 @@ jobs:
         with:
           server: "${{ inputs.server }}"
           ssh-key: "${{ secrets.ssh-key }}"
+          mirror: "true"
