@@ -58,3 +58,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.gh_pat }}
         GORELEASER_KEY: ${{ secrets.goreleaser_key }}
+        AUR_KEY: ${{ secrets.AUR_KEY }}
