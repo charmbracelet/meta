@@ -20,7 +20,7 @@ gomod:
   proxy: true
 
 builds:
-  - binary: '{{ with .binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}'
+  - binary: '{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}'
     env:
       - CGO_ENABLED=0
     main: '{{ with .main }}{{ . }}{{ else }}.{{ end }}'
@@ -57,9 +57,9 @@ archives:
 
 nfpms:
   - vendor: charmbracelet
-    homepage: '{{ .homepage }}'
-    maintainer: '{{ .maintainer }}'
-    description: '{{ .description }}'
+    homepage: '{{ .Var.homepage }}'
+    maintainer: '{{ .Var.maintainer }}'
+    description: '{{ .Var.description }}'
     license: MIT
     formats:
       - apk
@@ -68,14 +68,14 @@ nfpms:
 
 brews:
   - tap:
-      owner: '{{ .brew_owner }}'
+      owner: '{{ .Var.brew_owner }}'
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     commit_author:
-      name: '{{ .brew_commit_author_name }}'
-      email: '{{ .brew_commit_author_email }}'
-    homepage: '{{ .homepage }}'
-    description: '{{ .description }}'
+      name: '{{ .Var.brew_commit_author_name }}'
+      email: '{{ .Var.brew_commit_author_email }}'
+    homepage: '{{ .Var.homepage }}'
+    description: '{{ .Var.description }}'
 
 aurs:
   - maintainers: ['{{ .Var.maintainer }}']
@@ -135,8 +135,8 @@ signs:
 
 dockers:
   - image_templates:
-      - "{{ if not .IsNightly }}docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64{{ end }}"
-      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-amd64"
+      - "{{ if not .IsNightly }}docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64{{ end }}"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-amd64"
     goarch: amd64
     build_flag_templates:
       - --platform=linux/amd64
@@ -150,8 +150,8 @@ dockers:
     dockerfile: Dockerfile
     use: buildx
   - image_templates:
-      - "{{ if not .IsNightly }}docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64{{ end }}"
-      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-arm64"
+      - "{{ if not .IsNightly }}docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64{{ end }}"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-arm64"
     goarch: arm64
     build_flag_templates:
       - --platform=linux/arm64
@@ -165,8 +165,8 @@ dockers:
     dockerfile: Dockerfile
     use: buildx
   - image_templates:
-      - "{{ if not .IsNightly }}docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7{{ end }}"
-      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-armv7"
+      - "{{ if not .IsNightly }}docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7{{ end }}"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-armv7"
     goarch: arm
     goarm: "7"
     build_flag_templates:
@@ -182,36 +182,36 @@ dockers:
     use: buildx
 
 docker_manifests:
-  - name_template: "{{ if not .IsNightly }}docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:latest{{ end }}"
+  - name_template: "{{ if not .IsNightly }}docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:latest{{ end }}"
     image_templates:
-      - "docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
-      - "docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
-      - "docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
-  - name_template: "{{ if not .IsNightly }}ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:latest{{ end }}"
+      - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
+      - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
+      - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
+  - name_template: "{{ if not .IsNightly }}ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:latest{{ end }}"
     image_templates:
-      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
-      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
-      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
-  - name_template: "{{ if not .IsNightly }}docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}{{ end }}"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
+  - name_template: "{{ if not .IsNightly }}docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}{{ end }}"
     image_templates:
-      - "docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
-      - "docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
-      - "docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
-  - name_template: "{{ if not .IsNightly }}ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}{{ end }}"
+      - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
+      - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
+      - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
+  - name_template: "{{ if not .IsNightly }}ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}{{ end }}"
     image_templates:
-      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
-      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
-      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
-  - name_template: "{{ if not .IsNightly }}docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}{{ end }}"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
+  - name_template: "{{ if not .IsNightly }}docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}{{ end }}"
     image_templates:
-      - "docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
-      - "docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
-      - "docker.io/{{ .docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
-  - name_template: "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}"
+      - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
+      - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
+      - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
+  - name_template: "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}"
     image_templates:
-      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-amd64"
-      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-arm64"
-      - "ghcr.io/{{ .ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-armv7"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-amd64"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-arm64"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-armv7"
 
 docker_signs:
   - cmd: cosign
