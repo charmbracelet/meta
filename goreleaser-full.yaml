@@ -54,6 +54,11 @@ archives:
       darwin: Darwin
       386: i386
       amd64: x86_64
+    files:
+      - README*
+      - LICENSE*
+      - manpages/*
+      - completions/*
 
 nfpms:
   - vendor: charmbracelet
