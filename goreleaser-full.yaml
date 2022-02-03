@@ -54,6 +54,11 @@ archives:
       darwin: Darwin
       386: i386
       amd64: x86_64
+    files:
+      - README*
+      - LICENSE*
+      - manpages/*
+      - completions/*
 
 nfpms:
   - vendor: charmbracelet
@@ -65,6 +70,15 @@ nfpms:
       - apk
       - deb
       - rpm
+    contents:
+      - src: ./completions/{{ .ProjectName }}.bash
+        dst: /etc/bash_completion.d/{{ .ProjectName }}
+      - src: ./completions/{{ .ProjectName }}.fish
+        dst: /usr/share/fish/completions/{{ .ProjectName }}.fish
+      - src: ./completions/{{ .ProjectName }}.zsh
+        dst: /usr/local/share/zsh/site-functions/_{{ .ProjectName }}
+      - src: ./manpages/{{ .ProjectName }}.1.gz
+        dst: /usr/share/man/man1/{{ .ProjectName }}.1.gz
 
 brews:
   - tap:
@@ -76,6 +90,12 @@ brews:
       email: '{{ .Var.brew_commit_author_email }}'
     homepage: '{{ .Var.homepage }}'
     description: '{{ .Var.description }}'
+    install: |-
+      bin.install "{{ .ProjectName }}"
+      bash_completion.install "completions/{{ .ProjectName }}.bash" => "{{ .ProjectName }}"
+      zsh_completion.install "completions/{{ .ProjectName }}.zsh" => "_{{ .ProjectName }}"
+      fish_completion.install "completions/{{ .ProjectName }}.fish"
+      man1.install "manpages/{{ .ProjectName }}.1.gz"
 
 aurs:
   - maintainers: ['{{ .Var.maintainer }}']
@@ -85,6 +105,20 @@ aurs:
     license: MIT
     private_key: '{{ .Env.AUR_KEY }}'
     git_url: 'ssh://aur@aur.archlinux.org/{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin.git'
+    package: |-
+      # bin
+      install -Dm755 "./{{ .ProjectName }}" "${pkgdir}/usr/bin/{{ .ProjectName }}"
+      # license
+      install -Dm644 "./LICENSE.md" "${pkgdir}/usr/share/licenses/{{ .ProjectName }}/LICENSE"
+      # completions
+      mkdir -p "${pkgdir}/usr/share/bash-completion/completions/"
+      mkdir -p "${pkgdir}/usr/share/zsh/site-functions/"
+      mkdir -p "${pkgdir}/usr/share/fish/vendor_completions.d/"
+      install -Dm644 "./completions/{{ .ProjectName }}.bash" "${pkgdir}/usr/share/bash-completion/completions/{{ .ProjectName }}"
+      install -Dm644 "./completions/{{ .ProjectName }}.zsh" "${pkgdir}/usr/share/zsh/site-functions/_{{ .ProjectName }}"
+      install -Dm644 "./completions/{{ .ProjectName }}.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/{{ .ProjectName }}.fish"
+      # man pages
+      install -Dm644 "./manpages/{{ .ProjectName }}.1.gz" "${pkgdir}/usr/share/man/man1/{{ .ProjectName }}.1.gz"
 
 checksum:
   name_template: 'checksums.txt'

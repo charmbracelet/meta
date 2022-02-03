@@ -35,4 +35,3 @@ jobs:
         args: release --rm-dist --snapshot --skip-sign --skip-sbom
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GORELEASER_KEY: ${{ secrets.goreleaser_key }}
