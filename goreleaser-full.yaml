@@ -24,7 +24,7 @@ builds:
     env:
       - CGO_ENABLED=0
     main: '{{ with .main }}{{ . }}{{ else }}.{{ end }}'
-    ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit }}
+    ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit } -X main.CommitDate={{ .CommitDate }}}
     goos:
       - linux
       - darwin
@@ -132,10 +132,10 @@ sboms:
     artifacts: source
 
 snapshot:
-  name_template: "{{ incpatch .Version }}-devel"
+  name_template: "{{ incpatch .Version }}-snapshot"
 
 nightly:
-  name_template: "devel-{{ .ShortCommit }}"
+  name_template: "{{ incpatch .Version }}-devel"
 
 changelog:
   sort: asc
