@@ -24,7 +24,7 @@ builds:
     env:
       - CGO_ENABLED=0
     main: '{{ with .main }}{{ . }}{{ else }}.{{ end }}'
-    ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit } -X main.CommitDate={{ .CommitDate }}}
+    ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit }} -X main.CommitDate={{ .CommitDate }}
     goos:
       - linux
       - darwin
