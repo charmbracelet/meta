@@ -9,6 +9,8 @@ on:
         required: true
       goreleaser_key:
         required: true
+      gh_pat:
+        required: false
     inputs:
       upload_artifacts:
         required: false
@@ -26,10 +28,14 @@ jobs:
       packages: write
     env:
       DOCKER_CLI_EXPERIMENTAL: enabled
+      GH_PAT: ${{ secrets.gh_pat }}
     steps:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
+    - run: |
+        git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
+      if: env.GH_PAT != null
     - uses: actions/setup-go@v2
       with:
         go-version: 1.17
