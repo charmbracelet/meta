@@ -10,9 +10,6 @@ before:
   hooks:
     - go mod tidy
 
-gomod:
-  proxy: true
-
 builds:
   - binary: '{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}'
     env:
