@@ -70,7 +70,7 @@ jobs:
         GORELEASER_KEY: ${{ secrets.goreleaser_key }}
 
     - uses: actions/upload-artifact@v2
-      if: inputs.upload_artifacts == 'true'
+      if: inputs.upload_artifacts == true
       with:
         name: Linux (x86_64)
         path: |
@@ -79,7 +79,7 @@ jobs:
           README.md
 
     - uses: actions/upload-artifact@v2
-      if: inputs.upload_artifacts == 'true'
+      if: inputs.upload_artifacts == true
       with:
         name: Linux (arm64)
         path: |
@@ -88,7 +88,7 @@ jobs:
           README.md
 
     - uses: actions/upload-artifact@v2
-      if: inputs.upload_artifacts == 'true'
+      if: inputs.upload_artifacts == true
       with:
         name: MacOS (x86_64)
         path: |
@@ -97,7 +97,7 @@ jobs:
           README.md
 
     - uses: actions/upload-artifact@v2
-      if: inputs.upload_artifacts == 'true'
+      if: inputs.upload_artifacts == true
       with:
         name: MacOS (arm64)
         path: |
@@ -106,7 +106,7 @@ jobs:
           README.md
 
     - uses: actions/upload-artifact@v2
-      if: inputs.upload_artifacts == 'true'
+      if: inputs.upload_artifacts == true
       with:
         name: Windows (x86_64)
         path: |
