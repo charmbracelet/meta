@@ -21,8 +21,6 @@ About the tool
 
 ## Installation
 
-## Build From Source
-
 ### Package Manager
 ... is a single binary called `...`. You can get it from a package
 manager:
@@ -33,6 +31,10 @@ brew tap charmbracelet/tap && brew install charmbracelet/tap/<product>
 
 # Arch Linux
 pacman -S <product>
+
+# Windows (with Scoop)
+scoop install <product>
+chocolatey install <product>
 ```
 
 You can also download a binary from the [releases][releases] page. Packages are
@@ -46,6 +48,16 @@ Or just install it with `go`:
 
 ```bash
 go install github.com/charmbracelet/<product>@latest
+```
+
+## Build From Source
+
+Or just build it yourself (requires Go 1.1x+):
+
+```bash
+git clone https://github.com/charmbracelet/<product>.git
+cd <product>
+go build [./cmd/product]
 ```
 
 ## Set up
