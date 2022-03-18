@@ -21,6 +21,8 @@ About the tool
 
 ## Installation
 
+## Build From Source
+
 ### Package Manager
 ... is a single binary called `...`. You can get it from a package
 manager:
