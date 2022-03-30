@@ -61,7 +61,7 @@ dockers:
     build_flag_templates:
       - --platform=linux/amd64
       - --label=org.opencontainers.image.title={{ .ProjectName }}
-      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .Var.description }}
       - --label=org.opencontainers.image.source={{ .GitURL }}
       - --label=org.opencontainers.image.version={{ if not .IsNightly }}v{{ end }}{{ .Version }}
       - --label=org.opencontainers.image.created={{ .Date }}
