@@ -1,0 +1,48 @@
+name: build
+
+on:
+  workflow_call:
+    secrets:
+      gh_pat:
+        required: false
+      goreleaser_key:
+        required: true
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        go-version: [~1.17, ^1]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      GO111MODULE: "on"
+      GH_PAT: ${{ secrets.gh_pat }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - run: |
+          git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
+        if: env.GH_PAT != null
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go-version }}
+      - uses: actions/cache@v3
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: Download Go modules
+        run: go mod download
+      - name: Build
+        run: go build -v ./...
+      - name: Test
+        run: go test ./...
+
+  snapshot:
+    uses: ./.github/workflows/snapshot.yml
+    secrets:
+      goreleaser_key: ${{ secrets.goreleaser_key }}
+      gh_pat: ${{ secrets.gh_pat }}
