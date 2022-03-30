@@ -5,8 +5,6 @@ on:
     secrets:
       gh_pat:
         required: false
-      goreleaser_key:
-        required: true
 
 jobs:
   build:
@@ -40,9 +38,3 @@ jobs:
         run: go build -v ./...
       - name: Test
         run: go test ./...
-
-  snapshot:
-    uses: ./.github/workflows/snapshot.yml
-    secrets:
-      goreleaser_key: ${{ secrets.goreleaser_key }}
-      gh_pat: ${{ secrets.gh_pat }}
