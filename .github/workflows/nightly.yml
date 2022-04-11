@@ -69,7 +69,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GORELEASER_KEY: ${{ secrets.goreleaser_key }}
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: inputs.upload_artifacts == true
       with:
         name: Linux (x86_64)
@@ -78,7 +78,7 @@ jobs:
           LICENSE
           README.md
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: inputs.upload_artifacts == true
       with:
         name: Linux (arm64)
@@ -87,7 +87,7 @@ jobs:
           LICENSE
           README.md
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: inputs.upload_artifacts == true
       with:
         name: MacOS (x86_64)
@@ -96,7 +96,7 @@ jobs:
           LICENSE
           README.md
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: inputs.upload_artifacts == true
       with:
         name: MacOS (arm64)
@@ -105,7 +105,7 @@ jobs:
           LICENSE
           README.md
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: inputs.upload_artifacts == true
       with:
         name: Windows (x86_64)
