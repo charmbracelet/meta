@@ -109,7 +109,7 @@ aurs:
       # bin
       install -Dm755 "./{{ .ProjectName }}" "${pkgdir}/usr/bin/{{ .ProjectName }}"
       # license
-      install -Dm644 "./LICENSE.md" "${pkgdir}/usr/share/licenses/{{ .ProjectName }}/LICENSE"
+      install -Dm644 "./LICENSE*" "${pkgdir}/usr/share/licenses/{{ .ProjectName }}/"
       # completions
       mkdir -p "${pkgdir}/usr/share/bash-completion/completions/"
       mkdir -p "${pkgdir}/usr/share/zsh/site-functions/"
