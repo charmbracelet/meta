@@ -2,6 +2,11 @@ name: snapshot
 
 on:
   workflow_call:
+    inputs:
+      go_version:
+        required: true
+        type: string
+        default: 1.18
     secrets:
       goreleaser_key:
         required: true
@@ -25,7 +30,7 @@ jobs:
       if: env.GH_PAT != null
     - uses: actions/setup-go@v3
       with:
-        go-version: 1.17
+        go-version: ${{ inputs.go_version }}
     - uses: actions/cache@v3
       with:
         path: ~/go/pkg/mod

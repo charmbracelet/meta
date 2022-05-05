@@ -2,6 +2,11 @@ name: build
 
 on:
   workflow_call:
+    inputs:
+      go_version:
+        required: true
+        type: string
+        default: ~1.18
     secrets:
       gh_pat:
         required: false
@@ -10,7 +15,7 @@ jobs:
   build:
     strategy:
       matrix:
-        go-version: [~1.17, ^1]
+        go-version: ['${{ inputs.go_version }}', ^1]
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     env:
