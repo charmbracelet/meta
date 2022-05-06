@@ -3,6 +3,10 @@ name: nightly
 on:
   workflow_call:
     inputs:
+      upload_artifacts:
+        required: false
+        type: boolean
+        default: true
       go_version:
         required: false
         type: string
@@ -16,11 +20,6 @@ on:
         required: true
       gh_pat:
         required: false
-    inputs:
-      upload_artifacts:
-        required: false
-        type: boolean
-        default: true
 
 jobs:
   nightly:
