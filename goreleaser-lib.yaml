@@ -1,0 +1,26 @@
+before:
+  hooks: ['go mod tidy']
+builds: [skip: true]
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+  groups:
+    - title: 'New Features'
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: 'Bug fixes'
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 10
+    - title: Others
+      order: 999
+release:
+  footer: |
+    * * *
+
+    <a href="https://charm.sh/"><img alt="The Charm logo" src="https://stuff.charm.sh/charm-badge.jpg" width="400"></a>
+
+    Thoughts? Questions? We love hearing from you. Feel free to reach out on [Twitter](https://twitter.com/charmcli), [The Fediverse](https://mastodon.technology/@charm), or on [Slack](https://charm.sh/slack).
