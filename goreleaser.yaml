@@ -66,6 +66,10 @@ nfpms:
       - deb
       - rpm
 
+furies:
+  - account: charmcli
+    secret_name: FURY_TOKEN
+
 brews:
   - tap:
       owner: '{{ .Var.brew_owner }}'
