@@ -15,6 +15,14 @@ variables:
 before:
   hooks:
     - go mod tidy
+    - rm -rf completions
+    - mkdir completions
+    - rm -rf manpages
+    - mkdir manpages
+    - sh -c 'go run {{ with .Var.main }}{{ . }}{{ else }}.{{ end }} completion "bash" >./completions/{{ .ProjectName }}.bash'
+    - sh -c 'go run {{ with .Var.main }}{{ . }}{{ else }}.{{ end }} completion "zsh" >./completions/{{ .ProjectName }}.zsh'
+    - sh -c 'go run {{ with .Var.main }}{{ . }}{{ else }}.{{ end }} completion "fish" >./completions/{{ .ProjectName }}.fish'
+    - sh -c 'go run {{ with .Var.main }}{{ . }}{{ else }}.{{ end }} man | gzip -c >./manpages/{{ .ProjectName }}.1.gz'
 
 gomod:
   proxy: true
