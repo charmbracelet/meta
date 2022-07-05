@@ -67,7 +67,7 @@ nfpms:
       - rpm
 
 furies:
-  - account: charmcli
+  - account: '{{ with .Env.FURY_TOKEN }}charmcli{{ else }}{{ end }}'
     secret_name: FURY_TOKEN
 
 brews:
