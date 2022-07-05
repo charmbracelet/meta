@@ -20,6 +20,8 @@ on:
         required: true
       gh_pat:
         required: false
+      fury_token:
+        required: false
 
 jobs:
   nightly:
@@ -72,7 +74,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GORELEASER_KEY: ${{ secrets.goreleaser_key }}
-        FURY_TOKEN: ${{ secrets.FURY_TOKEN }}
+        FURY_TOKEN: ${{ secrets.fury_token }}
 
     - uses: actions/upload-artifact@v3
       if: inputs.upload_artifacts == true
