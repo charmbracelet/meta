@@ -20,6 +20,10 @@ on:
         required: false
       fury_token:
         required: false
+      nfpm_gpg_key:
+        required: false
+      nfpm_passphrase:
+        required: false
 
 jobs:
   release:
@@ -60,6 +64,10 @@ jobs:
       with:
         username: ${{ secrets.docker_username }}
         password: ${{ secrets.docker_token }}
+    - run: |
+        echo "$NFPM_GPG_KEY" > gpg.key
+      env:
+        NFPM_GPG_KEY: ${{ secrets.nfpm_gpg_key }}
     - uses: goreleaser/goreleaser-action@v3
       with:
         version: latest
@@ -71,3 +79,5 @@ jobs:
         GORELEASER_KEY: ${{ secrets.goreleaser_key }}
         AUR_KEY: ${{ secrets.aur_key }}
         FURY_TOKEN: ${{ secrets.fury_token }}
+        GPG_KEY_PATH: gpg.key
+        NFPM_DEFAULT_PASSPHRASE: ${{ secrets.nfpm_passphrase }}

@@ -65,6 +65,12 @@ nfpms:
       - apk
       - deb
       - rpm
+    rpm:
+      signature:
+        key_file: '{{ .Env.GPG_KEY_PATH }}'
+    deb:
+      signature:
+        key_file: '{{ .Env.GPG_KEY_PATH }}'
 
 furies:
   - account: '{{ with .Env.FURY_TOKEN }}charmcli{{ else }}{{ end }}'
