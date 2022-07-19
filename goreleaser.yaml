@@ -67,10 +67,10 @@ nfpms:
       - rpm
     rpm:
       signature:
-        key_file: '{{ .Env.GPG_KEY_PATH }}'
+        key_file: '{{ if ne (index .Env "GPG_KEY_PATH") "" }}{{ .Env.GPG_KEY_PATH }}{{ else }}{{ end }}'
     deb:
       signature:
-        key_file: '{{ .Env.GPG_KEY_PATH }}'
+        key_file: '{{ if ne (index .Env "GPG_KEY_PATH") "" }}{{ .Env.GPG_KEY_PATH }}{{ else }}{{ end }}'
 
 furies:
   - account: '{{ with .Env.FURY_TOKEN }}charmcli{{ else }}{{ end }}'
