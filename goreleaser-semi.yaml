@@ -118,7 +118,7 @@ brews:
     homepage: '{{ .Var.homepage }}'
     description: '{{ .Var.description }}'
     install: |-
-      bin.install "{{ .ProjectName }}"
+      bin.install "{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}"
       bash_completion.install "completions/{{ .ProjectName }}.bash" => "{{ .ProjectName }}"
       zsh_completion.install "completions/{{ .ProjectName }}.zsh" => "_{{ .ProjectName }}"
       fish_completion.install "completions/{{ .ProjectName }}.fish"
