@@ -21,9 +21,6 @@ builds:
     goarch:
       - amd64
 
-release:
-  disable: true
-
 checksum:
   name_template: 'checksums.txt'
 
@@ -56,14 +53,14 @@ signs:
 
 dockers:
   - image_templates:
-      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-amd64"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
     goarch: amd64
     build_flag_templates:
       - --platform=linux/amd64
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.description={{ .Var.description }}
       - --label=org.opencontainers.image.source={{ .GitURL }}
-      - --label=org.opencontainers.image.version={{ if not .IsNightly }}v{{ end }}{{ .Version }}
+      - --label=org.opencontainers.image.version=v{{ .Version }}
       - --label=org.opencontainers.image.created={{ .Date }}
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
       - --label=org.opencontainers.image.licenses=MIT
@@ -77,12 +74,12 @@ docker_manifests:
   - name_template: "{{ if not .IsNightly }}ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}{{ end }}"
     image_templates:
       - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
-  - name_template: "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}"
+  - name_template: "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}"
     image_templates:
-      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-amd64"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
   - name_template: "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ .Commit }}{{ if .IsNightly }}-devel{{ end }}"
     image_templates:
-      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ if not .IsNightly }}v{{ end }}{{ .Version }}-amd64"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
   - name_template: "{{ if .IsNightly }}ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:nightly{{ end }}"
     image_templates:
       - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ .Version }}-amd64"
@@ -96,3 +93,11 @@ docker_signs:
     args:
       - 'sign'
       - '${artifact}'
+
+release:
+  footer: |
+    * * *
+
+    <a href="https://charm.sh/"><img alt="The Charm logo" src="https://stuff.charm.sh/charm-badge.jpg" width="400"></a>
+
+    Thoughts? Questions? We love hearing from you. Feel free to reach out on [Twitter](https://twitter.com/charmcli), [The Fediverse](https://mastodon.technology/@charm), or on [Slack](https://charm.sh/slack).
