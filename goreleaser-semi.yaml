@@ -93,7 +93,7 @@ nfpms:
       - src: ./completions/{{ .ProjectName }}.fish
         dst: /usr/share/fish/completions/{{ .ProjectName }}.fish
       - src: ./completions/{{ .ProjectName }}.zsh
-        dst: /usr/local/share/zsh/site-functions/_{{ .ProjectName }}
+        dst: /usr/share/zsh/site-functions/_{{ .ProjectName }}
       - src: ./manpages/{{ .ProjectName }}.1.gz
         dst: /usr/share/man/man1/{{ .ProjectName }}.1.gz
     rpm:
