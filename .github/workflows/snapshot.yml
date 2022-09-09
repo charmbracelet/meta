@@ -31,12 +31,7 @@ jobs:
     - uses: actions/setup-go@v3
       with:
         go-version: ${{ inputs.go_version }}
-    - uses: actions/cache@v3
-      with:
-        path: ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
+        cache: true
     - uses: docker/setup-qemu-action@v2
     - uses: docker/setup-buildx-action@v2
     - uses: goreleaser/goreleaser-action@v3
