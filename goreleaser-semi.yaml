@@ -91,7 +91,7 @@ nfpms:
       - src: ./completions/{{ .ProjectName }}.bash
         dst: /etc/bash_completion.d/{{ .ProjectName }}
       - src: ./completions/{{ .ProjectName }}.fish
-        dst: /usr/share/fish/completions/{{ .ProjectName }}.fish
+        dst: /usr/share/fish/vendor_completions.d/{{ .ProjectName }}.fish
       - src: ./completions/{{ .ProjectName }}.zsh
         dst: /usr/share/zsh/site-functions/_{{ .ProjectName }}
       - src: ./manpages/{{ .ProjectName }}.1.gz
