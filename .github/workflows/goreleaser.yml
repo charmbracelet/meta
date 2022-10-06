@@ -6,7 +6,7 @@ on:
       go_version:
         required: false
         type: string
-        default: 1.18
+        default: ^1
     secrets:
       docker_username:
         required: true
