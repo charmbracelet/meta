@@ -24,6 +24,8 @@ on:
         required: false
       nfpm_passphrase:
         required: false
+      snapcraft_token:
+        required: false
 
 jobs:
   release:
@@ -68,6 +70,13 @@ jobs:
         echo "$NFPM_GPG_KEY" > ${{ runner.temp }}/gpg.key
       env:
         NFPM_GPG_KEY: ${{ secrets.nfpm_gpg_key }}
+    - name: Set Up Snapcraft
+      env:
+        SNAPCRAFT_TOKEN: ${{ secrets.snapcraft_token }}
+      if: env.SNAPCRAFT_TOKEN != null
+      uses: samuelmeuli/action-snapcraft@v1
+      with:
+        snapcraft_token: ${{ secrets.snapcraft_token }}
     - uses: goreleaser/goreleaser-action@v3
       with:
         version: latest
