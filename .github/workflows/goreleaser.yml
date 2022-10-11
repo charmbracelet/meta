@@ -77,6 +77,11 @@ jobs:
       uses: samuelmeuli/action-snapcraft@v1
       with:
         snapcraft_token: ${{ secrets.snapcraft_token }}
+    - uses: samuelmeuli/action-snapcraft@v1
+    # https://github.com/goreleaser/goreleaser/issues/1715
+    - run: |
+        mkdir -p $HOME/.cache/snapcraft/download
+        mkdir -p $HOME/.cache/snapcraft/stage-packages
     - uses: goreleaser/goreleaser-action@v3
       with:
         version: latest
