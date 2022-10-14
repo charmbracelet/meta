@@ -45,12 +45,7 @@ jobs:
     - uses: actions/setup-go@v3
       with:
         go-version: ${{ inputs.go_version }}
-    - uses: actions/cache@v3
-      with:
-        path: ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
+        cache: true
     - uses: sigstore/cosign-installer@v2.8.0
     - uses: anchore/sbom-action/download-syft@v0.12.0
     - uses: docker/setup-qemu-action@v2
