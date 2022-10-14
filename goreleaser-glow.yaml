@@ -161,28 +161,17 @@ changelog:
   use: github
   filters:
     exclude:
-    - '^test:'
-    - '^chore'
-    - 'merge conflict'
-    - Merge pull request
-    - Merge remote-tracking branch
-    - Merge branch
-    - go mod tidy
+      - "^docs:"
+      - "^test:"
   groups:
-    - title: Dependency updates
-      regexp: "^.*feat\\(deps\\)*:+.*$"
-      order: 300
     - title: 'New Features'
       regexp: "^.*feat[(\\w)]*:+.*$"
-      order: 100
+      order: 0
     - title: 'Bug fixes'
       regexp: "^.*fix[(\\w)]*:+.*$"
-      order: 200
-    - title: 'Documentation updates'
-      regexp: "^.*docs[(\\w)]*:+.*$"
-      order: 400
-    - title: Other work
-      order: 9999
+      order: 10
+    - title: Others
+      order: 999
 
 signs:
   - cmd: cosign
@@ -294,3 +283,20 @@ release:
     <a href="https://charm.sh/"><img alt="The Charm logo" src="https://stuff.charm.sh/charm-badge.jpg" width="400"></a>
 
     Thoughts? Questions? We love hearing from you. Feel free to reach out on [Twitter](https://twitter.com/charmcli), [The Fediverse](https://mastodon.technology/@charm), or on [Slack](https://charm.sh/slack).
+
+snapcrafts:
+  -
+    publish: true
+    summary: '{{ .Var.description }}'
+    description: |
+      Glow is a terminal based markdown reader designed from the ground up to bring out the beauty—and power—of the CLI.
+      Use it to discover markdown files, read documentation directly on the command line and stash markdown files to your own private collection so you can read them anywhere. Glow will find local markdown files in subdirectories or a local Git repository.
+      By the way, all data stashed is encrypted end-to-end: only you can decrypt it. More on that below.
+    grade: '{{ if or .IsNightly .IsSnapshot }}devel{{ else }}stable{{ end }}'
+    confinement: strict
+    license: MIT
+    base: core20
+
+    apps:
+      glow:
+        plugs: ["home", "network"]

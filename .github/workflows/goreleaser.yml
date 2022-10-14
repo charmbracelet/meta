@@ -6,7 +6,7 @@ on:
       go_version:
         required: false
         type: string
-        default: 1.18
+        default: ^1
     secrets:
       docker_username:
         required: true
@@ -23,6 +23,8 @@ on:
       nfpm_gpg_key:
         required: false
       nfpm_passphrase:
+        required: false
+      snapcraft_token:
         required: false
 
 jobs:
@@ -44,7 +46,7 @@ jobs:
       with:
         go-version: ${{ inputs.go_version }}
         cache: true
-    - uses: sigstore/cosign-installer@v2.5.1
+    - uses: sigstore/cosign-installer@v2.8.0
     - uses: anchore/sbom-action/download-syft@v0.12.0
     - uses: docker/setup-qemu-action@v2
     - uses: docker/setup-buildx-action@v2
@@ -63,6 +65,18 @@ jobs:
         echo "$NFPM_GPG_KEY" > ${{ runner.temp }}/gpg.key
       env:
         NFPM_GPG_KEY: ${{ secrets.nfpm_gpg_key }}
+    - name: Set Up Snapcraft
+      env:
+        SNAPCRAFT_TOKEN: ${{ secrets.snapcraft_token }}
+      if: env.SNAPCRAFT_TOKEN != null
+      uses: samuelmeuli/action-snapcraft@v1
+      with:
+        snapcraft_token: ${{ secrets.snapcraft_token }}
+    - uses: samuelmeuli/action-snapcraft@v1
+    # https://github.com/goreleaser/goreleaser/issues/1715
+    - run: |
+        mkdir -p $HOME/.cache/snapcraft/download
+        mkdir -p $HOME/.cache/snapcraft/stage-packages
     - uses: goreleaser/goreleaser-action@v3
       with:
         version: latest
