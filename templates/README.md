@@ -70,7 +70,7 @@ We’d love to hear your thoughts on this project. Feel free to drop us a note!
 
 * [Twitter](https://twitter.com/charmcli)
 * [The Fediverse](https://mastodon.social/@charmcli)
-* [Chat on Discord](https://charm.sh/chat)
+* [Discord](https://charm.sh/chat)
 
 ## License
 
