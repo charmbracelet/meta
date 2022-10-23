@@ -69,12 +69,12 @@ go build [./cmd/product]
 We’d love to hear your thoughts on this project. Feel free to drop us a note!
 
 * [Twitter](https://twitter.com/charmcli)
-* [The Fediverse](https://mastodon.technology/@charm)
-* [Slack](https://charm.sh/slack)
+* [The Fediverse](https://mastodon.social/@charmcli)
+* [Chat on Discord](https://charm.sh/chat)
 
 ## License
 
-[MIT](https://github.com/charmbracelet/soft-serve/raw/main/LICENSE)
+[MIT](https://github.com/charmbracelet/meta/raw/main/LICENSE)
 
 ***
 
