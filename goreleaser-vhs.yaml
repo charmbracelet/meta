@@ -64,7 +64,6 @@ archives:
       - LICENSE*
       - manpages/*
       - completions/*
-      - examples/*
 
 nfpms:
   - vendor: charmbracelet
