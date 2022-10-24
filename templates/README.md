@@ -1,11 +1,8 @@
 Project Name
-==========
+============
 
 <p>
-    <picture>
-        <source srcset="https://stuff.charm.sh/" type="image/webp">
-        <img style="width: 451px" src="" alt="">
-    </picture><br>
+    <img src="https://stuff.charm.sh/project.png" width="400" alt="Project logo"><br>
     <a href="https://github.com/charmbracelet/soft-serve/releases"><img src="https://img.shields.io/github/release/charmbracelet/soft-serve.svg" alt="Latest Release"></a>
     <a href="https://pkg.go.dev/github.com/charmbracelet/soft-serve?tab=doc"><img src="https://godoc.org/github.com/golang/gddo?status.svg" alt="GoDoc"></a>
     <a href="https://github.com/charmbracelet/soft-serve/actions"><img src="https://github.com/charmbracelet/soft-serve/workflows/build/badge.svg" alt="Build Status"></a>
