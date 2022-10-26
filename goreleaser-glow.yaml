@@ -300,4 +300,7 @@ snapcrafts:
 
     apps:
       glow:
+        command: glow
         plugs: ["home", "network"]
+
+# yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json

@@ -90,3 +90,5 @@ jobs:
         FURY_TOKEN: ${{ secrets.fury_token }}
         GPG_KEY_PATH: ${{ runner.temp }}/gpg.key
         NFPM_DEFAULT_PASSPHRASE: ${{ secrets.nfpm_passphrase }}
+
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
