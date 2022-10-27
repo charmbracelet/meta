@@ -119,6 +119,18 @@ brews:
       fish_completion.install "completions/{{ .ProjectName }}.fish"
       man1.install "manpages/{{ .ProjectName }}.1.gz"
 
+scoop:
+  bucket:
+    owner: '{{ .Var.brew_owner }}'
+    name: scoop-bucket
+    token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+  commit_author:
+    name: '{{ .Var.brew_commit_author_name }}'
+    email: '{{ .Var.brew_commit_author_email }}'
+  homepage: '{{ .Var.homepage }}'
+  description: '{{ .Var.description }}'
+  license: MIT
+
 aurs:
   - maintainers: ['{{ .Var.maintainer }}']
     description: '{{ .Var.description }}'
