@@ -85,6 +85,9 @@ nfpms:
         dst: /usr/share/zsh/site-functions/_{{ .ProjectName }}
       - src: ./manpages/{{ .ProjectName }}.1.gz
         dst: /usr/share/man/man1/{{ .ProjectName }}.1.gz
+    dependencies:
+      - ffmpeg
+      # - ttyd # not available on debian/rhel repositories
     rpm:
       signature:
         key_file: '{{ if ne (index .Env "GPG_KEY_PATH") "" }}{{ .Env.GPG_KEY_PATH }}{{ else }}{{ end }}'
@@ -106,6 +109,9 @@ brews:
       email: '{{ .Var.brew_commit_author_email }}'
     homepage: '{{ .Var.homepage }}'
     description: '{{ .Var.description }}'
+    dependencies:
+      - name: ffmpeg
+      - name: ttyd
     install: |-
       bin.install "{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}"
       bash_completion.install "completions/{{ .ProjectName }}.bash" => "{{ .ProjectName }}"
@@ -121,6 +127,9 @@ aurs:
     license: MIT
     private_key: '{{ .Env.AUR_KEY }}'
     git_url: 'ssh://aur@aur.archlinux.org/{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin.git'
+    depends:
+      - ffmpeg
+      - ttyd-git
     package: |-
       # bin
       install -Dm755 "./{{ .ProjectName }}" "${pkgdir}/usr/bin/{{ .ProjectName }}"
