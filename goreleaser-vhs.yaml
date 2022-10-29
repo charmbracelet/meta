@@ -141,7 +141,7 @@ aurs:
     git_url: 'ssh://aur@aur.archlinux.org/{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin.git'
     depends:
       - ffmpeg
-      - ttyd-git
+      - ttyd
     package: |-
       # bin
       install -Dm755 "./{{ .ProjectName }}" "${pkgdir}/usr/bin/{{ .ProjectName }}"
