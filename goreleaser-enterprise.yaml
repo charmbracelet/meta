@@ -82,7 +82,7 @@ docker_manifests:
       - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
   - name_template: "{{ if .IsNightly }}ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:nightly{{ end }}"
     image_templates:
-      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
 
 docker_signs:
   - cmd: cosign
