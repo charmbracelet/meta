@@ -66,14 +66,12 @@ jobs:
         echo "$NFPM_GPG_KEY" > ${{ runner.temp }}/gpg.key
       env:
         NFPM_GPG_KEY: ${{ secrets.nfpm_gpg_key }}
-    - name: Set Up Snapcraft
+    - run: sudo snap install snapcraft --classic
+    - run: |
+        echo "$SNAPCRAFT_TOKEN" | snapcraft login --with -
       env:
         SNAPCRAFT_TOKEN: ${{ secrets.snapcraft_token }}
       if: env.SNAPCRAFT_TOKEN != null
-      uses: samuelmeuli/action-snapcraft@v1
-      with:
-        snapcraft_token: ${{ secrets.snapcraft_token }}
-    - uses: samuelmeuli/action-snapcraft@v1
     # https://github.com/goreleaser/goreleaser/issues/1715
     - run: |
         mkdir -p $HOME/.cache/snapcraft/download

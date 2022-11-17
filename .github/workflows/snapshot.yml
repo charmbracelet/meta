@@ -35,7 +35,7 @@ jobs:
         check-latest: true
     - uses: docker/setup-qemu-action@v2
     - uses: docker/setup-buildx-action@v2
-    - uses: samuelmeuli/action-snapcraft@v1
+    - run: sudo snap install snapcraft --classic
     # https://github.com/goreleaser/goreleaser/issues/1715
     - run: |
         mkdir -p $HOME/.cache/snapcraft/download
