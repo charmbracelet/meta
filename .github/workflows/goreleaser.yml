@@ -89,5 +89,15 @@ jobs:
         FURY_TOKEN: ${{ secrets.fury_token }}
         GPG_KEY_PATH: ${{ runner.temp }}/gpg.key
         NFPM_DEFAULT_PASSPHRASE: ${{ secrets.nfpm_passphrase }}
+        TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
+        TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
+        TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+        TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+        MASTODON_CLIENT_ID: ${{ secrets.MASTODON_CLIENT_ID }}
+        MASTODON_CLIENT_SECRET: ${{ secrets.MASTODON_CLIENT_SECRET }}
+        MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
+        DISCORD_WEBHOOK_ID: ${{ secrets.DISCORD_WEBHOOK_ID }}
+        DISCORD_WEBHOOK_TOKEN: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+
 
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
