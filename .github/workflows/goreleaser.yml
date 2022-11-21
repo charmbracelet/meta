@@ -26,6 +26,24 @@ on:
         required: false
       snapcraft_token:
         required: false
+      twitter_consumer_key:
+        required: false
+      twitter_consumer_secret:
+        required: false
+      twitter_access_token:
+        required: false
+      twitter_access_token_secret:
+        required: false
+      mastodon_client_id:
+        required: false
+      mastodon_client_secret:
+        required: false
+      mastodon_access_token:
+        required: false
+      discord_webhook_id:
+        required: false
+      discord_webhook_token:
+        required: false
 
 jobs:
   release:
@@ -89,15 +107,15 @@ jobs:
         FURY_TOKEN: ${{ secrets.fury_token }}
         GPG_KEY_PATH: ${{ runner.temp }}/gpg.key
         NFPM_DEFAULT_PASSPHRASE: ${{ secrets.nfpm_passphrase }}
-        TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
-        TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
-        TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-        TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
-        MASTODON_CLIENT_ID: ${{ secrets.MASTODON_CLIENT_ID }}
-        MASTODON_CLIENT_SECRET: ${{ secrets.MASTODON_CLIENT_SECRET }}
-        MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
-        DISCORD_WEBHOOK_ID: ${{ secrets.DISCORD_WEBHOOK_ID }}
-        DISCORD_WEBHOOK_TOKEN: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+        TWITTER_CONSUMER_KEY: ${{ secrets.twitter_consumer_key }}
+        TWITTER_CONSUMER_SECRET: ${{ secrets.twitter_consumer_secret }}
+        TWITTER_ACCESS_TOKEN: ${{ secrets.twitter_access_token }}
+        TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.twitter_access_token_secret }}
+        MASTODON_CLIENT_ID: ${{ secrets.mastodon_client_id }}
+        MASTODON_CLIENT_SECRET: ${{ secrets.mastodon_client_secret }}
+        MASTODON_ACCESS_TOKEN: ${{ secrets.mastodon_access_token }}
+        DISCORD_WEBHOOK_ID: ${{ secrets.discord_webhook_id }}
+        DISCORD_WEBHOOK_TOKEN: ${{ secrets.discord_webhook_token }}
 
 
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
