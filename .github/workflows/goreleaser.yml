@@ -84,7 +84,7 @@ jobs:
         echo "$NFPM_GPG_KEY" > ${{ runner.temp }}/gpg.key
       env:
         NFPM_GPG_KEY: ${{ secrets.nfpm_gpg_key }}
-    - run: sudo snap install snapcraft --classic
+    - run: sudo snap install snapcraft --classic --channel=6.x/stable
     - run: |
         echo "$SNAPCRAFT_TOKEN" | snapcraft login --with -
       env:
