@@ -83,6 +83,7 @@ nfpms:
     homepage: '{{ .Var.homepage }}'
     maintainer: '{{ .Var.maintainer }}'
     description: '{{ .Var.description }}'
+    file_name_template: '{{ .ConventionalFileName }}'
     license: MIT
     formats:
       - apk
