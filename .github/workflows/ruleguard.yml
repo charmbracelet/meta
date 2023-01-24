@@ -1,0 +1,49 @@
+name: ruleguard
+
+on:
+  workflow_call:
+    inputs:
+      go-version:
+        required: false
+        type: string
+        default: stable
+      cache:
+        required: false
+        type: boolean
+        default: true
+      args:
+        required: false
+        type: string
+        default: ''
+    secrets:
+      gh_pat:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    env:
+      GH_PAT: ${{ secrets.gh_pat }}
+    steps:
+      - run: |
+          git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
+        if: env.GH_PAT != null
+      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        with:
+          repository: dgryski/semgrep-go
+          path: rules
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ${{ inputs.go-version }}
+          cache: ${{ inputs.cache }}
+      - name: ruleguard
+        run: |
+          # needs to be outside of the workspace for some reason
+          mv rules ../
+          go install github.com/quasilyte/go-ruleguard/cmd/ruleguard@latest
+          go get -u github.com/quasilyte/go-ruleguard/dsl@latest
+          ruleguard -c=0 -rules ../rules/ruleguard.rules.go ${{ inputs.args }} ./...
