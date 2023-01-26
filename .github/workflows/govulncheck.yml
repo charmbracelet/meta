@@ -11,6 +11,9 @@ on:
         required: false
         type: boolean
         default: true
+      run:
+        required: false
+        type: string
     secrets:
       gh_pat:
         required: false
@@ -23,6 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_PAT: ${{ secrets.gh_pat }}
+      RUN: ${{ inputs.run }}
     steps:
       - run: |
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
@@ -32,6 +36,8 @@ jobs:
         with:
           go-version: ${{ inputs.go-version }}
           cache: ${{ inputs.cache }}
+      - run: ${{ inputs.run }}
+        if: env.RUN != null
       - name: govulncheck
         run: |
           go install golang.org/x/vuln/cmd/govulncheck@latest
