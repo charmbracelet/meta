@@ -30,6 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_PAT: ${{ secrets.gh_pat }}
+      RUN: ${{ inputs.run }}
     steps:
       - run: |
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
