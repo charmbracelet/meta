@@ -44,6 +44,6 @@ jobs:
       with:
         version: latest
         distribution: goreleaser-pro
-        args: release --rm-dist --snapshot --skip-sign --skip-sbom
+        args: release --clean --snapshot --skip-sign --skip-sbom
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

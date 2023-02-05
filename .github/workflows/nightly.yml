@@ -66,7 +66,7 @@ jobs:
       with:
         version: latest
         distribution: goreleaser-pro
-        args: release --rm-dist --nightly
+        args: release --clean --nightly
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GORELEASER_KEY: ${{ secrets.goreleaser_key }}
