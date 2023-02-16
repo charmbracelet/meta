@@ -34,7 +34,7 @@ jobs:
     steps:
       - run: |
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
-        if: env.GH_PAT != null
+        if: env.GH_PAT != ""
       - uses: actions/checkout@v3
       - uses: actions/checkout@v3
         with:
@@ -45,7 +45,7 @@ jobs:
           go-version: ${{ inputs.go-version }}
           cache: ${{ inputs.cache }}
       - run: ${{ inputs.run }}
-        if: env.RUN != null
+        if: env.RUN != ""
       - name: ruleguard
         run: |
           # needs to be outside of the workspace for some reason
