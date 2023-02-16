@@ -27,7 +27,7 @@ jobs:
         fetch-depth: 0
     - run: |
         git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
-      if: env.GH_PAT != null
+      if: ${{ env.GH_PAT != '' }}
     - uses: actions/setup-go@v3
       with:
         go-version: ${{ inputs.go_version }}

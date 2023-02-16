@@ -89,7 +89,7 @@ jobs:
         echo "$SNAPCRAFT_TOKEN" | snapcraft login --with -
       env:
         SNAPCRAFT_TOKEN: ${{ secrets.snapcraft_token }}
-      if: env.SNAPCRAFT_TOKEN != null
+      if: ${{ env.SNAPCRAFT_TOKEN != '' }}
     # https://github.com/goreleaser/goreleaser/issues/1715
     - run: |
         mkdir -p $HOME/.cache/snapcraft/download
