@@ -30,14 +30,14 @@ jobs:
     steps:
       - run: |
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
-        if: ${{ env.GH_PAT != '' }}
+        if: env.GH_PAT != null
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ inputs.go-version }}
           cache: ${{ inputs.cache }}
       - run: ${{ inputs.run }}
-        if: ${{ env.RUN != '' }}
+        if: env.RUN != null
       - name: govulncheck
         run: |
           go install golang.org/x/vuln/cmd/govulncheck@latest
