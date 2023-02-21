@@ -44,21 +44,16 @@ builds:
       - "386"
       - arm
     goarm:
-      - "6"
       - "7"
     ignore:
       - goos: windows
         goarch: arm64
-      - goos: windows
-        goarm: "6"
       - goos: windows
         goarm: "7"
       - goos: freebsd
         goarch: arm64
       - goos: freebsd
         goarch: "386"
-      - goos: freebsd
-        goarm: "6"
       - goos: freebsd
         goarm: "7"
 
