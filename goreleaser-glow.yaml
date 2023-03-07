@@ -189,14 +189,13 @@ changelog:
 
 signs:
   - cmd: cosign
-    env:
-      - COSIGN_EXPERIMENTAL=1
     certificate: '${artifact}.pem'
     args:
       - sign-blob
       - '--output-certificate=${certificate}'
       - '--output-signature=${signature}'
       - '${artifact}'
+      - '--yes'
     artifacts: checksum
     output: true
 
@@ -282,13 +281,12 @@ docker_manifests:
 
 docker_signs:
   - cmd: cosign
-    env:
-     - COSIGN_EXPERIMENTAL=1
     artifacts: manifests
     output: true
     args:
       - 'sign'
       - '${artifact}'
+      - '--yes'
 
 release:
   footer: |
