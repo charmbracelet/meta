@@ -38,8 +38,6 @@ builds:
       - darwin
       - windows
       - freebsd
-      - openbsd
-      - netbsd
     goarch:
       - amd64
       - arm64
