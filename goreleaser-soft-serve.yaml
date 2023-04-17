@@ -49,6 +49,8 @@ builds:
       - goos: windows
         goarch: arm64
       - goos: windows
+        goarch: "386"
+      - goos: windows
         goarm: "7"
 
 archives:
