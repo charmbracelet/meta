@@ -2,9 +2,9 @@ announce:
   # will run only if release is a patch release
   skip: '{{ eq .Patch 0 }}'
 
-  twitter:
-    enabled: true
-    message_template: '{{ .ProjectName }} {{ .Version }} is out! Check it out: https://github.com/charmbracelet/{{ .ProjectName }}/releases/tag/{{ .Tag }}'
+  #twitter:
+  #  enabled: true
+  #  message_template: '{{ .ProjectName }} {{ .Version }} is out! Check it out: https://github.com/charmbracelet/{{ .ProjectName }}/releases/tag/{{ .Tag }}'
 
   mastodon:
     enabled: true
