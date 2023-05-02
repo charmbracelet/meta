@@ -1,17 +1,3 @@
-variables:
-  main: ""
-  binary_name: ""
-  description: ""
-  github_url: ""
-  maintainer: ""
-  homepage: "https://charm.sh/"
-  brew_commit_author_name: ""
-  brew_commit_author_email: ""
-  brew_owner: charmbracelet
-  docker_io_registry_owner: charmcli
-  ghcr_io_registry_owner: charmbracelet
-  aur_project_name: ""
-
 before:
   hooks:
     - go mod tidy
@@ -90,10 +76,14 @@ nfpms:
         dst: /usr/share/zsh/site-functions/_{{ .ProjectName }}
       - src: ./manpages/{{ .ProjectName }}.1.gz
         dst: /usr/share/man/man1/{{ .ProjectName }}.1.gz
-      - src: ./.nfpm/soft.service
-        dst: /etc/systemd/system/soft.service
-      - src: ./.nfpm/soft.conf
-        dst: /etc/soft.conf
+      - src: ./.nfpm/soft-serve.service
+        dst: /etc/systemd/system/soft-serve.service
+      - src: ./.nfpm/soft-serve.conf
+        dst: /etc/soft-serve.conf
+      - src: ./.nfpm/sysusers.conf
+        dst: /usr/lib/sysusers.d/soft-serve.conf
+      - src: ./.nfpm/tmpfiles.conf
+        dst: /usr/lib/tmpfiles.d/soft-serve.conf
     scripts:
       postinstall: ./.nfpm/postinstall.sh
       postremove: ./.nfpm/postremove.sh
