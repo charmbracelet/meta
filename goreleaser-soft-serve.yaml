@@ -31,7 +31,7 @@ builds:
   - binary: '{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}'
     env:
       - CGO_ENABLED=0
-    main: '{{ with .main }}{{ . }}{{ else }}.{{ end }}'
+    main: '{{ with .Var.main }}{{ . }}{{ else }}.{{ end }}'
     ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit }} -X main.CommitDate={{ .CommitDate }}
     goos:
       - linux
@@ -57,12 +57,13 @@ archives:
   - format_overrides:
       - goos: windows
         format: zip
-    replacements:
-      windows: Windows
-      darwin: Darwin
-      linux: Linux
-      386: i386
-      amd64: x86_64
+    rlcp: true
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
     files:
       - README*
       - LICENSE*
@@ -89,6 +90,13 @@ nfpms:
         dst: /usr/share/zsh/site-functions/_{{ .ProjectName }}
       - src: ./manpages/{{ .ProjectName }}.1.gz
         dst: /usr/share/man/man1/{{ .ProjectName }}.1.gz
+      - src: ./.nfpm/soft.service
+        dst: /etc/systemd/system/soft.service
+      - src: ./.nfpm/soft.conf
+        dst: /etc/soft.conf
+    scripts:
+      postinstall: ./.nfpm/postinstall.sh
+      postremove: ./.nfpm/postremove.sh
     dependencies:
       - git
     rpm:
@@ -164,6 +172,7 @@ checksum:
 
 source:
   enabled: true
+  rlcp: true
 
 sboms:
   - artifacts: archive
