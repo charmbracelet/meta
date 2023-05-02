@@ -77,7 +77,7 @@ nfpms:
       - src: ./manpages/{{ .ProjectName }}.1.gz
         dst: /usr/share/man/man1/{{ .ProjectName }}.1.gz
       - src: ./.nfpm/soft-serve.service
-        dst: /etc/systemd/system/soft-serve.service
+        dst: /usr/lib/systemd/system/soft-serve.service
       - src: ./.nfpm/soft-serve.conf
         dst: /etc/soft-serve.conf
       - src: ./.nfpm/sysusers.conf
