@@ -1,3 +1,17 @@
+variables:
+  main: ""
+  binary_name: ""
+  description: ""
+  github_url: ""
+  maintainer: ""
+  homepage: "https://charm.sh/"
+  brew_commit_author_name: ""
+  brew_commit_author_email: ""
+  brew_owner: charmbracelet
+  docker_io_registry_owner: charmcli
+  ghcr_io_registry_owner: charmbracelet
+  aur_project_name: ""
+
 before:
   hooks:
     - go mod tidy
