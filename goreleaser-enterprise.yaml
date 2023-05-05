@@ -2,8 +2,6 @@ variables:
   main: ""
   binary_name: ""
   description: ""
-  github_url: ""
-  homepage: "https://charm.sh/"
   ghcr_io_registry_owner: charmbracelet
 
 before:
@@ -14,7 +12,7 @@ builds:
   - binary: '{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}'
     env:
       - CGO_ENABLED=0
-    main: '{{ with .main }}{{ . }}{{ else }}.{{ end }}'
+    main: '{{ with .Var.main }}{{ . }}{{ else }}.{{ end }}'
     ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit }} -X main.CommitDate={{ .CommitDate }}
     goos:
       - linux
@@ -26,6 +24,7 @@ checksum:
 
 source:
   enabled: true
+  rlcp: true
 
 sboms:
   - artifacts: archive
