@@ -12,4 +12,7 @@ jobs:
       - uses: goreleaser/goreleaser-action@v4
         with:
           distribution: goreleaser-pro
-          args: check -q --glob 'goreleaser*.yaml'
+          install-only: true
+      - name: check
+        run: |
+          goreleaser check -q goreleaser*.yaml
