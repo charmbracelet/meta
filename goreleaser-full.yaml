@@ -30,7 +30,7 @@ builds:
   - binary: '{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}'
     env:
       - CGO_ENABLED=0
-    main: '{{ with .Var.Main }}{{ . }}{{ else }}.{{ end }}'
+    main: '{{ with .Var.main }}{{ . }}{{ else }}.{{ end }}'
     ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit }} -X main.CommitDate={{ .CommitDate }}
     goos:
       - linux
