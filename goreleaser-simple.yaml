@@ -2,14 +2,11 @@ variables:
   main: ""
   binary_name: ""
   description: ""
-  github_url: ""
   maintainer: ""
   homepage: "https://charm.sh/"
   brew_commit_author_name: ""
   brew_commit_author_email: ""
   brew_owner: charmbracelet
-  docker_io_registry_owner: charmcli
-  ghcr_io_registry_owner: charmbracelet
   aur_project_name: ""
 
 gomod:
@@ -19,7 +16,7 @@ builds:
   - binary: '{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}'
     env:
       - CGO_ENABLED=0
-    main: '{{ with .main }}{{ . }}{{ else }}.{{ end }}'
+    main: '{{ with .Var.main }}{{ . }}{{ else }}.{{ end }}'
     ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit }} -X main.CommitDate={{ .CommitDate }}
     goos:
       - linux
@@ -45,12 +42,13 @@ archives:
   - format_overrides:
       - goos: windows
         format: zip
-    replacements:
-      windows: Windows
-      darwin: Darwin
-      linux: Linux
-      386: i386
-      amd64: x86_64
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+    rlcp: true
     files:
       - README*
       - LICENSE*
@@ -88,17 +86,17 @@ brews:
     homepage: '{{ .Var.homepage }}'
     description: '{{ .Var.description }}'
 
-scoop:
-  bucket:
-    owner: '{{ .Var.brew_owner }}'
-    name: scoop-bucket
-    token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-  commit_author:
-    name: '{{ .Var.brew_commit_author_name }}'
-    email: '{{ .Var.brew_commit_author_email }}'
-  homepage: '{{ .Var.homepage }}'
-  description: '{{ .Var.description }}'
-  license: MIT
+scoops:
+  - bucket:
+      owner: '{{ .Var.brew_owner }}'
+      name: scoop-bucket
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    commit_author:
+      name: '{{ .Var.brew_commit_author_name }}'
+      email: '{{ .Var.brew_commit_author_email }}'
+    homepage: '{{ .Var.homepage }}'
+    description: '{{ .Var.description }}'
+    license: MIT
 
 aurs:
   - maintainers: ['{{ .Var.maintainer }}']
@@ -120,6 +118,7 @@ checksum:
 
 source:
   enabled: true
+  rlcp: true
 
 sboms:
   - artifacts: archive
