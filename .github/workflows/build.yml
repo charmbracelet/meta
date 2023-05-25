@@ -38,10 +38,11 @@ jobs:
       GO111MODULE: "on"
       GH_PAT: ${{ secrets.gh_pat }}
     steps:
+      - run: |
+          git config --global core.autocrlf false
+          git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
       - name: Checkout code
         uses: actions/checkout@v3
-      - run: |
-          git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
         if: env.GH_PAT != null
       - name: Install Go
         uses: actions/setup-go@v4
