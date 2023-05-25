@@ -39,11 +39,11 @@ jobs:
       GH_PAT: ${{ secrets.gh_pat }}
     steps:
       - run: |
-          git config --global core.autocrlf false
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
+        if: env.GH_PAT != null
+      - run: git config --global core.autocrlf false
       - name: Checkout code
         uses: actions/checkout@v3
-        if: env.GH_PAT != null
       - name: Install Go
         uses: actions/setup-go@v4
         with:
