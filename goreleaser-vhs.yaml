@@ -27,10 +27,10 @@ gomod:
   proxy: true
 
 builds:
-  - binary: '{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}'
+  - binary: "{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}"
     env:
       - CGO_ENABLED=0
-    main: '{{ with .Var.main }}{{ . }}{{ else }}.{{ end }}'
+    main: "{{ with .Var.main }}{{ . }}{{ else }}.{{ end }}"
     ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit }} -X main.CommitDate={{ .CommitDate }}
     goos:
       - linux
@@ -55,6 +55,7 @@ archives:
         format: zip
     name_template: >-
       {{ .ProjectName }}_
+      {{- .Version }}_
       {{- title .Os }}_
       {{- if eq .Arch "amd64" }}x86_64
       {{- else if eq .Arch "386" }}i386
@@ -68,10 +69,10 @@ archives:
 
 nfpms:
   - vendor: charmbracelet
-    homepage: '{{ .Var.homepage }}'
-    maintainer: '{{ .Var.maintainer }}'
-    description: '{{ .Var.description }}'
-    file_name_template: '{{ .ConventionalFileName }}'
+    homepage: "{{ .Var.homepage }}"
+    maintainer: "{{ .Var.maintainer }}"
+    description: "{{ .Var.description }}"
+    file_name_template: "{{ .ConventionalFileName }}"
     license: MIT
     formats:
       - apk
@@ -97,19 +98,19 @@ nfpms:
         key_file: '{{ if ne (index .Env "GPG_KEY_PATH") "" }}{{ .Env.GPG_KEY_PATH }}{{ else }}{{ end }}'
 
 furies:
-  - account: '{{ with .Env.FURY_TOKEN }}charmcli{{ else }}{{ end }}'
+  - account: "{{ with .Env.FURY_TOKEN }}charmcli{{ else }}{{ end }}"
     secret_name: FURY_TOKEN
 
 brews:
   - tap:
-      owner: '{{ .Var.brew_owner }}'
+      owner: "{{ .Var.brew_owner }}"
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     commit_author:
-      name: '{{ .Var.brew_commit_author_name }}'
-      email: '{{ .Var.brew_commit_author_email }}'
-    homepage: '{{ .Var.homepage }}'
-    description: '{{ .Var.description }}'
+      name: "{{ .Var.brew_commit_author_name }}"
+      email: "{{ .Var.brew_commit_author_email }}"
+    homepage: "{{ .Var.homepage }}"
+    description: "{{ .Var.description }}"
     dependencies:
       - name: ffmpeg
       - name: ttyd
@@ -122,24 +123,24 @@ brews:
 
 scoops:
   - bucket:
-      owner: '{{ .Var.brew_owner }}'
+      owner: "{{ .Var.brew_owner }}"
       name: scoop-bucket
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     commit_author:
-      name: '{{ .Var.brew_commit_author_name }}'
-      email: '{{ .Var.brew_commit_author_email }}'
-    homepage: '{{ .Var.homepage }}'
-    description: '{{ .Var.description }}'
+      name: "{{ .Var.brew_commit_author_name }}"
+      email: "{{ .Var.brew_commit_author_email }}"
+    homepage: "{{ .Var.homepage }}"
+    description: "{{ .Var.description }}"
     license: MIT
 
 aurs:
-  - maintainers: ['{{ .Var.maintainer }}']
-    description: '{{ .Var.description }}'
-    name: '{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin'
-    homepage: '{{ .Var.homepage }}'
+  - maintainers: ["{{ .Var.maintainer }}"]
+    description: "{{ .Var.description }}"
+    name: "{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin"
+    homepage: "{{ .Var.homepage }}"
     license: MIT
-    private_key: '{{ .Env.AUR_KEY }}'
-    git_url: 'ssh://aur@aur.archlinux.org/{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin.git'
+    private_key: "{{ .Env.AUR_KEY }}"
+    git_url: "ssh://aur@aur.archlinux.org/{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin.git"
     depends:
       - ffmpeg
       - ttyd
@@ -160,7 +161,7 @@ aurs:
       install -Dm644 "./manpages/{{ .ProjectName }}.1.gz" "${pkgdir}/usr/share/man/man1/{{ .ProjectName }}.1.gz"
 
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
 
 source:
   enabled: true
@@ -182,24 +183,24 @@ changelog:
   use: github
   filters:
     exclude:
-    - '^test:'
-    - '^chore'
-    - 'merge conflict'
-    - Merge pull request
-    - Merge remote-tracking branch
-    - Merge branch
-    - go mod tidy
+      - "^test:"
+      - "^chore"
+      - "merge conflict"
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+      - go mod tidy
   groups:
     - title: Dependency updates
       regexp: "^.*feat\\(deps\\)*:+.*$"
       order: 300
-    - title: 'New Features'
+    - title: "New Features"
       regexp: "^.*feat[(\\w)]*:+.*$"
       order: 100
-    - title: 'Bug fixes'
+    - title: "Bug fixes"
       regexp: "^.*fix[(\\w)]*:+.*$"
       order: 200
-    - title: 'Documentation updates'
+    - title: "Documentation updates"
       regexp: "^.*docs[(\\w)]*:+.*$"
       order: 400
     - title: Other work
@@ -207,13 +208,13 @@ changelog:
 
 signs:
   - cmd: cosign
-    certificate: '${artifact}.pem'
+    certificate: "${artifact}.pem"
     args:
       - sign-blob
-      - '--output-certificate=${certificate}'
-      - '--output-signature=${signature}'
-      - '${artifact}'
-      - '--yes'
+      - "--output-certificate=${certificate}"
+      - "--output-signature=${signature}"
+      - "${artifact}"
+      - "--yes"
     artifacts: checksum
     output: true
 
@@ -280,9 +281,9 @@ docker_signs:
     artifacts: manifests
     output: true
     args:
-      - 'sign'
-      - '${artifact}'
-      - '--yes'
+      - "sign"
+      - "${artifact}"
+      - "--yes"
 
 release:
   footer: |
