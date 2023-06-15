@@ -54,6 +54,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       if: ${{ inputs.upload_artifact == true && always() }}
       with:
+        retention-days: 7
         name: dist
         path: |
           dist
