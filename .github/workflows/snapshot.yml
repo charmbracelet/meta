@@ -7,6 +7,10 @@ on:
         required: false
         type: string
         default: ^1
+      upload_artifact:
+        required: false
+        type: boolean
+        default: true
     secrets:
       goreleaser_key:
         required: true
@@ -47,3 +51,9 @@ jobs:
         args: release --clean --snapshot --skip-sign --skip-sbom
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/upload-artifact@v3
+      if: ${{ inputs.upload_artifact == true && always() }}
+      with:
+        name: dist
+        path: |
+          dist

@@ -7,6 +7,10 @@ on:
         required: false
         type: boolean
         default: true
+      upload_artifact:
+        required: false
+        type: boolean
+        default: true
       go_version:
         required: false
         type: string
@@ -71,6 +75,13 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GORELEASER_KEY: ${{ secrets.goreleaser_key }}
         FURY_TOKEN: ${{ secrets.fury_token }}
+
+    - uses: actions/upload-artifact@v3
+      if: ${{ inputs.upload_artifact == true && always() }}
+      with:
+        name: dist
+        path: |
+          dist
 
     - uses: actions/upload-artifact@v3
       if: inputs.upload_artifacts == true
