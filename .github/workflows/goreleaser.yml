@@ -59,73 +59,73 @@ jobs:
     env:
       DOCKER_CLI_EXPERIMENTAL: enabled
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    - run: |
-        git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
-    - uses: actions/setup-go@v4
-      with:
-        go-version: ${{ inputs.go_version }}
-        cache: true
-        check-latest: true
-    - uses: sigstore/cosign-installer@v3.1.0
-    - uses: anchore/sbom-action/download-syft@v0.14.3
-    - uses: docker/setup-qemu-action@v2
-    - uses: docker/setup-buildx-action@v2
-    - uses: docker/login-action@v2
-      name: ghcr.io login
-      with:
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    - uses: docker/login-action@v2
-      name: docker.io login
-      with:
-        username: ${{ secrets.docker_username }}
-        password: ${{ secrets.docker_token }}
-    - run: |
-        echo "$NFPM_GPG_KEY" > ${{ runner.temp }}/gpg.key
-      env:
-        NFPM_GPG_KEY: ${{ secrets.nfpm_gpg_key }}
-    - run: sudo snap install snapcraft --classic --channel=6.x/stable
-    - run: |
-        echo "$SNAPCRAFT_TOKEN" | snapcraft login --with -
-      env:
-        SNAPCRAFT_TOKEN: ${{ secrets.snapcraft_token }}
-      if: env.SNAPCRAFT_TOKEN != null
-    # https://github.com/goreleaser/goreleaser/issues/1715
-    - run: |
-        mkdir -p $HOME/.cache/snapcraft/download
-        mkdir -p $HOME/.cache/snapcraft/stage-packages
-    - uses: goreleaser/goreleaser-action@v4
-      with:
-        version: latest
-        distribution: goreleaser-pro
-        args: release --clean
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.gh_pat }}
-        GORELEASER_KEY: ${{ secrets.goreleaser_key }}
-        AUR_KEY: ${{ secrets.aur_key }}
-        FURY_TOKEN: ${{ secrets.fury_token }}
-        GPG_KEY_PATH: ${{ runner.temp }}/gpg.key
-        NFPM_DEFAULT_PASSPHRASE: ${{ secrets.nfpm_passphrase }}
-        TWITTER_CONSUMER_KEY: ${{ secrets.twitter_consumer_key }}
-        TWITTER_CONSUMER_SECRET: ${{ secrets.twitter_consumer_secret }}
-        TWITTER_ACCESS_TOKEN: ${{ secrets.twitter_access_token }}
-        TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.twitter_access_token_secret }}
-        MASTODON_CLIENT_ID: ${{ secrets.mastodon_client_id }}
-        MASTODON_CLIENT_SECRET: ${{ secrets.mastodon_client_secret }}
-        MASTODON_ACCESS_TOKEN: ${{ secrets.mastodon_access_token }}
-        DISCORD_WEBHOOK_ID: ${{ secrets.discord_webhook_id }}
-        DISCORD_WEBHOOK_TOKEN: ${{ secrets.discord_webhook_token }}
-    - uses: actions/upload-artifact@v3
-      if: ${{ inputs.upload_artifact == true && always() }}
-      with:
-        retention-days: 30
-        name: dist
-        path: |
-          dist
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - run: |
+          git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
+      - uses: actions/setup-go@v4
+        with:
+          go-version: ${{ inputs.go_version }}
+          cache: true
+          check-latest: true
+      - uses: sigstore/cosign-installer@v3.1.0
+      - uses: anchore/sbom-action/download-syft@v0.14.3
+      - uses: docker/setup-qemu-action@v2
+      - uses: docker/setup-buildx-action@v2
+      - uses: docker/login-action@v2
+        name: ghcr.io login
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/login-action@v2
+        name: docker.io login
+        with:
+          username: ${{ secrets.docker_username }}
+          password: ${{ secrets.docker_token }}
+      - run: |
+          echo "$NFPM_GPG_KEY" > ${{ runner.temp }}/gpg.key
+        env:
+          NFPM_GPG_KEY: ${{ secrets.nfpm_gpg_key }}
+      - run: sudo snap install snapcraft --classic --channel=6.x/stable
+      - run: |
+          echo "$SNAPCRAFT_TOKEN" | snapcraft login --with -
+        env:
+          SNAPCRAFT_TOKEN: ${{ secrets.snapcraft_token }}
+        if: env.SNAPCRAFT_TOKEN != null
+      # https://github.com/goreleaser/goreleaser/issues/1715
+      - run: |
+          mkdir -p $HOME/.cache/snapcraft/download
+          mkdir -p $HOME/.cache/snapcraft/stage-packages
+      - uses: goreleaser/goreleaser-action@v4
+        with:
+          version: latest
+          distribution: goreleaser-pro
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.gh_pat }}
+          GORELEASER_KEY: ${{ secrets.goreleaser_key }}
+          AUR_KEY: ${{ secrets.aur_key }}
+          FURY_TOKEN: ${{ secrets.fury_token }}
+          GPG_KEY_PATH: ${{ runner.temp }}/gpg.key
+          NFPM_DEFAULT_PASSPHRASE: ${{ secrets.nfpm_passphrase }}
+          TWITTER_CONSUMER_KEY: ${{ secrets.twitter_consumer_key }}
+          TWITTER_CONSUMER_SECRET: ${{ secrets.twitter_consumer_secret }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.twitter_access_token }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.twitter_access_token_secret }}
+          MASTODON_CLIENT_ID: ${{ secrets.mastodon_client_id }}
+          MASTODON_CLIENT_SECRET: ${{ secrets.mastodon_client_secret }}
+          MASTODON_ACCESS_TOKEN: ${{ secrets.mastodon_access_token }}
+          DISCORD_WEBHOOK_ID: ${{ secrets.discord_webhook_id }}
+          DISCORD_WEBHOOK_TOKEN: ${{ secrets.discord_webhook_token }}
+      - uses: actions/upload-artifact@v3
+        if: ${{ inputs.upload_artifact == true && always() }}
+        with:
+          retention-days: 30
+          name: dist
+          path: |
+            dist
 
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json

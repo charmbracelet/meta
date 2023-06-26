@@ -3,7 +3,6 @@ name: pr-comment
 on:
   workflow_call:
 
-
 jobs:
   pr-comment:
     if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'

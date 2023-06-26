@@ -26,35 +26,35 @@ jobs:
       DOCKER_CLI_EXPERIMENTAL: enabled
       GH_PAT: ${{ secrets.gh_pat }}
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    - run: |
-        git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
-      if: env.GH_PAT != null
-    - uses: actions/setup-go@v4
-      with:
-        go-version: ${{ inputs.go_version }}
-        cache: true
-        check-latest: true
-    - uses: docker/setup-qemu-action@v2
-    - uses: docker/setup-buildx-action@v2
-    - run: sudo snap install snapcraft --classic
-    # https://github.com/goreleaser/goreleaser/issues/1715
-    - run: |
-        mkdir -p $HOME/.cache/snapcraft/download
-        mkdir -p $HOME/.cache/snapcraft/stage-packages
-    - uses: goreleaser/goreleaser-action@v4
-      with:
-        version: latest
-        distribution: goreleaser-pro
-        args: release --clean --snapshot --skip-sign --skip-sbom
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - uses: actions/upload-artifact@v3
-      if: ${{ inputs.upload_artifact == true && always() }}
-      with:
-        retention-days: 7
-        name: dist
-        path: |
-          dist
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - run: |
+          git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
+        if: env.GH_PAT != null
+      - uses: actions/setup-go@v4
+        with:
+          go-version: ${{ inputs.go_version }}
+          cache: true
+          check-latest: true
+      - uses: docker/setup-qemu-action@v2
+      - uses: docker/setup-buildx-action@v2
+      - run: sudo snap install snapcraft --classic
+      # https://github.com/goreleaser/goreleaser/issues/1715
+      - run: |
+          mkdir -p $HOME/.cache/snapcraft/download
+          mkdir -p $HOME/.cache/snapcraft/stage-packages
+      - uses: goreleaser/goreleaser-action@v4
+        with:
+          version: latest
+          distribution: goreleaser-pro
+          args: release --clean --snapshot --skip-sign --skip-sbom
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v3
+        if: ${{ inputs.upload_artifact == true && always() }}
+        with:
+          retention-days: 7
+          name: dist
+          path: |
+            dist
