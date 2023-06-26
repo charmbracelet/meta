@@ -14,7 +14,7 @@ on:
       args:
         required: false
         type: string
-        default: ''
+        default: ""
       run:
         required: false
         type: string
