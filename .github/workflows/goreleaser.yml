@@ -7,6 +7,10 @@ on:
         required: false
         type: string
         default: ^1
+      upload_artifact:
+        required: false
+        type: boolean
+        default: true
     secrets:
       docker_username:
         required: true
@@ -116,6 +120,12 @@ jobs:
         MASTODON_ACCESS_TOKEN: ${{ secrets.mastodon_access_token }}
         DISCORD_WEBHOOK_ID: ${{ secrets.discord_webhook_id }}
         DISCORD_WEBHOOK_TOKEN: ${{ secrets.discord_webhook_token }}
-
+    - uses: actions/upload-artifact@v3
+      if: ${{ inputs.upload_artifact == true && always() }}
+      with:
+        retention-days: 30
+        name: dist
+        path: |
+          dist
 
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
