@@ -63,7 +63,6 @@ archives:
       {{- if eq .Arch "amd64" }}x86_64
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
-    rlcp: true
     files:
       - README*
       - LICENSE*
@@ -191,7 +190,6 @@ checksum:
 
 source:
   enabled: true
-  rlcp: true
 
 sboms:
   - artifacts: archive

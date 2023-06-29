@@ -56,7 +56,6 @@ archives:
   - format_overrides:
       - goos: windows
         format: zip
-    rlcp: true
     name_template: >-
       {{ .ProjectName }}_
       {{- .Version }}_
@@ -192,7 +191,6 @@ checksum:
 
 source:
   enabled: true
-  rlcp: true
 
 sboms:
   - artifacts: archive
