@@ -9,10 +9,10 @@ before:
     - go mod tidy
 
 builds:
-  - binary: '{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}'
+  - binary: "{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}"
     env:
       - CGO_ENABLED=0
-    main: '{{ with .Var.main }}{{ . }}{{ else }}.{{ end }}'
+    main: "{{ with .Var.main }}{{ . }}{{ else }}.{{ end }}"
     ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit }} -X main.CommitDate={{ .CommitDate }}
     goos:
       - linux
@@ -20,7 +20,7 @@ builds:
       - amd64
 
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
 
 source:
   enabled: true
@@ -39,13 +39,13 @@ nightly:
 
 signs:
   - cmd: cosign
-    certificate: '${artifact}.pem'
+    certificate: "${artifact}.pem"
     args:
       - sign-blob
-      - '--output-certificate=${certificate}'
-      - '--output-signature=${signature}'
-      - '${artifact}'
-      - '--yes'
+      - "--output-certificate=${certificate}"
+      - "--output-signature=${signature}"
+      - "${artifact}"
+      - "--yes"
     artifacts: checksum
     output: true
 
@@ -87,9 +87,9 @@ docker_signs:
     artifacts: manifests
     output: true
     args:
-      - 'sign'
-      - '${artifact}'
-      - '--yes'
+      - "sign"
+      - "${artifact}"
+      - "--yes"
 
 release:
   footer: |

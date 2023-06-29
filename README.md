@@ -107,11 +107,10 @@ jobs:
     uses: charmbracelet/meta/.github/workflows/pr-comment.yml@main
 ```
 
-***
+---
 
 Part of [Charm](https://charm.sh).
 
 <a href="https://charm.sh/"><img alt="The Charm logo" src="https://stuff.charm.sh/charm-badge.jpg" width="400"></a>
 
-Charm热爱开源 • Charm loves open source
-
+Charm 热爱开源 • Charm loves open source

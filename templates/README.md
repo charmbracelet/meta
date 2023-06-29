@@ -1,5 +1,4 @@
-Project Name
-============
+# Project Name
 
 <p>
     <img src="https://stuff.charm.sh/project.png" width="400" alt="Project logo"><br>
@@ -19,6 +18,7 @@ About the tool
 ## Installation
 
 ### Package Manager
+
 ... is a single binary called `...`. You can get it from a package
 manager:
 
@@ -41,6 +41,7 @@ macOS, and Windows.
 [releases]: https://github.com/charmbracelet/<product>/releases
 
 ### Go
+
 Or just install it with `go`:
 
 ```bash
@@ -65,18 +66,18 @@ go build [./cmd/product]
 
 We’d love to hear your thoughts on this project. Feel free to drop us a note!
 
-* [Twitter](https://twitter.com/charmcli)
-* [The Fediverse](https://mastodon.social/@charmcli)
-* [Discord](https://charm.sh/chat)
+- [Twitter](https://twitter.com/charmcli)
+- [The Fediverse](https://mastodon.social/@charmcli)
+- [Discord](https://charm.sh/chat)
 
 ## License
 
 [MIT](https://github.com/charmbracelet/meta/raw/main/LICENSE)
 
-***
+---
 
 Part of [Charm](https://charm.sh).
 
 <a href="https://charm.sh/"><img alt="The Charm logo" src="https://stuff.charm.sh/charm-badge.jpg" width="400"></a>
 
-Charm热爱开源 • Charm loves open source
+Charm 热爱开源 • Charm loves open source

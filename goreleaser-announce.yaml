@@ -1,6 +1,6 @@
 announce:
   # will run only if release is a patch release
-  skip: '{{ eq .Patch 0 }}'
+  skip: "{{ eq .Patch 0 }}"
 
   #twitter:
   #  enabled: true
@@ -8,12 +8,11 @@ announce:
 
   mastodon:
     enabled: true
-    message_template: '{{ .ProjectName }} {{ .Version }} is out! Check it out: https://github.com/charmbracelet/{{ .ProjectName }}/releases/tag/{{ .Tag }}'
+    message_template: "{{ .ProjectName }} {{ .Version }} is out! Check it out: https://github.com/charmbracelet/{{ .ProjectName }}/releases/tag/{{ .Tag }}"
     server: https://fosstodon.org
 
   discord:
     enabled: true
-    message_template: '{{ .ProjectName }} {{ .Version }} is out! Check it out: https://github.com/charmbracelet/{{ .ProjectName }}/releases/tag/{{ .Tag }}'
-
+    message_template: "{{ .ProjectName }} {{ .Version }} is out! Check it out: https://github.com/charmbracelet/{{ .ProjectName }}/releases/tag/{{ .Tag }}"
 # yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
 
