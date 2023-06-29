@@ -63,7 +63,6 @@ archives:
       {{- if eq .Arch "amd64" }}x86_64
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
-    rlcp: true
     files:
       - README*
       - LICENSE*
@@ -102,7 +101,7 @@ furies:
     secret_name: FURY_TOKEN
 
 brews:
-  - tap:
+  - repository:
       owner: "{{ .Var.brew_owner }}"
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
@@ -119,7 +118,7 @@ brews:
       man1.install "manpages/{{ .ProjectName }}.1.gz"
 
 scoops:
-  - bucket:
+  - repository:
       owner: "{{ .Var.brew_owner }}"
       name: scoop-bucket
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
@@ -159,7 +158,6 @@ checksum:
 
 source:
   enabled: true
-  rlcp: true
 
 sboms:
   - artifacts: archive
