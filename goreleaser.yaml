@@ -112,6 +112,39 @@ aurs:
     private_key: "{{ .Env.AUR_KEY }}"
     git_url: "ssh://aur@aur.archlinux.org/{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin.git"
 
+nix:
+  - repository:
+      owner: "{{ .Var.brew_owner }}"
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+      name: nur
+    homepage: "{{ .Var.homepage }}"
+    description: "{{ .Var.description }}"
+    license: mit
+    install: |-
+      mkdir -p $out/bin
+      cp -vr ./{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }} $out/bin/{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}
+      installManPage ./manpages/{{.ProjectName}}.1.gz
+      installShellCompletion ./completions/*
+
+winget:
+  - publisher: charmbracelet
+    license: MIT
+    copyright: Charmbracelet, Inc
+    homepage: "{{ .Var.homepage }}"
+    short_description: "{{ .Var.description }}"
+    repository:
+      owner: "{{ .Var.brew_owner }}"
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+      name: winget-pkgs
+      branch: "{{.ProjectName}}-{{.Version}}"
+      pull_request:
+        enabled: true
+        draft: true
+        base:
+          owner: microsoft
+          name: winget-pkgs
+          branch: master
+
 checksum:
   name_template: "checksums.txt"
 
