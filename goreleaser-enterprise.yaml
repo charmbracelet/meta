@@ -24,7 +24,6 @@ checksum:
 
 source:
   enabled: true
-  rlcp: true
 
 sboms:
   - artifacts: archive
