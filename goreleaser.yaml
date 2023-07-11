@@ -80,7 +80,7 @@ furies:
     secret_name: FURY_TOKEN
 
 brews:
-  - tap:
+  - repository:
       owner: "{{ .Var.brew_owner }}"
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
@@ -91,7 +91,7 @@ brews:
     description: "{{ .Var.description }}"
 
 scoops:
-  - bucket:
+  - repository:
       owner: "{{ .Var.brew_owner }}"
       name: scoop-bucket
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"

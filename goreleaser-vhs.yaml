@@ -101,7 +101,7 @@ furies:
     secret_name: FURY_TOKEN
 
 brews:
-  - tap:
+  - repository:
       owner: "{{ .Var.brew_owner }}"
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
@@ -121,7 +121,7 @@ brews:
       man1.install "manpages/{{ .ProjectName }}.1.gz"
 
 scoops:
-  - bucket:
+  - repository:
       owner: "{{ .Var.brew_owner }}"
       name: scoop-bucket
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
