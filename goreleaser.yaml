@@ -119,11 +119,6 @@ nix:
     homepage: "{{ .Var.homepage }}"
     description: "{{ .Var.description }}"
     license: mit
-    install: |-
-      mkdir -p $out/bin
-      cp -vr ./{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }} $out/bin/{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}
-      installManPage ./manpages/{{.ProjectName}}.1.gz
-      installShellCompletion ./completions/*
 
 winget:
   - publisher: charmbracelet
