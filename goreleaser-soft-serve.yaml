@@ -146,6 +146,9 @@ scoops:
     homepage: "{{ .Var.homepage }}"
     description: "{{ .Var.description }}"
     license: MIT
+    depends:
+      - git
+      - bash
 
 aurs:
   - maintainers: ["{{ .Var.maintainer }}"]
