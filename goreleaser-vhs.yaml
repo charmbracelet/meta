@@ -169,11 +169,11 @@ winget:
 aurs:
   - maintainers: ["{{ .Var.maintainer }}"]
     description: "{{ .Var.description }}"
-    name: "{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin"
+    name: "{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}-bin{{ end }}"
     homepage: "{{ .Var.homepage }}"
     license: MIT
     private_key: "{{ .Env.AUR_KEY }}"
-    git_url: "ssh://aur@aur.archlinux.org/{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin.git"
+    git_url: "ssh://aur@aur.archlinux.org/{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}-bin{{ end }}.git"
     depends:
       - ffmpeg
       - ttyd
