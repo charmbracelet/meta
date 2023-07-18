@@ -1,0 +1,34 @@
+variables:
+  main: ""
+  binary_name: ""
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - binary: "{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}"
+    env:
+      - CGO_ENABLED=0
+    main: "{{ with .Var.main }}{{ . }}{{ else }}.{{ end }}"
+    ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit }} -X main.CommitDate={{ .CommitDate }}
+    goos:
+      - linux
+      - darwin
+      - windows
+      - freebsd
+      - openbsd
+      - netbsd
+    goarch:
+      - amd64
+      - arm64
+      - "386"
+      - arm
+    goarm:
+      - "7"
+    ignore:
+      - goos: windows
+        goarch: arm64
+      - goos: windows
+        goarm: "7"
+# yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json

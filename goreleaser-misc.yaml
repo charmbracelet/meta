@@ -1,0 +1,29 @@
+checksum:
+  name_template: "checksums.txt"
+
+source:
+  enabled: true
+
+sboms:
+  - artifacts: archive
+  - id: source
+    artifacts: source
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-snapshot"
+
+nightly:
+  name_template: "{{ incpatch .Version }}-devel"
+
+signs:
+  - cmd: cosign
+    certificate: "${artifact}.pem"
+    args:
+      - sign-blob
+      - "--output-certificate=${certificate}"
+      - "--output-signature=${signature}"
+      - "${artifact}"
+      - "--yes"
+    artifacts: checksum
+    output: true
+# yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
