@@ -106,12 +106,12 @@ jobs:
           mkdir -p $HOME/.cache/snapcraft/download
           mkdir -p $HOME/.cache/snapcraft/stage-packages
       - run: |
-          wget https://github.com/charmbracelet/meta/blob/main/${{ inputs.footer_filename }} -O $HOME/.cache/footer.md
+          wget https://github.com/charmbracelet/meta/blob/main/${{ inputs.footer_filename }} -O /tmp/footer.md
       - uses: goreleaser/goreleaser-action@v4
         with:
           version: latest
           distribution: goreleaser-pro
-          args: release --clean --release-footer-tmpl $HOME/.cache/footer.md
+          args: release --clean --release-footer-tmpl /tmp/footer.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.gh_pat }}
