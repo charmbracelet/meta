@@ -115,11 +115,11 @@ brews:
       - name: ffmpeg
       - name: ttyd
     install: |-
-      bin.install "{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}"
-      bash_completion.install "completions/{{ .ProjectName }}.bash" => "{{ .ProjectName }}"
-      zsh_completion.install "completions/{{ .ProjectName }}.zsh" => "_{{ .ProjectName }}"
-      fish_completion.install "completions/{{ .ProjectName }}.fish"
-      man1.install "manpages/{{ .ProjectName }}.1.gz"
+      bin.install "{{ .ProjectName }}/{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}"
+      bash_completion.install "{{ .ProjectName }}/completions/{{ .ProjectName }}.bash" => "{{ .ProjectName }}"
+      zsh_completion.install "{{ .ProjectName }}/completions/{{ .ProjectName }}.zsh" => "_{{ .ProjectName }}"
+      fish_completion.install "{{ .ProjectName }}/completions/{{ .ProjectName }}.fish"
+      man1.install "{{ .ProjectName }}/manpages/{{ .ProjectName }}.1.gz"
 
 scoops:
   - repository:
@@ -144,9 +144,9 @@ nix:
     path: pkgs/{{.ProjectName}}/default.nix
     install: |-
       mkdir -p $out/bin
-      cp -vr ./{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }} $out/bin/{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}
-      installManPage ./manpages/{{.ProjectName}}.1.gz
-      installShellCompletion ./completions/*
+      cp -vr ./{{ .ProjectName }}/{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }} $out/bin/{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}
+      installManPage ./{{ .ProjectName }}/manpages/{{.ProjectName}}.1.gz
+      installShellCompletion ./{{ .ProjectName }}/completions/*
 
 winget:
   - publisher: charmbracelet
@@ -180,19 +180,19 @@ aurs:
       - ttyd
     package: |-
       # bin
-      install -Dm755 "./{{ .ProjectName }}" "${pkgdir}/usr/bin/{{ .ProjectName }}"
+      install -Dm755 "./{{ .ProjectName }}/{{ .ProjectName }}" "${pkgdir}/usr/bin/{{ .ProjectName }}"
       # license
       mkdir -p "${pkgdir}/usr/share/licenses/{{ .ProjectName }}/"
-      install -Dm644 ./LICENSE* "${pkgdir}/usr/share/licenses/{{ .ProjectName }}/"
+      install -Dm644 ./{{ .ProjectName }}/LICENSE* "${pkgdir}/usr/share/licenses/{{ .ProjectName }}/"
       # completions
       mkdir -p "${pkgdir}/usr/share/bash-completion/completions/"
       mkdir -p "${pkgdir}/usr/share/zsh/site-functions/"
       mkdir -p "${pkgdir}/usr/share/fish/vendor_completions.d/"
-      install -Dm644 "./completions/{{ .ProjectName }}.bash" "${pkgdir}/usr/share/bash-completion/completions/{{ .ProjectName }}"
-      install -Dm644 "./completions/{{ .ProjectName }}.zsh" "${pkgdir}/usr/share/zsh/site-functions/_{{ .ProjectName }}"
-      install -Dm644 "./completions/{{ .ProjectName }}.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/{{ .ProjectName }}.fish"
+      install -Dm644 "./{{ .ProjectName }}/completions/{{ .ProjectName }}.bash" "${pkgdir}/usr/share/bash-completion/completions/{{ .ProjectName }}"
+      install -Dm644 "./{{ .ProjectName }}/completions/{{ .ProjectName }}.zsh" "${pkgdir}/usr/share/zsh/site-functions/_{{ .ProjectName }}"
+      install -Dm644 "./{{ .ProjectName }}/completions/{{ .ProjectName }}.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/{{ .ProjectName }}.fish"
       # man pages
-      install -Dm644 "./manpages/{{ .ProjectName }}.1.gz" "${pkgdir}/usr/share/man/man1/{{ .ProjectName }}.1.gz"
+      install -Dm644 "./{{ .ProjectName }}/manpages/{{ .ProjectName }}.1.gz" "${pkgdir}/usr/share/man/man1/{{ .ProjectName }}.1.gz"
 
 checksum:
   name_template: "checksums.txt"
