@@ -2,7 +2,6 @@ variables:
   main: ""
   binary_name: ""
   description: ""
-  github_url: ""
   maintainer: ""
   homepage: "https://charm.sh/"
   brew_commit_author_name: ""
@@ -288,6 +287,37 @@ docker_signs:
 release:
   footer: |
     * * *
+
+    <details>
+    <summary>Verifying the artifacts</summary>
+
+    First, download the [`checksums.txt` file](https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Version}}/checksums.txt), for example, with `wget`:
+
+    ```bash
+    wget 'https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Version}}/checksums.txt'
+    ```
+
+    Then, verify it using [`cosign`](https://github.com/sigstore/cosign):
+
+    ```bash
+    cosign verify-blob \
+      --certificate-identity 'https://github.com/charmbracelet/meta/.github/workflows/goreleaser.yml@refs/heads/main' \
+      --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
+      --cert 'https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Version}}/checksums.txt.pem' \
+      --signature 'https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Version}}/checksums.txt.sig' \
+      ./checksums.txt
+    ```
+
+    If the output is `Verified OK`, you can safely use it to verify the checksums of other artifacts you downloaded from the release using `sha256sum`:
+
+    ```bash
+    sha256sum --ignore-missing -c checksums.txt
+    ```
+
+    Done! You artifacts are now verified!
+
+    </details>
+
 
     <a href="https://charm.sh/"><img alt="The Charm logo" src="https://stuff.charm.sh/charm-badge.jpg" width="400"></a>
 
