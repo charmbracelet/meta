@@ -178,7 +178,8 @@ winget:
       branch: "{{.ProjectName}}-{{.Version}}"
       pull_request:
         enabled: true
-        draft: true
+        draft: false
+        check_boxes: true
         base:
           owner: microsoft
           name: winget-pkgs
