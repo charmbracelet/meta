@@ -1,7 +1,10 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
+
 variables:
   main: ""
   binary_name: ""
   description: ""
+  github_url: ""
   maintainer: ""
   homepage: "https://charm.sh/"
   brew_commit_author_name: ""
@@ -283,4 +286,8 @@ docker_signs:
       - "sign"
       - "${artifact}"
       - "--yes"
-# yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
+
+release:
+  footer:
+    from_url:
+      url: https://raw.githubusercontent.com/charmbracelet/meta/main/footer.md

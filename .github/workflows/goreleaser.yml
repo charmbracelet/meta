@@ -11,10 +11,6 @@ on:
         required: false
         type: boolean
         default: true
-      footer_filename:
-        required: false
-        type: string
-        default: footer.md
       lfs:
         required: false
         type: boolean
@@ -111,13 +107,11 @@ jobs:
       - run: |
           mkdir -p $HOME/.cache/snapcraft/download
           mkdir -p $HOME/.cache/snapcraft/stage-packages
-      - run: |
-          wget https://github.com/charmbracelet/meta/blob/main/${{ inputs.footer_filename }} -O /tmp/footer.md
       - uses: goreleaser/goreleaser-action@v4
         with:
           version: latest
           distribution: goreleaser-pro
-          args: release --clean --release-footer-tmpl /tmp/footer.md
+          args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.gh_pat }}

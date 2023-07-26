@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
+
 before:
   hooks: ["go mod tidy"]
 builds: [skip: true]
@@ -28,4 +30,8 @@ changelog:
       order: 400
     - title: Other work
       order: 9999
-# yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
+
+release:
+  footer:
+    from_url:
+      url: https://raw.githubusercontent.com/charmbracelet/meta/main/footer_lib.md

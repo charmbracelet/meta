@@ -320,6 +320,11 @@ docker_signs:
       - "${artifact}"
       - "--yes"
 
+release:
+  footer:
+    from_url:
+      url: https://raw.githubusercontent.com/charmbracelet/meta/main/footer.md
+
 snapcrafts:
   - publish: true
     summary: "{{ .Var.description }}"

@@ -196,4 +196,8 @@ signs:
       - "--yes"
     artifacts: checksum
     output: true
-# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+release:
+  footer:
+    from_url:
+      url: https://raw.githubusercontent.com/charmbracelet/meta/main/footer.md
