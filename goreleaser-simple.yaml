@@ -42,6 +42,7 @@ archives:
   - format_overrides:
       - goos: windows
         format: zip
+    wrap_in_directory: "{{.ProjectName}}"
     name_template: >-
       {{ .ProjectName }}_
       {{- .Version }}_
@@ -108,10 +109,10 @@ aurs:
     git_url: "ssh://aur@aur.archlinux.org/{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin.git"
     package: |-
       # bin
-      install -Dm755 "./{{ .ProjectName }}" "${pkgdir}/usr/bin/{{ .ProjectName }}"
+      install -Dm755 "./{{ .ProjectName }}/{{ .ProjectName }}" "${pkgdir}/usr/bin/{{ .ProjectName }}"
       # license
       mkdir -p "${pkgdir}/usr/share/licenses/{{ .ProjectName }}/"
-      install -Dm644 ./LICENSE* "${pkgdir}/usr/share/licenses/{{ .ProjectName }}/"
+      install -Dm644 ./{{ .ProjectName }}/LICENSE* "${pkgdir}/usr/share/licenses/{{ .ProjectName }}/"
 
 nix:
   - repository:
