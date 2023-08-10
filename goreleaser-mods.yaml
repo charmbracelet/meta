@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
+
 variables:
   main: ""
   aur_project_name: ""
@@ -128,11 +130,13 @@ winget:
       branch: "{{.ProjectName}}-{{.Version}}"
       pull_request:
         enabled: true
-        draft: true
+        draft: false
+        check_boxes: true
         base:
           owner: microsoft
           name: winget-pkgs
           branch: master
+
 checksum:
   name_template: "checksums.txt"
 
@@ -191,9 +195,6 @@ signs:
     output: true
 
 release:
-  footer: |
-    * * *
-
-    <a href="https://charm.sh/"><img alt="The Charm logo" src="https://stuff.charm.sh/charm-badge.jpg" width="400"></a>
-
-    Thoughts? Questions? We love hearing from you. Feel free to reach out on [Twitter](https://twitter.com/charmcli), [The Fediverse](https://mastodon.technology/@charm), or on [Discord](https://charm.sh/chat).
+  footer:
+    from_url:
+      url: https://raw.githubusercontent.com/charmbracelet/meta/main/footer.md
