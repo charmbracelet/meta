@@ -15,4 +15,4 @@ jobs:
           install-only: true
       - name: check
         run: |
-          goreleaser check -q goreleaser*.yaml
+          goreleaser check goreleaser*.yaml
