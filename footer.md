@@ -6,7 +6,7 @@
 First, download the [`checksums.txt` file](https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Version}}/checksums.txt), for example, with `wget`:
 
 ```bash
-wget 'https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Version}}/checksums.txt'
+wget 'https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.TAg}}/checksums.txt'
 ```
 
 Then, verify it using [`cosign`](https://github.com/sigstore/cosign):
@@ -15,8 +15,8 @@ Then, verify it using [`cosign`](https://github.com/sigstore/cosign):
 cosign verify-blob \
   --certificate-identity 'https://github.com/charmbracelet/meta/.github/workflows/goreleaser.yml@refs/heads/main' \
   --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
-  --cert 'https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Version}}/checksums.txt.pem' \
-  --signature 'https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Version}}/checksums.txt.sig' \
+  --cert 'https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Tag}}/checksums.txt.pem' \
+  --signature 'https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Tag}}/checksums.txt.sig' \
   ./checksums.txt
 ```
 
