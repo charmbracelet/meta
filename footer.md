@@ -6,7 +6,7 @@
 First, download the [`checksums.txt` file](https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Version}}/checksums.txt), for example, with `wget`:
 
 ```bash
-wget 'https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.TAg}}/checksums.txt'
+wget 'https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Tag}}/checksums.txt'
 ```
 
 Then, verify it using [`cosign`](https://github.com/sigstore/cosign):
