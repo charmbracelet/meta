@@ -47,12 +47,13 @@ builds:
       - "386"
       - arm
     goarm:
+      - "6"
       - "7"
     ignore:
       - goos: windows
         goarch: arm64
       - goos: windows
-        goarm: "7"
+        goarch: arm
 
 archives:
   - format_overrides:
@@ -65,6 +66,7 @@ archives:
       {{- if eq .Arch "amd64" }}x86_64
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
+      {{- with .Arm}}v{{ . }}{{ end }}
     files:
       - README*
       - LICENSE*
@@ -112,6 +114,7 @@ brews:
       email: "{{ .Var.brew_commit_author_email }}"
     homepage: "{{ .Var.homepage }}"
     description: "{{ .Var.description }}"
+    goarm: 7
     install: |-
       bin.install "{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}"
       bash_completion.install "completions/{{ .ProjectName }}.bash" => "{{ .ProjectName }}"
