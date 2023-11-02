@@ -78,7 +78,10 @@ nfpms:
     homepage: "{{ .Var.homepage }}"
     maintainer: "{{ .Var.maintainer }}"
     description: "{{ .Var.description }}"
-    file_name_template: "{{ .ConventionalFileName }}"
+    file_name_template: >-
+      {{- trimsuffix .ConventionalFileName .ConventionalExtension -}}
+      {{- if and (eq .Arm "6") (eq .ConventionalExtension ".deb") }}6{{ end -}}
+      {{- .ConventionalExtension -}}
     license: MIT
     formats:
       - apk
