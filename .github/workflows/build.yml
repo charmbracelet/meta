@@ -18,7 +18,7 @@ jobs:
       GH_PAT: ${{ secrets.gh_pat }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-go@v4
+      - uses: actions/setup-go@v5
         with:
           go-version: ${{ inputs.go_version }}
           cache: true
@@ -44,7 +44,7 @@ jobs:
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
         if: env.GH_PAT != null
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
           cache: true

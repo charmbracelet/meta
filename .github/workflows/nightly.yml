@@ -52,7 +52,7 @@ jobs:
       - run: |
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
         if: env.GH_PAT != null
-      - uses: actions/setup-go@v4
+      - uses: actions/setup-go@v5
         with:
           go-version: ${{ inputs.go_version }}
           cache: true

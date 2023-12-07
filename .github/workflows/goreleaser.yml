@@ -70,7 +70,7 @@ jobs:
           lfs: ${{ inputs.lfs }}
       - run: |
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
-      - uses: actions/setup-go@v4
+      - uses: actions/setup-go@v5
         with:
           go-version: ${{ inputs.go_version }}
           cache: true
