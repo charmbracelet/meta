@@ -1,0 +1,38 @@
+name: build
+
+on:
+  workflow_call:
+    inputs:
+      go_version:
+        required: false
+        type: string
+        default: stable
+      test_timeout:
+        required: false
+        type: string
+        default: 5m
+    secrets:
+      gh_pat:
+        required: false
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    env:
+      GH_PAT: ${{ secrets.gh_pat }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - run: |
+          git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
+        if: env.GH_PAT != null
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ inputs.go_version }}
+          cache: true
+      - name: Test
+        run: go test -failfast -race -coverpkg=./... -covermode=atomic -coverprofile=coverage.txt ./... -timeout ${{ inputs.test_timeout }}
+      - uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.txt
