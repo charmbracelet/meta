@@ -12,6 +12,7 @@ variables:
   docker_io_registry_owner: charmcli
   ghcr_io_registry_owner: charmbracelet
   aur_project_name: ""
+  scoop_name: ""
 
 before:
   hooks:
@@ -133,6 +134,7 @@ scoops:
     commit_author:
       name: "{{ .Var.brew_commit_author_name }}"
       email: "{{ .Var.brew_commit_author_email }}"
+    name: "{{ with .Var.scoop_name }}{{ . }}{{ end }}"
     homepage: "{{ .Var.homepage }}"
     description: "{{ .Var.description }}"
     license: MIT
