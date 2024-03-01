@@ -150,7 +150,6 @@ scoops:
     license: MIT
     depends:
       - git
-      - bash
 
 aurs:
   - maintainers: ["{{ .Var.maintainer }}"]
