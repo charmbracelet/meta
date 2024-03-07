@@ -68,6 +68,7 @@ archives:
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
       {{- with .Arm}}v{{ . }}{{ end }}
+    wrap_in_directory: true
     files:
       - README*
       - LICENSE*
