@@ -185,6 +185,7 @@ aurs:
       - ffmpeg
       - ttyd
     package: |-
+      cd "${srcdir}/{{ .ProjectName }}_${pkgver}_Linux_${CARCH}"
       # bin
       install -Dm755 "./{{ .ProjectName }}" "${pkgdir}/usr/bin/{{ .ProjectName }}"
       # license
