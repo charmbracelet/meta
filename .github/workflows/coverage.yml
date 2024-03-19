@@ -25,6 +25,7 @@ jobs:
         uses: actions/checkout@v4
       - run: |
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
+          git config --global url."https://${{ secrets.gh_pat }}@github.com/charmcli".insteadOf "https://github.com/charmcli"
         if: env.GH_PAT != null
       - name: Install Go
         uses: actions/setup-go@v5
