@@ -114,6 +114,8 @@ aurs:
       # license
       mkdir -p "${pkgdir}/usr/share/licenses/{{ .ProjectName }}/"
       install -Dm644 ./LICENSE* "${pkgdir}/usr/share/licenses/{{ .ProjectName }}/"
+      # readme
+      install -Dm644 README* "${pkgdir}/usr/share/doc/{{ .ProjectName }}/"
 
 nix:
   - repository:
