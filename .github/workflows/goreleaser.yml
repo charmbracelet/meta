@@ -76,7 +76,7 @@ jobs:
           go-version: ${{ inputs.go_version }}
           cache: true
           check-latest: true
-      - uses: sigstore/cosign-installer@v3.4.0
+      - uses: sigstore/cosign-installer@v3.5.0
       - uses: cachix/install-nix-action@v26
         with:
           github_access_token: ${{ secrets.gh_pat }}
