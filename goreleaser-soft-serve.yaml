@@ -179,6 +179,8 @@ aurs:
       install -Dm644 "./completions/{{ .ProjectName }}.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/{{ .ProjectName }}.fish"
       # man pages
       install -Dm644 "./manpages/{{ .ProjectName }}.1.gz" "${pkgdir}/usr/share/man/man1/{{ .ProjectName }}.1.gz"
+      # readme
+      install -Dm644 README* "${pkgdir}/usr/share/doc/{{ .ProjectName }}/"
 
 nix:
   - repository:
