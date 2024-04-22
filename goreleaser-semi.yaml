@@ -163,6 +163,7 @@ aurs:
       # man pages
       install -Dm644 "./manpages/{{ .ProjectName }}.1.gz" "${pkgdir}/usr/share/man/man1/{{ .ProjectName }}.1.gz"
       # readme
+      mkdir -pv "${pkgdir}/usr/share/doc/{{ .ProjectName }}/"
       install -Dm644 README* "${pkgdir}/usr/share/doc/{{ .ProjectName }}/"
 
 nix:
