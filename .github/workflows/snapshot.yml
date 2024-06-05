@@ -45,11 +45,11 @@ jobs:
       - run: |
           mkdir -p $HOME/.cache/snapcraft/download
           mkdir -p $HOME/.cache/snapcraft/stage-packages
-      - uses: goreleaser/goreleaser-action@v5
+      - uses: goreleaser/goreleaser-action@v6
         with:
           version: latest
           distribution: goreleaser-pro
-          args: release --clean --snapshot --skip-sign --skip-sbom
+          args: release --clean --snapshot --skip=sign,sbom
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/upload-artifact@v4
