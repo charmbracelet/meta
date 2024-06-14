@@ -1,0 +1,72 @@
+furies:
+  - account: "{{ with .Env.FURY_TOKEN }}charmcli{{ else }}{{ end }}"
+    secret_name: FURY_TOKEN
+
+winget:
+  - publisher: charmbracelet
+    license: MIT
+    copyright: Charmbracelet, Inc
+    homepage: "{{ .Var.homepage }}"
+    short_description: "{{ .Var.description }}"
+    repository:
+      owner: "{{ .Var.brew_owner }}"
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+      name: winget-pkgs
+      branch: "{{.ProjectName}}-{{.Version}}"
+      pull_request:
+        enabled: true
+        draft: true
+        base:
+          owner: microsoft
+          name: winget-pkgs
+          branch: master
+
+scoops:
+  - repository:
+      owner: "{{ .Var.brew_owner }}"
+      name: scoop-bucket
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    commit_author:
+      name: "{{ .Var.brew_commit_author_name }}"
+      email: "{{ .Var.brew_commit_author_email }}"
+    homepage: "{{ .Var.homepage }}"
+    description: "{{ .Var.description }}"
+    license: MIT
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^test:"
+      - "^chore"
+      - "merge conflict"
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+      - go mod tidy
+  groups:
+    - title: Dependency updates
+      regexp: "^.*feat\\(deps\\)*:+.*$"
+      order: 300
+    - title: "New Features"
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 100
+    - title: "Bug fixes"
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 200
+    - title: "Documentation updates"
+      regexp: "^.*docs[(\\w)]*:+.*$"
+      order: 400
+    - title: Other work
+      order: 9999
+
+release:
+  footer: |
+    * * *
+
+    <a href="https://charm.sh/"><img alt="The Charm logo" src="https://stuff.charm.sh/charm-badge.jpg" width="400"></a>
+
+    Thoughts? Questions? We love hearing from you. Feel free to reach out on [Twitter](https://twitter.com/charmcli), [The Fediverse](https://mastodon.technology/@charm), or on [Discord](https://charm.sh/chat).
+
+# yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json

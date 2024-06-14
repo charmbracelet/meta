@@ -1,0 +1,82 @@
+variables:
+  main: ""
+  binary_name: ""
+  description: ""
+  maintainer: ""
+  homepage: "https://charm.sh/"
+  brew_commit_author_name: ""
+  brew_commit_author_email: ""
+  brew_owner: charmbracelet
+  aur_project_name: ""
+
+gomod:
+  proxy: true
+
+archives:
+  - format_overrides:
+      - goos: windows
+        format: zip
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+    files:
+      - README*
+      - LICENSE*
+
+nfpms:
+  - vendor: charmbracelet
+    homepage: "{{ .Var.homepage }}"
+    maintainer: "{{ .Var.maintainer }}"
+    description: "{{ .Var.description }}"
+    file_name_template: "{{ .ConventionalFileName }}"
+    license: MIT
+    formats:
+      - apk
+      - deb
+      - rpm
+    rpm:
+      signature:
+        key_file: '{{ if ne (index .Env "GPG_KEY_PATH") "" }}{{ .Env.GPG_KEY_PATH }}{{ else }}{{ end }}'
+    deb:
+      signature:
+        key_file: '{{ if ne (index .Env "GPG_KEY_PATH") "" }}{{ .Env.GPG_KEY_PATH }}{{ else }}{{ end }}'
+
+brews:
+  - repository:
+      owner: "{{ .Var.brew_owner }}"
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    commit_author:
+      name: "{{ .Var.brew_commit_author_name }}"
+      email: "{{ .Var.brew_commit_author_email }}"
+    homepage: "{{ .Var.homepage }}"
+    description: "{{ .Var.description }}"
+
+aurs:
+  - maintainers: ["{{ .Var.maintainer }}"]
+    description: "{{ .Var.description }}"
+    name: "{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin"
+    homepage: "{{ .Var.homepage }}"
+    license: MIT
+    private_key: "{{ .Env.AUR_KEY }}"
+    git_url: "ssh://aur@aur.archlinux.org/{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin.git"
+    package: |-
+      # bin
+      install -Dm755 "./{{ .ProjectName }}" "${pkgdir}/usr/bin/{{ .ProjectName }}"
+      # license
+      mkdir -p "${pkgdir}/usr/share/licenses/{{ .ProjectName }}/"
+      install -Dm644 ./LICENSE* "${pkgdir}/usr/share/licenses/{{ .ProjectName }}/"
+
+nix:
+  - repository:
+      owner: "{{ .Var.brew_owner }}"
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+      name: nur
+    homepage: "{{ .Var.homepage }}"
+    description: "{{ .Var.description }}"
+    license: mit
+# yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
