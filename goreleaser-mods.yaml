@@ -9,21 +9,21 @@ variables:
   brew_owner: charmbracelet
   description: "AI on the command line"
   github_url: "https://github.com/charmbracelet/mods"
-  maintainer: "Toby Padilla <toby@charm.sh>"
-  brew_commit_author_name: "Toby Padilla"
-  brew_commit_author_email: "toby@charm.sh"
+  maintainer: "Carlos Becker <carlos@charm.sh>"
+  brew_commit_author_name: "Carlos Becker"
+  brew_commit_author_email: "carlos@charm.sh"
 
 before:
   hooks:
     - go mod tidy
     - rm -rf completions
     - mkdir completions
-    - cmd: sh -c 'go run . completion "bash" >./completions/{{ .ProjectName }}.bash'
-      env: ["__MODS_CMP_ENABLED=1"]
-    - cmd: sh -c 'go run . completion "zsh" >./completions/{{ .ProjectName }}.zsh'
-      env: ["__MODS_CMP_ENABLED=1"]
-    - cmd: sh -c 'go run . completion "fish" >./completions/{{ .ProjectName }}.fish'
-      env: ["__MODS_CMP_ENABLED=1"]
+    - rm -rf manpages
+    - mkdir manpages
+    - sh -c 'go run . completion "bash" >./completions/{{ .ProjectName }}.bash'
+    - sh -c 'go run . completion "zsh" >./completions/{{ .ProjectName }}.zsh'
+    - sh -c 'go run . completion "fish" >./completions/{{ .ProjectName }}.fish'
+    - sh -c 'go run . man | gzip -c >./manpages/{{ .ProjectName }}.1.gz'
 
 gomod:
   proxy: true
@@ -62,6 +62,7 @@ archives:
     files:
       - README*
       - LICENSE*
+      - manpages/*
       - completions/*
 
 nfpms:
@@ -77,6 +78,8 @@ nfpms:
         dst: /usr/share/fish/vendor_completions.d/{{ .ProjectName }}.fish
       - src: ./completions/{{ .ProjectName }}.zsh
         dst: /usr/share/zsh/site-functions/_{{ .ProjectName }}
+      - src: ./manpages/{{ .ProjectName }}.1.gz
+        dst: /usr/share/man/man1/{{ .ProjectName }}.1.gz
     formats:
       - apk
       - deb
@@ -106,6 +109,7 @@ brews:
       bash_completion.install "completions/{{ .ProjectName }}.bash" => "{{ .ProjectName }}"
       zsh_completion.install "completions/{{ .ProjectName }}.zsh" => "_{{ .ProjectName }}"
       fish_completion.install "completions/{{ .ProjectName }}.fish"
+      man1.install "manpages/{{ .ProjectName }}.1.gz"
 
 scoops:
   - repository:
@@ -141,6 +145,8 @@ aurs:
       install -Dm644 "./completions/{{ .ProjectName }}.bash" "${pkgdir}/usr/share/bash-completion/completions/{{ .ProjectName }}"
       install -Dm644 "./completions/{{ .ProjectName }}.zsh" "${pkgdir}/usr/share/zsh/site-functions/_{{ .ProjectName }}"
       install -Dm644 "./completions/{{ .ProjectName }}.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/{{ .ProjectName }}.fish"
+      # man pages
+      install -Dm644 "./manpages/{{ .ProjectName }}.1.gz" "${pkgdir}/usr/share/man/man1/{{ .ProjectName }}.1.gz"
       # readme
       mkdir -pv "${pkgdir}/usr/share/doc/{{ .ProjectName }}/"
       install -Dm644 README* "${pkgdir}/usr/share/doc/{{ .ProjectName }}/"
@@ -154,6 +160,7 @@ nix:
     description: "{{ .Var.description }}"
     license: mit
     extra_install: |-
+      installManPage ./manpages/{{.ProjectName}}.1.gz
       installShellCompletion ./completions/*
 
 winget:
