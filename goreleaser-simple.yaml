@@ -12,6 +12,10 @@ variables:
   brew_owner: charmbracelet
   aur_project_name: ""
 
+includes:
+  - from_url:
+      url: charmbracelet/meta/main/notarize.yaml
+
 gomod:
   proxy: true
 

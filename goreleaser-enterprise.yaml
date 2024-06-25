@@ -7,6 +7,10 @@ variables:
   description: ""
   ghcr_io_registry_owner: charmbracelet
 
+includes:
+  - from_url:
+      url: charmbracelet/meta/main/notarize.yaml
+
 before:
   hooks:
     - go mod tidy

@@ -15,6 +15,10 @@ variables:
   aur_project_name: ""
   scoop_name: ""
 
+includes:
+  - from_url:
+      url: charmbracelet/meta/main/notarize.yaml
+
 before:
   hooks:
     - go mod tidy
