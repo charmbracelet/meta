@@ -13,6 +13,10 @@ variables:
   brew_commit_author_name: "Carlos Becker"
   brew_commit_author_email: "carlos@charm.sh"
 
+includes:
+  - from_url:
+      url: charmbracelet/meta/main/notarize.yaml
+
 before:
   hooks:
     - go mod tidy

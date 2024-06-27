@@ -15,6 +15,10 @@ variables:
   ghcr_io_registry_owner: charmbracelet
   aur_project_name: ""
 
+includes:
+  - from_url:
+      url: charmbracelet/meta/main/notarize.yaml
+
 before:
   hooks:
     - go mod tidy
