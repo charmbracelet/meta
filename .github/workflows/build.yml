@@ -37,7 +37,6 @@ jobs:
     env:
       GO111MODULE: "on"
       GH_PAT: ${{ secrets.gh_pat }}
-      XDG_CONFIG_HOME: /tmp
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
