@@ -14,7 +14,7 @@ on:
       go_version:
         required: false
         type: string
-        default: ^1
+        default: stable
       lfs:
         required: false
         type: boolean
