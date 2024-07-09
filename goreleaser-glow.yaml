@@ -2,8 +2,6 @@
 
 version: 2
 variables:
-  main: ""
-  binary_name: ""
   description: ""
   maintainer: ""
   homepage: "https://charm.sh/"
@@ -25,19 +23,18 @@ before:
     - mkdir completions
     - rm -rf manpages
     - mkdir manpages
-    - sh -c 'go run {{ with .Var.main }}{{ . }}{{ else }}.{{ end }} completion "bash" >./completions/{{ .ProjectName }}.bash'
-    - sh -c 'go run {{ with .Var.main }}{{ . }}{{ else }}.{{ end }} completion "zsh" >./completions/{{ .ProjectName }}.zsh'
-    - sh -c 'go run {{ with .Var.main }}{{ . }}{{ else }}.{{ end }} completion "fish" >./completions/{{ .ProjectName }}.fish'
-    - sh -c 'go run {{ with .Var.main }}{{ . }}{{ else }}.{{ end }} man | gzip -c >./manpages/{{ .ProjectName }}.1.gz'
+    - sh -c 'go run . completion bash >./completions/glow.bash'
+    - sh -c 'go run . completion zsh >./completions/glow.zsh'
+    - sh -c 'go run . completion fish >./completions/glow.fish'
+    - sh -c 'go run . man | gzip -c >./manpages/glow.1.gz'
 
 gomod:
   proxy: true
 
 builds:
-  - binary: "{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}"
+  - binary: "glow"
     env:
       - CGO_ENABLED=0
-    main: "{{ with .Var.main }}{{ . }}{{ else }}.{{ end }}"
     ldflags: -s -w -X main.Version={{ .Version }} -X main.CommitSHA={{ .Commit }} -X main.CommitDate={{ .CommitDate }}
     goos:
       - linux
@@ -119,7 +116,7 @@ brews:
     homepage: "{{ .Var.homepage }}"
     description: "{{ .Var.description }}"
     install: |-
-      bin.install "{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}"
+      bin.install "glow"
       bash_completion.install "completions/{{ .ProjectName }}.bash" => "{{ .ProjectName }}"
       zsh_completion.install "completions/{{ .ProjectName }}.zsh" => "_{{ .ProjectName }}"
       fish_completion.install "completions/{{ .ProjectName }}.fish"
