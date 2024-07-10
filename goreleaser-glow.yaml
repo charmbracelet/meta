@@ -23,14 +23,12 @@ before:
     - mkdir completions
     - rm -rf manpages
     - mkdir manpages
-    - cmd: sh -c 'go run . completion bash >./completions/glow.bash'
+    - cmd: "go run . completion bash"
       output: true
-    - cmd: sh -c 'go run . completion zsh >./completions/glow.zsh'
-      output: true
-    - cmd: sh -c 'go run . completion fish >./completions/glow.fish'
-      output: true
-    - cmd: sh -c 'go run . man | gzip -c >./manpages/glow.1.gz'
-      output: true
+    - sh -c 'go run . completion bash >./completions/glow.bash'
+    - sh -c 'go run . completion zsh >./completions/glow.zsh'
+    - sh -c 'go run . completion fish >./completions/glow.fish'
+    - sh -c 'go run . man | gzip -c >./manpages/glow.1.gz'
 
 gomod:
   proxy: true
