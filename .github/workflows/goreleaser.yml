@@ -108,7 +108,10 @@ jobs:
           echo "$NFPM_GPG_KEY" > ${{ runner.temp }}/gpg.key
         env:
           NFPM_GPG_KEY: ${{ secrets.nfpm_gpg_key }}
-      - run: sudo snap install snapcraft --classic --channel=6.x/stable
+      - name: setup-snapcraft
+        run: |
+          sudo apt-get update
+          sudo apt-get -yq --no-install-suggests --no-install-recommends install snapcraft
       - uses: goreleaser/goreleaser-action@v6
         with:
           version: latest
