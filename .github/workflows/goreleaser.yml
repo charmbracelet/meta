@@ -109,15 +109,6 @@ jobs:
         env:
           NFPM_GPG_KEY: ${{ secrets.nfpm_gpg_key }}
       - run: sudo snap install snapcraft --classic --channel=6.x/stable
-      - run: |
-          echo "$SNAPCRAFT_TOKEN" | snapcraft login --with -
-        env:
-          SNAPCRAFT_TOKEN: ${{ secrets.snapcraft_token }}
-        if: env.SNAPCRAFT_TOKEN != null
-      # https://github.com/goreleaser/goreleaser/issues/1715
-      - run: |
-          mkdir -p $HOME/.cache/snapcraft/download
-          mkdir -p $HOME/.cache/snapcraft/stage-packages
       - uses: goreleaser/goreleaser-action@v6
         with:
           version: latest
@@ -145,6 +136,7 @@ jobs:
           MACOS_NOTARY_ISSUER_ID: ${{ secrets.macos_notary_issuer_id }}
           MACOS_NOTARY_KEY_ID: ${{ secrets.macos_notary_key_id }}
           MACOS_NOTARY_KEY: ${{ secrets.macos_notary_key }}
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_LOGIN }}
 
       - uses: actions/upload-artifact@v4
         if: ${{ inputs.upload_artifact == true && always() }}
