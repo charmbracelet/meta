@@ -139,7 +139,7 @@ jobs:
           MACOS_NOTARY_ISSUER_ID: ${{ secrets.macos_notary_issuer_id }}
           MACOS_NOTARY_KEY_ID: ${{ secrets.macos_notary_key_id }}
           MACOS_NOTARY_KEY: ${{ secrets.macos_notary_key }}
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_LOGIN }}
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.snapcraft_token }}
 
       - uses: actions/upload-artifact@v4
         if: ${{ inputs.upload_artifact == true && always() }}
