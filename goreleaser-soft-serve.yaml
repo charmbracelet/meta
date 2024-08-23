@@ -231,10 +231,10 @@ sboms:
     artifacts: source
 
 snapshot:
-  name_template: "{{ incpatch .Version }}-snapshot"
+  version_template: "{{ incpatch .Version }}-snapshot"
 
 nightly:
-  name_template: "{{ incpatch .Version }}-devel"
+  version_template: "{{ incpatch .Version }}-devel"
 
 changelog:
   sort: asc
