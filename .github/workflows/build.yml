@@ -7,6 +7,9 @@ on:
         required: false
         type: string
         default: stable
+      go-version-file:
+        required: false
+        type: string
       working-directory:
         required: false
         type: string
@@ -51,6 +54,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ inputs.go_version }}
+          go-version-file: ${{ inputs.go-version-file }}
           cache: true
       - name: Download Go modules
         run: go mod download
