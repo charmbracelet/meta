@@ -7,6 +7,9 @@ on:
         required: false
         type: string
         default: stable
+      working-directory:
+        required: false
+        type: string
     secrets:
       gh_pat:
         required: false
@@ -51,7 +54,10 @@ jobs:
           cache: true
       - name: Download Go modules
         run: go mod download
+        working-directory: ${{ inputs.working-directory }}
       - name: Build
         run: go build ./...
+        working-directory: ${{ inputs.working-directory }}
       - name: Test
         run: go test ./...
+        working-directory: ${{ inputs.working-directory }}
