@@ -33,6 +33,7 @@ changelog:
       order: 9999
 
 release:
+  prerelease: auto
   footer:
     from_url:
       url: https://raw.githubusercontent.com/charmbracelet/meta/main/footer_lib.md
