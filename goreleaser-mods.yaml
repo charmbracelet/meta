@@ -245,6 +245,7 @@ signs:
     output: true
 
 release:
+  prerelease: auto
   footer:
     from_url:
       url: https://raw.githubusercontent.com/charmbracelet/meta/main/footer.md
