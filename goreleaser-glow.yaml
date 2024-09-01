@@ -328,6 +328,9 @@ docker_signs:
       - "${artifact}"
       - "--yes"
 
+git:
+  tag_sort: semver
+
 release:
   prerelease: auto
   footer:
