@@ -210,6 +210,9 @@ signs:
     artifacts: checksum
     output: true
 
+git:
+  tag_sort: semver
+
 release:
   prerelease: auto
   footer:
