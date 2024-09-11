@@ -22,7 +22,7 @@ on:
 
 jobs:
   govulncheck:
-    if: inputs.go_version == "stable" || inputs.go-version == "stable"
+    if: ${{ inputs.go_version == 'stable' || inputs.go-version == 'stable' }}
     runs-on: ubuntu-latest
     env:
       GH_PAT: ${{ secrets.gh_pat }}
