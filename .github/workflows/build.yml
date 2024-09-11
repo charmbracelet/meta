@@ -22,7 +22,6 @@ on:
 
 jobs:
   govulncheck:
-    if: ${{ inputs.go_version == 'stable' || inputs.go-version == 'stable' }}
     runs-on: ubuntu-latest
     env:
       GH_PAT: ${{ secrets.gh_pat }}
@@ -30,7 +29,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version: ${{ inputs.go_version || inputs.go-version }}
+          go-version: stable
           cache: true
           check-latest: true
       - run: |
