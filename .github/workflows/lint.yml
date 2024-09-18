@@ -25,9 +25,6 @@ jobs:
         with:
           repository: ${{ github.repository_owner }}/meta
           path: ${{ github.repository_owner }}/meta
-      - run: |
-          pwd
-          tree
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
