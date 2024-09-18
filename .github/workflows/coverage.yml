@@ -1,18 +1,26 @@
-name: build
+name: coverage
 
 on:
   workflow_call:
     inputs:
-      go_version:
+      go-version:
         required: false
         type: string
         default: stable
-      test_timeout:
+      go-version-file:
+        required: false
+        type: string
+      working-directory:
+        required: false
+        type: string
+      test-timeout:
         required: false
         type: string
         default: 5m
     secrets:
       gh_pat:
+        required: false
+      codecov_token:
         required: false
 
 jobs:
@@ -30,10 +38,17 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: ${{ inputs.go_version }}
+          go-version: ${{ inputs.go-version }}
+          go-version-file: ${{ inputs.go-version-file }}
           cache: true
+      - name: Download Go modules
+        run: go mod download
+        working-directory: ${{ inputs.working-directory }}
       - name: Test
-        run: go test -failfast -race -coverpkg=./... -covermode=atomic -coverprofile=coverage.txt ./... -timeout ${{ inputs.test_timeout }}
+        run: go test -failfast -race -coverpkg=./... -covermode=atomic -coverprofile=coverage.txt ./... -timeout ${{ inputs.test-timeout }}
+        working-directory: ${{ inputs.working-directory }}
       - uses: codecov/codecov-action@v4
         with:
           file: ./coverage.txt
+          token: ${{ secrets.codecov_token }}
+          working-directory: ${{ inputs.working-directory }}
