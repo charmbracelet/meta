@@ -87,7 +87,7 @@ jobs:
           cache: true
           check-latest: true
       - uses: sigstore/cosign-installer@v3.7.0
-      - uses: cachix/install-nix-action@v29
+      - uses: cachix/install-nix-action@v30
         with:
           github_access_token: ${{ secrets.gh_pat }}
       - uses: anchore/sbom-action/download-syft@v0.17.2
