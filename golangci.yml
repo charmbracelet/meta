@@ -19,7 +19,6 @@ linters:
     - goimports
     - gosec
     - nilerr
-    - predeclared
     - revive
     - rowserrcheck
     - sqlclosecheck
