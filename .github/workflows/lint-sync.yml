@@ -1,0 +1,36 @@
+name: lint-sync
+on:
+  workflow_call:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: ${{ github.repository }}
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/meta
+          path: ${{ github.repository_owner }}/meta
+      - run: |
+          cp ${{ github.repository_owner }}/meta/golangci.yml ${{ github.repository }}/.golangci.yml
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "chore(ci): sync golangci-lint config"
+          title: "Sync golangci-lint config"
+          body: |
+            This is an automated pull request to sync the golangci-lint config with the meta repository.
+          branch: "ci/sync-lint-config"
+          delete-branch: true
+      - name: Check outputs
+        if: ${{ steps.cpr.outputs.pull-request-number }}
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
