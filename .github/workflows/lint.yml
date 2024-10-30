@@ -35,8 +35,6 @@ jobs:
           # Optional: golangci-lint command line arguments.
           args: |
             --config="${{ github.workspace }}/${{ github.repository_owner }}/meta/golangci.yml"
-          # Optional: show only new issues if it's a pull request. The default value is `false`.
-          only-new-issues: true
 
   lint-soft:
     strategy:
@@ -63,5 +61,3 @@ jobs:
           args: |
             --config="${{ github.workspace }}/${{ github.repository_owner }}/meta/golangci-soft.yml" \
             --issues-exit-code=0
-          # Optional: show only new issues if it's a pull request. The default value is `false`.
-          only-new-issues: true
