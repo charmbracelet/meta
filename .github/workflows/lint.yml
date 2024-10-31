@@ -59,5 +59,4 @@ jobs:
           working-directory: ${{ github.repository }}
           # Optional: golangci-lint command line arguments.
           args: |
-            --config="${{ github.workspace }}/${{ github.repository_owner }}/meta/golangci-soft.yml" \
-            --issues-exit-code=0
+            --config="${{ github.workspace }}/${{ github.repository_owner }}/meta/golangci-soft.yml"
