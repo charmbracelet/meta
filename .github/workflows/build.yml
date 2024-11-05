@@ -69,7 +69,7 @@ jobs:
         run: go test ./...
         working-directory: ${{ inputs.working-directory }}
   dependabot:
-    needs: [test, govulncheck]
+    needs: [build, govulncheck]
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
