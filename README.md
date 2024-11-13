@@ -2,8 +2,8 @@
 
 This repo contains Charm’s meta configuration files:
 
-- goreleaser configurations
-- github actions workflows
+- GoReleaser configurations
+- GitHub Actions workflows
 
 ## Related docs
 
