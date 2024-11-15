@@ -47,7 +47,7 @@ jobs:
       - name: Test
         run: go test -failfast -race -coverpkg=./... -covermode=atomic -coverprofile=coverage.txt ./... -timeout ${{ inputs.test-timeout }}
         working-directory: ${{ inputs.working-directory }}
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           file: ./coverage.txt
           token: ${{ secrets.codecov_token }}
