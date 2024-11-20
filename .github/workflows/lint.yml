@@ -19,7 +19,7 @@ jobs:
     steps:
       # By default, the GitHub Action on Windows uses `core.autocrlf=true`.
       # LF is converted to CRLF, this produces reports from formatters (gofmt/gofumpt/etc.).
-      - run: 'git config --global core.autocrlf input'
+      - run: "git config --global core.autocrlf input"
       - uses: actions/checkout@v4
         with:
           path: ${{ github.repository }}
@@ -37,7 +37,7 @@ jobs:
           working-directory: ${{ github.repository }}
           # Optional: golangci-lint command line arguments.
           args: |
-            --config="${{ github.workspace }}/${{ github.repository_owner }}/meta/golangci.yml" --timeout=5m 
+            --config="${{ github.workspace }}/${{ github.repository_owner }}/meta/golangci.yml" --timeout=5m
 
   lint-soft:
     strategy:
@@ -47,7 +47,7 @@ jobs:
     steps:
       # By default, the GitHub Action on Windows uses `core.autocrlf=true`.
       # LF is converted to CRLF, this produces reports from formatters (gofmt/gofumpt/etc.).
-      - run: 'git config --global core.autocrlf input'
+      - run: "git config --global core.autocrlf input"
       - uses: actions/checkout@v4
         with:
           path: ${{ github.repository }}
@@ -65,4 +65,4 @@ jobs:
           working-directory: ${{ github.repository }}
           # Optional: golangci-lint command line arguments.
           args: |
-            --config="${{ github.workspace }}/${{ github.repository_owner }}/meta/golangci-soft.yml"
+            --config="${{ github.workspace }}/${{ github.repository_owner }}/meta/golangci-soft.yml" --timeout=5m
