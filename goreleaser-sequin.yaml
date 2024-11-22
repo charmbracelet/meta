@@ -1,0 +1,260 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
+
+version: 2
+variables:
+  main: ""
+  aur_project_name: ""
+
+  homepage: "https://charm.sh/"
+  brew_owner: charmbracelet
+  description: "Human-readable ANSI sequences."
+  github_url: "https://github.com/charmbracelet/sequin"
+  maintainer: "Carlos A Becker <carlos@charm.sh>"
+  brew_commit_author_name: "Carlos A Becker"
+  brew_commit_author_email: "carlos@charm.sh"
+
+includes:
+  - from_url:
+      url: charmbracelet/meta/main/notarize.yaml
+
+before:
+  hooks:
+    - go mod tidy
+    - rm -rf completions
+    - mkdir completions
+    - rm -rf manpages
+    - mkdir manpages
+    - sh -c 'go run . completion "bash" >./completions/{{ .ProjectName }}.bash'
+    - sh -c 'go run . completion "zsh" >./completions/{{ .ProjectName }}.zsh'
+    - sh -c 'go run . completion "fish" >./completions/{{ .ProjectName }}.fish'
+    - sh -c 'go run . man | gzip -c >./manpages/{{ .ProjectName }}.1.gz'
+
+gomod:
+  proxy: true
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    main: "{{ with .Var.main }}{{ . }}{{ else }}.{{ end }}"
+    ldflags: -s -w -X main.Version=v{{ .Version }} -X main.CommitSHA={{ .Commit }} -X main.CommitDate={{ .CommitDate }}
+    goos:
+      - linux
+      - darwin
+      - windows
+      - freebsd
+      - openbsd
+      - netbsd
+    goarch:
+      - amd64
+      - arm64
+      - "386"
+      - arm
+    goarm:
+      - "7"
+    ignore:
+      - goos: windows
+        goarch: arm64
+      - goos: windows
+        goarm: "7"
+
+archives:
+  - format_overrides:
+      - goos: windows
+        format: zip
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+    wrap_in_directory: true
+    files:
+      - README*
+      - LICENSE*
+      - manpages/*
+      - completions/*
+
+nfpms:
+  - vendor: charmbracelet
+    homepage: "{{ .Var.homepage }}"
+    maintainer: "{{ .Var.maintainer }}"
+    file_name_template: "{{ .ConventionalFileName }}"
+    license: MIT
+    contents:
+      - src: ./completions/{{ .ProjectName }}.bash
+        dst: /etc/bash_completion.d/{{ .ProjectName }}
+      - src: ./completions/{{ .ProjectName }}.fish
+        dst: /usr/share/fish/vendor_completions.d/{{ .ProjectName }}.fish
+      - src: ./completions/{{ .ProjectName }}.zsh
+        dst: /usr/share/zsh/site-functions/_{{ .ProjectName }}
+      - src: ./manpages/{{ .ProjectName }}.1.gz
+        dst: /usr/share/man/man1/{{ .ProjectName }}.1.gz
+    formats:
+      - apk
+      - deb
+      - rpm
+    rpm:
+      signature:
+        key_file: '{{ if ne (index .Env "GPG_KEY_PATH") "" }}{{ .Env.GPG_KEY_PATH }}{{ else }}{{ end }}'
+    deb:
+      signature:
+        key_file: '{{ if ne (index .Env "GPG_KEY_PATH") "" }}{{ .Env.GPG_KEY_PATH }}{{ else }}{{ end }}'
+
+furies:
+  - account: "{{ with .Env.FURY_TOKEN }}charmcli{{ else }}{{ end }}"
+    secret_name: FURY_TOKEN
+
+brews:
+  - repository:
+      owner: "{{ .Var.brew_owner }}"
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    commit_author:
+      name: "{{ .Var.brew_commit_author_name }}"
+      email: "{{ .Var.brew_commit_author_email }}"
+    homepage: "{{ .Var.homepage }}"
+    description: "{{ .Var.description }}"
+    extra_install: |-
+      bash_completion.install "completions/{{ .ProjectName }}.bash" => "{{ .ProjectName }}"
+      zsh_completion.install "completions/{{ .ProjectName }}.zsh" => "_{{ .ProjectName }}"
+      fish_completion.install "completions/{{ .ProjectName }}.fish"
+      man1.install "manpages/{{ .ProjectName }}.1.gz"
+
+scoops:
+  - repository:
+      owner: "{{ .Var.brew_owner }}"
+      name: scoop-bucket
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    commit_author:
+      name: "{{ .Var.brew_commit_author_name }}"
+      email: "{{ .Var.brew_commit_author_email }}"
+    homepage: "{{ .Var.homepage }}"
+    description: "{{ .Var.description }}"
+    license: MIT
+
+aurs:
+  - maintainers: ["{{ .Var.maintainer }}"]
+    description: "{{ .Var.description }}"
+    name: "{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin"
+    homepage: "{{ .Var.homepage }}"
+    license: MIT
+    private_key: "{{ .Env.AUR_KEY }}"
+    git_url: "ssh://aur@aur.archlinux.org/{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin.git"
+    package: |-
+      cd "${srcdir}/{{ .ProjectName }}_${pkgver}_Linux_${CARCH}"
+      # bin
+      install -Dm755 "./{{ .ProjectName }}" "${pkgdir}/usr/bin/{{ .ProjectName }}"
+      # license
+      mkdir -p "${pkgdir}/usr/share/licenses/{{ .ProjectName }}/"
+      install -Dm644 ./LICENSE* "${pkgdir}/usr/share/licenses/{{ .ProjectName }}/"
+      # completions
+      mkdir -p "${pkgdir}/usr/share/bash-completion/completions/"
+      mkdir -p "${pkgdir}/usr/share/zsh/site-functions/"
+      mkdir -p "${pkgdir}/usr/share/fish/vendor_completions.d/"
+      install -Dm644 "./completions/{{ .ProjectName }}.bash" "${pkgdir}/usr/share/bash-completion/completions/{{ .ProjectName }}"
+      install -Dm644 "./completions/{{ .ProjectName }}.zsh" "${pkgdir}/usr/share/zsh/site-functions/_{{ .ProjectName }}"
+      install -Dm644 "./completions/{{ .ProjectName }}.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/{{ .ProjectName }}.fish"
+      # man pages
+      install -Dm644 "./manpages/{{ .ProjectName }}.1.gz" "${pkgdir}/usr/share/man/man1/{{ .ProjectName }}.1.gz"
+      # readme
+      mkdir -pv "${pkgdir}/usr/share/doc/{{ .ProjectName }}/"
+      install -Dm644 README* "${pkgdir}/usr/share/doc/{{ .ProjectName }}/"
+
+nix:
+  - repository:
+      owner: "{{ .Var.brew_owner }}"
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+      name: nur
+    homepage: "{{ .Var.homepage }}"
+    description: "{{ .Var.description }}"
+    license: mit
+    extra_install: |-
+      installManPage ./manpages/{{.ProjectName}}.1.gz
+      installShellCompletion ./completions/*
+
+winget:
+  - publisher: charmbracelet
+    license: MIT
+    copyright: Charmbracelet, Inc
+    homepage: "{{ .Var.homepage }}"
+    short_description: "{{ .Var.description }}"
+    repository:
+      owner: "{{ .Var.brew_owner }}"
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+      name: winget-pkgs
+      branch: "{{.ProjectName}}-{{.Version}}"
+      pull_request:
+        enabled: true
+        draft: false
+        check_boxes: true
+        base:
+          owner: microsoft
+          name: winget-pkgs
+          branch: master
+
+checksum:
+  name_template: "checksums.txt"
+
+source:
+  enabled: true
+
+sboms:
+  - artifacts: archive
+  - id: source
+    artifacts: source
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-snapshot"
+
+nightly:
+  version_template: "{{ incpatch .Version }}-devel"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^test:"
+      - "^chore"
+      - "merge conflict"
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+      - go mod tidy
+  groups:
+    - title: Dependency updates
+      regexp: "^.*\\(deps\\)*:+.*$"
+      order: 300
+    - title: "New Features"
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 100
+    - title: "Bug fixes"
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 200
+    - title: "Documentation updates"
+      regexp: "^.*docs[(\\w)]*:+.*$"
+      order: 400
+    - title: Other work
+      order: 9999
+
+signs:
+  - cmd: cosign
+    certificate: "${artifact}.pem"
+    args:
+      - sign-blob
+      - "--output-certificate=${certificate}"
+      - "--output-signature=${signature}"
+      - "${artifact}"
+      - "--yes"
+    artifacts: checksum
+    output: true
+
+git:
+  tag_sort: semver
+
+release:
+  prerelease: auto
+  footer:
+    from_url:
+      url: https://raw.githubusercontent.com/charmbracelet/meta/main/footer.md
