@@ -7,6 +7,11 @@ on:
         required: true
         type: string
   workflow_dispatch: # allows manual triggering
+    inputs:
+      repo_name:
+        description: The repository name, without the "charmbracelet/" prefix.
+        required: true
+        type: string
 
 permissions:
   contents: write
