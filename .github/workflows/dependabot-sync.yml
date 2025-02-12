@@ -6,6 +6,7 @@ on:
         description: The repository name, without the "charmbracelet/" prefix.
         required: true
         type: string
+  workflow_dispatch: # allows manual triggering
 
 permissions:
   contents: write
