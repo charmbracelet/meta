@@ -1,0 +1,45 @@
+name: dependabot-sync
+on:
+  workflow_call:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: ${{ github.repository }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/meta
+          path: ${{ github.repository_owner }}/meta
+
+      - run: |
+          DEPENDABOT_FILE="${{ github.repository_owner }}/meta/dependabot/dependabot-${{ github.event.repository.name }}.yml"
+          if [ ! -f $DEPENDABOT_FILE ]; then
+            DEPENDABOT_FILE="${{ github.repository_owner }}/meta/dependabot/dependabot.yml"
+          fi
+          cp $DEPENDABOT_FILE ${{ github.repository }}/dependabot.yml
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "ci: sync dependabot config"
+          title: "ci: sync dependabot config"
+          body: |
+            This is an automated pull request to sync the Dependabot config with the meta repository.
+          branch: "ci/sync-dependabot-config"
+          delete-branch: true
+          path: "${{ github.repository }}"
+
+      - name: Check outputs
+        if: ${{ steps.cpr.outputs.pull-request-number }}
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
