@@ -20,11 +20,11 @@ jobs:
           path: ${{ github.repository_owner }}/meta
 
       - run: |
+          cp "${{ github.repository_owner }}/meta/dependabot/dependabot.yml" "${{ github.repository }}/dependabot.yml"
           DEPENDABOT_FILE="${{ github.repository_owner }}/meta/dependabot/dependabot-${{ github.event.repository.name }}.yml"
-          if [ ! -f $DEPENDABOT_FILE ]; then
-            DEPENDABOT_FILE="${{ github.repository_owner }}/meta/dependabot/dependabot.yml"
+          if [ -f "$DEPENDABOT_FILE" ]; then
+            cat "$DEPENDABOT_FILE" >> "${{ github.repository }}/dependabot.yml"
           fi
-          cp $DEPENDABOT_FILE ${{ github.repository }}/dependabot.yml
 
       - name: Create Pull Request
         id: cpr
