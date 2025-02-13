@@ -1,65 +1,17 @@
 name: dependabot-sync
 on:
-  workflow_call:
-    inputs:
-      repo_name:
-        description: The repository name, without the "charmbracelet/" prefix.
-        required: true
-        type: string
-    secrets:
-      gh_token:
-        required: true
+  schedule:
+    - cron: "0 0 * * 0" # every Sunday at midnight
   workflow_dispatch: # allows manual triggering
-    inputs:
-      repo_name:
-        description: The repository name, without the "charmbracelet/" prefix.
-        required: true
-        type: string
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  sync:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          repository: ${{ github.repository_owner }}/${{ inputs.repo_name }}
-          path: ${{ github.repository_owner }}/${{ inputs.repo_name }}
-          token: ${{ secrets.gh_token || secrets.PERSONAL_ACCESS_TOKEN }}
-
-      - uses: actions/checkout@v4
-        with:
-          repository: ${{ github.repository_owner }}/meta
-          path: ${{ github.repository_owner }}/meta
-          token: ${{ secrets.gh_token || secrets.PERSONAL_ACCESS_TOKEN }}
-
-      - run: |
-          cp "${{ github.repository_owner }}/meta/dependabot/workflows/dependabot-sync.yml" "${{ github.repository_owner }}/${{ inputs.repo_name }}/.github/workflows/dependabot-sync.yml"
-          cp "${{ github.repository_owner }}/meta/dependabot/dependabot.yml" "${{ github.repository_owner }}/${{ inputs.repo_name }}/.github/dependabot.yml"
-          DEPENDABOT_FILE="${{ github.repository_owner }}/meta/dependabot/dependabot-${{ inputs.repo_name }}.yml"
-          if [ -f "$DEPENDABOT_FILE" ]; then
-            cat "$DEPENDABOT_FILE" >> "${{ github.repository_owner }}/${{ inputs.repo_name }}/.github/dependabot.yml"
-          fi
-
-      - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v7
-        with:
-          commit-message: "ci: sync dependabot config"
-          author: Charm <124303983+charmcli@users.noreply.github.com>
-          title: "ci: sync dependabot config"
-          body: |
-            This is an automated pull request to sync the Dependabot config with the meta repository.
-          branch: "ci/sync-dependabot-config"
-          delete-branch: true
-          path: "${{ github.repository_owner }}/${{ inputs.repo_name }}"
-          token: ${{ secrets.gh_token || secrets.PERSONAL_ACCESS_TOKEN }}
-
-      - name: Check outputs
-        if: ${{ steps.cpr.outputs.pull-request-number }}
-        run: |
-          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
+  dependabot-sync:
+    uses: charmbracelet/meta/.github/workflows/dependabot-sync.yml@main
+    with:
+      repo_name: ${{ github.event.repository.name }}
+    secrets:
+      gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
