@@ -24,12 +24,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          repository: ${{ github.repository_owner }}/${{ inputs.repo_name }}
           path: ${{ github.repository_owner }}/${{ inputs.repo_name }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - uses: actions/checkout@v4
         with:
           repository: ${{ github.repository_owner }}/meta
           path: ${{ github.repository_owner }}/meta
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - run: |
           cp "${{ github.repository_owner }}/meta/dependabot/workflows/dependabot-sync.yml" "${{ github.repository_owner }}/${{ inputs.repo_name }}/.github/workflows/dependabot-sync.yml"
