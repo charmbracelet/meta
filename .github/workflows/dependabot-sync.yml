@@ -37,6 +37,7 @@ jobs:
           token: ${{ secrets.gh_token || secrets.PERSONAL_ACCESS_TOKEN }}
 
       - run: |
+          mkdir -p "${{ github.repository_owner }}/${{ inputs.repo_name }}/.github/workflows"
           cp "${{ github.repository_owner }}/meta/dependabot/workflows/dependabot-sync.yml" "${{ github.repository_owner }}/${{ inputs.repo_name }}/.github/workflows/dependabot-sync.yml"
           cp "${{ github.repository_owner }}/meta/dependabot/dependabot.yml" "${{ github.repository_owner }}/${{ inputs.repo_name }}/.github/dependabot.yml"
           DEPENDABOT_FILE="${{ github.repository_owner }}/meta/dependabot/dependabot-${{ inputs.repo_name }}.yml"
