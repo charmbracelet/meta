@@ -2,7 +2,7 @@
 # all public repositories.
 
 REPOS=$(gh repo list charmbracelet --visibility public --no-archived --limit 1000 --json "name" -t '{{range .}}{{printf "%s\n" .name}}{{end}}')
-REPOS=$(echo "$REPOS" | awk '$0 != "x" && $0 != ".github"' | sort)
+REPOS=$(echo "$REPOS" | awk '$0 != "x" && $0 != ".github" && $0 != "meta"' | sort)
 
 for repo in $REPOS; do
   echo "Dispatching dependabot-sync.yml for $repo"
