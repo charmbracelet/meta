@@ -6,6 +6,9 @@ on:
         description: The repository name, without the "charmbracelet/" prefix.
         required: true
         type: string
+    secrets:
+      gh_token:
+        required: true
   workflow_dispatch: # allows manual triggering
     inputs:
       repo_name:
@@ -25,13 +28,13 @@ jobs:
         with:
           repository: ${{ github.repository_owner }}/${{ inputs.repo_name }}
           path: ${{ github.repository_owner }}/${{ inputs.repo_name }}
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.gh_token || secrets.PERSONAL_ACCESS_TOKEN }}
 
       - uses: actions/checkout@v4
         with:
           repository: ${{ github.repository_owner }}/meta
           path: ${{ github.repository_owner }}/meta
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.gh_token || secrets.PERSONAL_ACCESS_TOKEN }}
 
       - run: |
           cp "${{ github.repository_owner }}/meta/dependabot/workflows/dependabot-sync.yml" "${{ github.repository_owner }}/${{ inputs.repo_name }}/.github/workflows/dependabot-sync.yml"
@@ -53,7 +56,7 @@ jobs:
           branch: "ci/sync-dependabot-config"
           delete-branch: true
           path: "${{ github.repository_owner }}/${{ inputs.repo_name }}"
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.gh_token || secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Check outputs
         if: ${{ steps.cpr.outputs.pull-request-number }}
