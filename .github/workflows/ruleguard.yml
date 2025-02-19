@@ -51,6 +51,6 @@ jobs:
         run: |
           # needs to be outside of the workspace for some reason
           mv rules ../
-          go install github.com/quasilyte/go-ruleguard/cmd/ruleguard@latest
-          go get -u github.com/quasilyte/go-ruleguard/dsl@latest
+          go install github.com/quasilyte/go-ruleguard/cmd/ruleguard@master
+          go get -u github.com/quasilyte/go-ruleguard/dsl@master
           ruleguard -c=0 -rules ../rules/ruleguard.rules.go ${{ inputs.args }} ./...
