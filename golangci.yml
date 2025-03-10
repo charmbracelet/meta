@@ -1,6 +1,5 @@
 run:
   tests: false
-  issues-exit-code: 0
 
 issues:
   include:
