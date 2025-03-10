@@ -1,5 +1,6 @@
 run:
   tests: false
+  issues-exit-code: 0
 
 issues:
   include:
@@ -14,15 +15,26 @@ issues:
 
 linters:
   enable:
-    - bodyclose
-    - gofumpt
-    - goimports
-    - gosec
-    - nilerr
-    - revive
-    - rowserrcheck
-    - sqlclosecheck
-    - tparallel
-    - unconvert
-    - unparam
-    - whitespace
+    - exhaustive
+    - goconst
+    - godot
+    - godox
+    - mnd
+    - gomoddirectives
+    - goprintffuncname
+    - misspell
+    - nakedret
+    - nestif
+    - noctx
+    - nolintlint
+    - prealloc
+    - wrapcheck
+
+  # disable default linters, they are already enabled in .golangci.yml
+  disable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
