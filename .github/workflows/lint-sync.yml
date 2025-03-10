@@ -19,7 +19,7 @@ jobs:
           path: ${{ github.repository_owner }}/meta
       - run: |
           cp ${{ github.repository_owner }}/meta/golangci.yml ${{ github.repository }}/.golangci.yml
-          cp ${{ github.repository_owner }}/meta/golangci-soft.yml ${{ github.repository }}/.golangci-soft.yml
+          rm -rf ${{ github.repository }}/.golangci-soft.yml
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v7
