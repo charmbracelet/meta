@@ -40,6 +40,5 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           working-directory: ${{ github.repository }}
-          only-new-issues: true
           args: |
             --config="${{ inputs.golangci_path || format('{0}/{1}/meta/golangci.yml', github.workspace, github.repository_owner) }}" --timeout=5m
