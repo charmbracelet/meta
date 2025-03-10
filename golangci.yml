@@ -14,17 +14,29 @@ issues:
 
 linters:
   enable:
+    - bodyclose
     - exhaustive
     - goconst
     - godot
     - godox
-    - mnd
+    - gofumpt
+    - goimports
     - gomoddirectives
     - goprintffuncname
+    - gosec
     - misspell
+    - mnd
     - nakedret
     - nestif
+    - nilerr
     - noctx
     - nolintlint
     - prealloc
+    - revive
+    - rowserrcheck
+    - sqlclosecheck
+    - tparallel
+    - unconvert
+    - unparam
+    - whitespace
     - wrapcheck
