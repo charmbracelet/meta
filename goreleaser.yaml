@@ -298,7 +298,6 @@ git:
   tag_sort: semver
 
 release:
-  draft: true
   prerelease: auto
   footer:
     from_url:
