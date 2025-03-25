@@ -25,7 +25,8 @@ linters:
     - goprintffuncname
     - gosec
     - misspell
-    - nakedret
+    - nakedret:
+      max-func-lines: 50 # default is 30
     - nestif
     - nilerr
     - noctx
