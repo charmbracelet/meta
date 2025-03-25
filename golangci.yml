@@ -46,3 +46,6 @@ linters-settings:
   nakedret:
     # Default: 30
     max-func-lines: 60
+  exhaustive:
+    # Default: false
+    default-signifies-exhaustive: true
