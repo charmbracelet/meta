@@ -16,6 +16,10 @@ on:
         type: boolean
         default: false
         description: Whether to download Git-LFS files
+      macos_sign_entitlements:
+        required: false
+        type: string
+        description: Path to entitlements file
     secrets:
       docker_username:
         required: true
@@ -133,6 +137,7 @@ jobs:
           DISCORD_WEBHOOK_TOKEN: ${{ secrets.discord_webhook_token }}
           MACOS_SIGN_P12: ${{ secrets.macos_sign_p12 }}
           MACOS_SIGN_PASSWORD: ${{ secrets.macos_sign_password }}
+          MACOS_SIGN_ENTITLEMENTS: ${{ inputs.macos_sign_entitlements }}
           MACOS_NOTARY_ISSUER_ID: ${{ secrets.macos_notary_issuer_id }}
           MACOS_NOTARY_KEY_ID: ${{ secrets.macos_notary_key_id }}
           MACOS_NOTARY_KEY: ${{ secrets.macos_notary_key }}
