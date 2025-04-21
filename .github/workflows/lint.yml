@@ -2,6 +2,11 @@ name: lint
 on:
   workflow_call:
     inputs:
+      directory:
+        type: string
+        required: false
+        default: ""
+        description: Path to the directory to run golangci-lint in.
       golangci_path:
         type: string
         required: false
@@ -41,4 +46,4 @@ jobs:
         with:
           working-directory: ${{ github.repository }}
           args: |
-            --config="${{ inputs.golangci_path || format('{0}/{1}/meta/golangci.yml', github.workspace, github.repository_owner) }}" --timeout=5m
+            --config="${{ inputs.golangci_path || format('{0}/{1}/meta/golangci.yml', github.workspace, github.repository_owner) }}" --timeout=5m ${{ inputs.directory }}
