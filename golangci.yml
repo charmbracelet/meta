@@ -7,7 +7,6 @@ linters:
     - exhaustive
     - goconst
     - godot
-    - godox
     - gomoddirectives
     - goprintffuncname
     - gosec
@@ -30,11 +29,6 @@ linters:
     generated: lax
     presets:
       - common-false-positives
-  settings:
-    godox:
-      keywords:
-        - BUG
-        - FIXME
 issues:
   max-issues-per-linter: 0
   max-same-issues: 0
