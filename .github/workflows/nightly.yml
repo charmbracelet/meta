@@ -54,7 +54,7 @@ jobs:
     env:
       DOCKER_CLI_EXPERIMENTAL: enabled
       GH_PAT: ${{ secrets.gh_pat }}
-      DOCKER_ENABLED: ${{ secrets.docker_username != null }}
+      DOCKER_ENABLED: ${{ secrets.docker_username }} != null
     steps:
       - uses: actions/checkout@v4
         with:
