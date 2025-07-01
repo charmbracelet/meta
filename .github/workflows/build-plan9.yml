@@ -1,0 +1,47 @@
+name: build
+
+on:
+  workflow_call:
+    inputs:
+      go_version:
+        required: false
+        type: string
+      go-version:
+        required: false
+        type: string
+        default: stable
+      go-version-file:
+        required: false
+        type: string
+      working-directory:
+        required: false
+        type: string
+    secrets:
+      gh_pat:
+        required: false
+
+jobs:
+  build-plan9:
+    runs-on: ubuntu-latest
+    env:
+      GO111MODULE: "on"
+      GH_PAT: ${{ secrets.gh_pat }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - run: |
+          git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
+          git config --global url."https://${{ secrets.gh_pat }}@github.com/charmcli".insteadOf "https://github.com/charmcli"
+        if: env.GH_PAT != null
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ inputs.go_version || inputs.go-version }}
+          go-version-file: ${{ inputs.go-version-file }}
+          cache: true
+      - name: Download Go modules
+        run: go mod download
+        working-directory: ${{ inputs.working-directory }}
+      - name: Build for Plan9
+        run: env GOOS=plan9 GOARCH=amd64 go build -v ./...
+        working-directory: ${{ inputs.working-directory }}
