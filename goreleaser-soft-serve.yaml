@@ -59,6 +59,10 @@ builds:
         goarch: "386"
       - goos: windows
         goarm: "7"
+      - goos: freebsd
+        goarch: "386"
+      - goos: freebsd
+        goarch: arm
 
 archives:
   - format_overrides:
