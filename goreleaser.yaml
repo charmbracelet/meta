@@ -87,7 +87,7 @@ furies:
   - account: "{{ with .Env.FURY_TOKEN }}charmcli{{ else }}{{ end }}"
     secret_name: FURY_TOKEN
 
-brews:
+homebrew_casks:
   - repository:
       owner: "{{ .Var.brew_owner }}"
       name: homebrew-tap
