@@ -105,7 +105,7 @@ furies:
   - account: "{{ with .Env.FURY_TOKEN }}charmcli{{ else }}{{ end }}"
     secret_name: FURY_TOKEN
 
-brews:
+homebrew_casks:
   - repository:
       owner: "{{ .Var.brew_owner }}"
       name: homebrew-tap
@@ -115,12 +115,14 @@ brews:
       email: "{{ .Var.brew_commit_author_email }}"
     homepage: "{{ .Var.homepage }}"
     description: "{{ .Var.description }}"
-    install: |-
-      bin.install "glow"
-      bash_completion.install "completions/{{ .ProjectName }}.bash" => "{{ .ProjectName }}"
-      zsh_completion.install "completions/{{ .ProjectName }}.zsh" => "_{{ .ProjectName }}"
-      fish_completion.install "completions/{{ .ProjectName }}.fish"
-      man1.install "manpages/{{ .ProjectName }}.1.gz"
+    hooks:
+      post:
+        install: |-
+          bin.install "glow"
+          bash_completion.install "completions/{{ .ProjectName }}.bash" => "{{ .ProjectName }}"
+          zsh_completion.install "completions/{{ .ProjectName }}.zsh" => "_{{ .ProjectName }}"
+          fish_completion.install "completions/{{ .ProjectName }}.fish"
+          man1.install "manpages/{{ .ProjectName }}.1.gz"
 
 scoops:
   - repository:
