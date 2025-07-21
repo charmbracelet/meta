@@ -16,6 +16,14 @@ includes:
   - from_url:
       url: charmbracelet/meta/main/notarize.yaml
 
+metadata:
+  mod_timestamp: "{{ .CommitTimestamp }}"
+  license: "MIT"
+  homepage: "{{ .Var.homepage }}"
+  description: "{{ .Var.description }}"
+  maintainers:
+    - "{{ .Var.maintainer }}"
+
 gomod:
   proxy: true
 
@@ -63,11 +71,7 @@ archives:
 
 nfpms:
   - vendor: charmbracelet
-    homepage: "{{ .Var.homepage }}"
-    maintainer: "{{ .Var.maintainer }}"
-    description: "{{ .Var.description }}"
     file_name_template: "{{ .ConventionalFileName }}"
-    license: MIT
     formats:
       - apk
       - deb
@@ -91,8 +95,6 @@ brews:
     commit_author:
       name: "{{ .Var.brew_commit_author_name }}"
       email: "{{ .Var.brew_commit_author_email }}"
-    homepage: "{{ .Var.homepage }}"
-    description: "{{ .Var.description }}"
 
 scoops:
   - repository:
@@ -102,16 +104,9 @@ scoops:
     commit_author:
       name: "{{ .Var.brew_commit_author_name }}"
       email: "{{ .Var.brew_commit_author_email }}"
-    homepage: "{{ .Var.homepage }}"
-    description: "{{ .Var.description }}"
-    license: MIT
 
 aurs:
-  - maintainers: ["{{ .Var.maintainer }}"]
-    description: "{{ .Var.description }}"
-    name: "{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin"
-    homepage: "{{ .Var.homepage }}"
-    license: MIT
+  - name: "{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin"
     private_key: "{{ .Env.AUR_KEY }}"
     git_url: "ssh://aur@aur.archlinux.org/{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin.git"
     package: |-
@@ -130,16 +125,10 @@ nix:
       owner: "{{ .Var.brew_owner }}"
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
       name: nur
-    homepage: "{{ .Var.homepage }}"
-    description: "{{ .Var.description }}"
-    license: mit
 
 winget:
   - publisher: charmbracelet
-    license: MIT
     copyright: Charmbracelet, Inc
-    homepage: "{{ .Var.homepage }}"
-    short_description: "{{ .Var.description }}"
     repository:
       owner: "{{ .Var.brew_owner }}"
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"

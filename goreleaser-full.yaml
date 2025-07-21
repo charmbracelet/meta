@@ -19,6 +19,14 @@ includes:
   - from_url:
       url: charmbracelet/meta/main/notarize.yaml
 
+metadata:
+  mod_timestamp: "{{ .CommitTimestamp }}"
+  license: "MIT"
+  homepage: "{{ .Var.homepage }}"
+  description: "{{ .Var.description }}"
+  maintainers:
+    - "{{ .Var.maintainer }}"
+
 before:
   hooks:
     - go mod tidy
@@ -82,14 +90,10 @@ archives:
 
 nfpms:
   - vendor: charmbracelet
-    homepage: "{{ .Var.homepage }}"
-    maintainer: "{{ .Var.maintainer }}"
-    description: "{{ .Var.description }}"
     file_name_template: >-
       {{- trimsuffix .ConventionalFileName .ConventionalExtension -}}
       {{- if and (eq .Arm "6") (eq .ConventionalExtension ".deb") }}6{{ end -}}
       {{- .ConventionalExtension -}}
-    license: MIT
     formats:
       - apk
       - deb
@@ -122,8 +126,6 @@ brews:
     commit_author:
       name: "{{ .Var.brew_commit_author_name }}"
       email: "{{ .Var.brew_commit_author_email }}"
-    homepage: "{{ .Var.homepage }}"
-    description: "{{ .Var.description }}"
     goarm: 7
     install: |-
       bin.install "{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}"
@@ -141,16 +143,9 @@ scoops:
       name: "{{ .Var.brew_commit_author_name }}"
       email: "{{ .Var.brew_commit_author_email }}"
     name: "{{ with .Var.scoop_name }}{{ . }}{{ end }}"
-    homepage: "{{ .Var.homepage }}"
-    description: "{{ .Var.description }}"
-    license: MIT
 
 aurs:
-  - maintainers: ["{{ .Var.maintainer }}"]
-    description: "{{ .Var.description }}"
-    name: "{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin"
-    homepage: "{{ .Var.homepage }}"
-    license: MIT
+  - name: "{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin"
     private_key: "{{ .Env.AUR_KEY }}"
     git_url: "ssh://aur@aur.archlinux.org/{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin.git"
     package: |-
@@ -178,19 +173,13 @@ nix:
       owner: "{{ .Var.brew_owner }}"
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
       name: nur
-    homepage: "{{ .Var.homepage }}"
-    description: "{{ .Var.description }}"
-    license: mit
     extra_install: |-
       installManPage ./manpages/{{.ProjectName}}.1.gz
       installShellCompletion ./completions/*
 
 winget:
   - publisher: charmbracelet
-    license: MIT
     copyright: Charmbracelet, Inc
-    homepage: "{{ .Var.homepage }}"
-    short_description: "{{ .Var.description }}"
     repository:
       owner: "{{ .Var.brew_owner }}"
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
