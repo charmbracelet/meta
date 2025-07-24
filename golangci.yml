@@ -14,7 +14,7 @@ linters:
     - nakedret
     - nestif
     - nilerr
-    - noctx
+    # - noctx - XXX: slog breaks everywhere, need to do this slowly.
     - nolintlint
     - prealloc
     - revive
