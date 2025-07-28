@@ -90,7 +90,7 @@ jobs:
           password: ${{ secrets.docker_token }}
       - uses: goreleaser/goreleaser-action@v6
         with:
-          version: nightly # TODO: change this after v2.11
+          version: latest
           distribution: goreleaser-pro
           args: release --clean --nightly
         env:
