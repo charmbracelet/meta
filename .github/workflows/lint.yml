@@ -5,7 +5,6 @@ on:
       directory:
         type: string
         required: false
-        default: ""
         description: Path to the directory to run golangci-lint in.
       golangci_path:
         type: string
@@ -15,6 +14,10 @@ on:
         type: string
         required: false
         description: Version of golangci-lint to use.
+      timeout:
+        type: string
+        required: false
+        description: Timeout for golangci-lint.
 
 permissions:
   # Required: allow read access to the content for analysis.
@@ -50,5 +53,5 @@ jobs:
         with:
           working-directory: ${{ github.repository }}
           args: |
-            --config="${{ inputs.golangci_path || format('{0}/{1}/meta/golangci.yml', github.workspace, github.repository_owner) }}" --timeout=5m ${{ inputs.directory }}
+            --config="${{ inputs.golangci_path || format('{0}/{1}/meta/golangci.yml', github.workspace, github.repository_owner) }}" --timeout=${{ inputs.timeout || '5m' }} ${{ inputs.directory }}
           version: ${{ inputs.golangci_version || 'v2.2' }}
