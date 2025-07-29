@@ -7,7 +7,7 @@ variables:
   description: ""
   github_url: ""
   maintainer: ""
-  homepage: "https://charm.sh/"
+  homepage: "https://charm.land/"
   brew_commit_author_name: ""
   brew_commit_author_email: ""
   brew_owner: charmbracelet
