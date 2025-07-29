@@ -5,7 +5,7 @@ variables:
   main: ""
   aur_project_name: ""
 
-  homepage: "https://charm.sh/"
+  homepage: "https://charm.land/"
   brew_owner: charmbracelet
   description: "Human-readable ANSI sequences."
   github_url: "https://github.com/charmbracelet/sequin"

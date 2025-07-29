@@ -68,7 +68,7 @@ We’d love to hear your thoughts on this project. Feel free to drop us a note!
 
 - [Twitter](https://twitter.com/charmcli)
 - [The Fediverse](https://mastodon.social/@charmcli)
-- [Discord](https://charm.sh/chat)
+- [Discord](https://charm.land/chat)
 
 ## License
 
@@ -76,9 +76,9 @@ We’d love to hear your thoughts on this project. Feel free to drop us a note!
 
 ---
 
-Part of [Charm](https://charm.sh).
+Part of [Charm](https://charm.land).
 
-<a href="https://charm.sh/"><img alt="The Charm logo" src="https://stuff.charm.sh/charm-badge.jpg" width="400"></a>
+<a href="https://charm.land/"><img alt="The Charm logo" src="https://stuff.charm.sh/charm-badge.jpg" width="400"></a>
 
 <!-- prettier-ignore -->
 Charm热爱开源 • Charm loves open source
