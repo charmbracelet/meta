@@ -26,7 +26,7 @@ variables:
   description: ""
   github_url: ""
   maintainer: ""
-  homepage: "https://charm.sh/"
+  homepage: "https://charm.land/"
   brew_commit_author_name: ""
   brew_commit_author_email: ""
   brew_owner: charmbracelet
@@ -109,9 +109,9 @@ jobs:
 
 ---
 
-Part of [Charm](https://charm.sh).
+Part of [Charm](https://charm.land).
 
-<a href="https://charm.sh/"><img alt="The Charm logo" src="https://stuff.charm.sh/charm-badge.jpg" width="400"></a>
+<a href="https://charm.land/"><img alt="The Charm logo" src="https://stuff.charm.sh/charm-badge.jpg" width="400"></a>
 
 <!-- prettier-ignore -->
 Charm热爱开源 • Charm loves open source
