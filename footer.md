@@ -3,7 +3,7 @@
 <details>
 <summary>Verifying the artifacts</summary>
 
-First, download the [`checksums.txt` file](https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Version}}/checksums.txt), for example, with `wget`:
+First, download the [`checksums.txt` file](https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Tag}}/checksums.txt), for example, with `wget`:
 
 ```bash
 wget 'https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Tag}}/checksums.txt'
