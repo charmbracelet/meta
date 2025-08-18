@@ -32,15 +32,15 @@ jobs:
 
       - uses: actions/checkout@v5
         with:
-          repository: ${{ github.repository_owner }}/meta
-          path: ${{ github.repository_owner }}/meta
+          repository: charmbracelet/meta
+          path: charmbracelet/meta
           token: ${{ secrets.gh_token || secrets.PERSONAL_ACCESS_TOKEN }}
 
       - run: |
           mkdir -p "${{ github.repository_owner }}/${{ inputs.repo_name }}/.github/workflows"
-          cp "${{ github.repository_owner }}/meta/dependabot/workflows/dependabot-sync.yml" "${{ github.repository_owner }}/${{ inputs.repo_name }}/.github/workflows/dependabot-sync.yml"
-          cp "${{ github.repository_owner }}/meta/dependabot/dependabot.yml" "${{ github.repository_owner }}/${{ inputs.repo_name }}/.github/dependabot.yml"
-          DEPENDABOT_FILE="${{ github.repository_owner }}/meta/dependabot/dependabot-${{ inputs.repo_name }}.yml"
+          cp "charmbracelet/meta/dependabot/workflows/dependabot-sync.yml" "${{ github.repository_owner }}/${{ inputs.repo_name }}/.github/workflows/dependabot-sync.yml"
+          cp "charmbracelet/meta/dependabot/dependabot.yml" "${{ github.repository_owner }}/${{ inputs.repo_name }}/.github/dependabot.yml"
+          DEPENDABOT_FILE="charmbracelet/meta/dependabot/dependabot-${{ inputs.repo_name }}.yml"
           if [ -f "$DEPENDABOT_FILE" ]; then
             cat "$DEPENDABOT_FILE" >> "${{ github.repository_owner }}/${{ inputs.repo_name }}/.github/dependabot.yml"
           fi
