@@ -37,10 +37,10 @@ jobs:
       # By default, the GitHub Action on Windows uses `core.autocrlf=true`.
       # LF is converted to CRLF, this produces reports from formatters (gofmt/gofumpt/etc.).
       - run: "git config --global core.autocrlf input"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           path: ${{ github.repository }}
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: ${{ github.repository_owner }}/meta
           path: ${{ github.repository_owner }}/meta
