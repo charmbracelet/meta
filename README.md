@@ -27,8 +27,6 @@ variables:
   github_url: ""
   maintainer: ""
   homepage: "https://charm.land/"
-  brew_commit_author_name: ""
-  brew_commit_author_email: ""
   brew_owner: charmbracelet
   docker_io_registry_owner: charmcli
   ghcr_io_registry_owner: charmbracelet
