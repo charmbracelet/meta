@@ -15,10 +15,10 @@ jobs:
           path: ${{ github.repository }}
       - uses: actions/checkout@v5
         with:
-          repository: ${{ github.repository_owner }}/meta
-          path: ${{ github.repository_owner }}/meta
+          repository: charmbracelet/meta
+          path: charmbracelet/meta
       - run: |
-          cp ${{ github.repository_owner }}/meta/golangci.yml ${{ github.repository }}/.golangci.yml
+          cp charmbracelet/meta/golangci.yml ${{ github.repository }}/.golangci.yml
           rm -rf ${{ github.repository }}/.golangci-soft.yml
       - name: Create Pull Request
         id: cpr

@@ -42,8 +42,8 @@ jobs:
           path: ${{ github.repository }}
       - uses: actions/checkout@v5
         with:
-          repository: ${{ github.repository_owner }}/meta
-          path: ${{ github.repository_owner }}/meta
+          repository: charmbracelet/meta
+          path: charmbracelet/meta
       - name: Install Go
         uses: actions/setup-go@v5
         with:
