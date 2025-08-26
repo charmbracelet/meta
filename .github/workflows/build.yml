@@ -39,6 +39,7 @@ jobs:
       - run: go install golang.org/x/vuln/cmd/govulncheck@latest
       - run: go mod tidy
       - run: govulncheck ./...
+
   build:
     strategy:
       matrix:
@@ -69,6 +70,7 @@ jobs:
       - name: Test
         run: go test ./...
         working-directory: ${{ inputs.working-directory }}
+
   dependabot:
     needs: [build, govulncheck]
     runs-on: ubuntu-latest
@@ -82,8 +84,9 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
           gh pr review --approve "$PR_URL"
-          gh pr merge --squash "$PR_URL"
+          gh pr merge --squash --auto "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
