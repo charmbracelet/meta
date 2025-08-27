@@ -55,3 +55,4 @@ jobs:
           args: |
             --config="${{ inputs.golangci_path || format('{0}/{1}/meta/golangci.yml', github.workspace, github.repository_owner) }}" --timeout=${{ inputs.timeout || '5m' }} ${{ inputs.directory }}
           version: ${{ inputs.golangci_version || 'v2.4' }}
+          only-new-issues: true
