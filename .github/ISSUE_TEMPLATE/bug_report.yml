@@ -1,4 +1,4 @@
-name: "🐞 Submit a bug report"
+name: "Submit a bug report"
 description: Report a bug to help us improve!
 title: "bug: [REPLACE ME]"
 labels:
@@ -7,14 +7,14 @@ body:
   - type: markdown
     attributes:
       value: |
-        ### Thanks for submitting a bug report! 🐞
+        ### Thanks for submitting a bug report!
 
-        - 💬 Make sure to check out the [**discussions**](../discussions) section. If your issue isn't a bug (or you're not sure), and you're looking for help to solve it, please [start a discussion here](../discussions/new?category=q-a) first.
-        - 🔎 Please [**search**](../labels/bug) to see if someone else has submitted a similar bug report, before making a new report.
+        - Make sure to check out the [**discussions**](../discussions) section. If your issue isn't a bug (or you're not sure), and you're looking for help to solve it, please [start a discussion here](../discussions/new?category=q-a) first.
+        - Please [**search**](../labels/bug) to see if someone else has submitted a similar bug report, before making a new report.
   - type: textarea
     id: description
     attributes:
-      label: "🌧 Describe the problem"
+      label: "Describe the problem"
       description: A clear and concise description of what the problem is.
       placeholder: >-
         Example: "When I attempted to do X, I got X error"
@@ -23,7 +23,7 @@ body:
   - type: textarea
     id: expected
     attributes:
-      label: "⛅ Expected behavior"
+      label: "Expected behavior"
       description: A clear and concise description of what you expected to happen.
       placeholder: >-
         Example: "I expected X to let me add Y component, and be successful"
@@ -32,7 +32,7 @@ body:
   - type: textarea
     id: reproduce
     attributes:
-      label: "🔄 Minimal reproduction"
+      label: "Minimal reproduction"
       description: >-
         Steps to reproduce the behavior (including code examples and/or
         configuration files if necessary)
@@ -46,7 +46,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: "💠 Version"
+      label: "Version"
       description: >-
         What version of the project are you using? Some examples: `v1.2.3`,
         `master`, `commit 1a2b3c`
@@ -57,7 +57,7 @@ body:
   - type: input
     id: os
     attributes:
-      label: "🖥 Operating system"
+      label: "Operating system"
       description: >-
         What operating system did this issue occur on? Please include architecture
         (**32bit**, **64bit**, **arm**, **arm64**, etc) and version/distribution
@@ -69,7 +69,7 @@ body:
   - type: input
     id: shell
     attributes:
-      label: "⌨️ Shell"
+      label: "Shell"
       description: >-
         What shell are you using? Some examples: `bash`, `zsh`, `fish`,
         `powershell`, etc.
@@ -80,7 +80,7 @@ body:
   - type: input
     id: emulator
     attributes:
-      label: "🖱️ Terminal Emulator"
+      label: "Terminal Emulator"
       description: >-
         What terminal emulator are you using? Some examples: `alacritty`, `kitty`,
         `ghostty`, `wezterm`, `konsole`, `xterm`, `gnome-terminal`, `xfce4-terminal`,
@@ -92,7 +92,7 @@ body:
   - type: input
     id: multiplexer
     attributes:
-      label: "⚙️ Terminal Multiplexer (if any)"
+      label: "Terminal Multiplexer (if any)"
       description: >-
         What terminal multiplexer are you using (if any)? Some examples: `tmux`,
         `screen`, `byobu`, etc.
@@ -107,7 +107,7 @@ body:
   - type: textarea
     id: context
     attributes:
-      label: "⚙ Additional context"
+      label: "Additional context"
       description: >-
         Add any other context about the problem here. This includes things
         like logs, screenshots, code examples, what was the state when the
@@ -117,7 +117,7 @@ body:
   - type: checkboxes
     id: requirements
     attributes:
-      label: "🤝 Requirements"
+      label: "Requirements"
       description: "Please confirm the following:"
       options:
         - label: >-

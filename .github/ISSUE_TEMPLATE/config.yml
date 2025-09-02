@@ -1,11 +1,11 @@
 blank_issues_enabled: true
 contact_links:
-  - name: "🙋‍♂️ Ask the community a question!"
+  - name: "Ask the community a question!"
     about: Have a question, that might not be a bug? Wondering how to solve a problem? Ask away!
     url: "https://github.com/charmbracelet/REPLACE_ME/discussions/new?category=q-a"
-  - name: "🎉 Show us what you've made!"
+  - name: "Show us what you've made!"
     about: Have you built something using bubbletea, and want to show others? Post here!
     url: "https://github.com/charmbracelet/REPLACE_ME/discussions/categories/show-and-tell"
-  - name: "💬 Discord chat"
+  - name: "Discord chat"
     about: Chat on our Discord.
     url: "https://charm.sh/discord"
