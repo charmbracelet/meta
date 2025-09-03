@@ -1,0 +1,133 @@
+name: "Submit a bug report"
+description: Report a bug to help us improve!
+title: "bug: [REPLACE ME]"
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Thanks for submitting a bug report!
+
+        - Make sure to check out the [**discussions**](../discussions) section. If your issue isn't a bug (or you're not sure), and you're looking for help to solve it, please [start a discussion here](../discussions/new?category=q-a) first.
+        - Please [**search**](../labels/bug) to see if someone else has submitted a similar bug report, before making a new report.
+  - type: textarea
+    id: description
+    attributes:
+      label: "Describe the problem"
+      description: A clear and concise description of what the problem is.
+      placeholder: >-
+        Example: "When I attempted to do X, I got X error"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: "Expected behavior"
+      description: A clear and concise description of what you expected to happen.
+      placeholder: >-
+        Example: "I expected X to let me add Y component, and be successful"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: "Minimal reproduction"
+      description: >-
+        Steps to reproduce the behavior (including code examples and/or
+        configuration files if necessary)
+      placeholder: |
+        Example:
+        1. Click on '....'
+        2. Run command with flags --foo --bar, tc
+        3. See error"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: "Version"
+      description: >-
+        What version of the project are you using? Some examples: `v1.2.3`,
+        `master`, `commit 1a2b3c`
+      placeholder: >-
+        Specify your version here.
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: "Operating system"
+      description: >-
+        What operating system did this issue occur on? Please include architecture
+        (**32bit**, **64bit**, **arm**, **arm64**, etc) and version/distribution
+        information.
+      placeholder: >-
+        Examples: "Linux Ubuntu 22.04 (64bit)", "Windows 11 (64bit)", "macOS 14.2 (arm64)"
+    validations:
+      required: true
+  - type: input
+    id: shell
+    attributes:
+      label: "Shell"
+      description: >-
+        What shell are you using? Some examples: `bash`, `zsh`, `fish`,
+        `powershell`, etc.
+      placeholder: >-
+        Specify your shell here.
+    validations:
+      required: true
+  - type: input
+    id: emulator
+    attributes:
+      label: "Terminal Emulator"
+      description: >-
+        What terminal emulator are you using? Some examples: `rio`, `alacritty`, `kitty`,
+        `ghostty`, `wezterm`, `konsole`, `xterm`, `gnome-terminal`, `xfce4-terminal`,
+        `lxterminal`, `rxvt-unicode`, `Windows Terminal`, etc.
+      placeholder: >-
+        Specify your terminal emulator here.
+    validations:
+      required: true
+  - type: input
+    id: multiplexer
+    attributes:
+      label: "Terminal Multiplexer (if any)"
+      description: >-
+        What terminal multiplexer are you using (if any)? Some examples: `tmux`,
+        `screen`, `byobu`, etc.
+      placeholder: >-
+        Specify your terminal multiplexer here (if any).
+  - type: markdown
+    attributes:
+      value: >-
+        **Note:** you might encounter rendering issues if your locale does not use
+        `UTF-8` encoding. Please check your locale (`locale` on POSIX systems) to
+        see what encoding is being used by your system.
+  - type: textarea
+    id: context
+    attributes:
+      label: "Additional context"
+      description: >-
+        Add any other context about the problem here. This includes things
+        like logs, screenshots, code examples, what was the state when the
+        bug occurred?
+      placeholder: >
+        Examples: logs, code snippets, screenshots, os version info, etc
+  - type: checkboxes
+    id: requirements
+    attributes:
+      label: "Requirements"
+      description: "Please confirm the following:"
+      options:
+        - label: >-
+            I believe the problem I'm facing is a bug, and is not intended
+            behavior. [Post here if you're not sure](../discussions/new?category=q-a).
+          required: true
+        - label: >-
+            I have confirmed that someone else has not
+            [submitted a similar bug report](../labels/bug).
+          required: true
+        - label: >-
+            (optional) I would be willing to contribute a PR to fix this issue.
+          required: false
