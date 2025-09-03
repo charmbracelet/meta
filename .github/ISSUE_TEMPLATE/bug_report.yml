@@ -82,7 +82,7 @@ body:
     attributes:
       label: "Terminal Emulator"
       description: >-
-        What terminal emulator are you using? Some examples: `alacritty`, `kitty`,
+        What terminal emulator are you using? Some examples: `rio`, `alacritty`, `kitty`,
         `ghostty`, `wezterm`, `konsole`, `xterm`, `gnome-terminal`, `xfce4-terminal`,
         `lxterminal`, `rxvt-unicode`, `Windows Terminal`, etc.
       placeholder: >-
