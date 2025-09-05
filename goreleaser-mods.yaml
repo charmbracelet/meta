@@ -10,8 +10,6 @@ variables:
   description: "AI on the command line"
   github_url: "https://github.com/charmbracelet/mods"
   maintainer: "Carlos Becker <carlos@charm.sh>"
-  brew_commit_author_name: "Carlos Becker"
-  brew_commit_author_email: "carlos@charm.sh"
 
 includes:
   - from_url:
@@ -110,8 +108,8 @@ brews:
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     commit_author:
-      name: "{{ .Var.brew_commit_author_name }}"
-      email: "{{ .Var.brew_commit_author_email }}"
+      name: "Charm"
+      email: "charmcli@users.noreply.github.com"
     extra_install: |-
       bash_completion.install "completions/{{ .ProjectName }}.bash" => "{{ .ProjectName }}"
       zsh_completion.install "completions/{{ .ProjectName }}.zsh" => "_{{ .ProjectName }}"
@@ -124,13 +122,16 @@ scoops:
       name: scoop-bucket
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     commit_author:
-      name: "{{ .Var.brew_commit_author_name }}"
-      email: "{{ .Var.brew_commit_author_email }}"
+      name: "Charm"
+      email: "charmcli@users.noreply.github.com"
 
 aurs:
   - name: "{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin"
     private_key: "{{ .Env.AUR_KEY }}"
     git_url: "ssh://aur@aur.archlinux.org/{{ with .Var.aur_project_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}-bin.git"
+    commit_author:
+      name: "Charm"
+      email: "charmcli@users.noreply.github.com"
     package: |-
       cd "${srcdir}/{{ .ProjectName }}_${pkgver}_Linux_${CARCH}"
       # bin
@@ -156,6 +157,9 @@ nix:
       owner: "{{ .Var.brew_owner }}"
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
       name: nur
+    commit_author:
+      name: "Charm"
+      email: "charmcli@users.noreply.github.com"
     extra_install: |-
       installManPage ./manpages/{{.ProjectName}}.1.gz
       installShellCompletion ./completions/*
@@ -163,6 +167,9 @@ nix:
 winget:
   - publisher: charmbracelet
     copyright: Charmbracelet, Inc
+    commit_author:
+      name: "Charm"
+      email: "charmcli@users.noreply.github.com"
     repository:
       owner: "{{ .Var.brew_owner }}"
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
