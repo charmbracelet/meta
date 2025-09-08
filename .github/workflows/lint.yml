@@ -45,7 +45,7 @@ jobs:
           repository: charmbracelet/meta
           path: charmbracelet/meta
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: stable
       - name: golangci-lint
