@@ -36,12 +36,12 @@ jobs:
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmcli".insteadOf "https://github.com/charmcli"
         if: env.GH_PAT != null
-      - uses: actions/checkout@v5
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           repository: dgryski/semgrep-go
           path: rules
-      - uses: actions/setup-go@v6
+      - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00
         with:
           go-version: ${{ inputs.go-version }}
           cache: ${{ inputs.cache }}

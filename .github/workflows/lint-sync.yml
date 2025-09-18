@@ -10,10 +10,10 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           path: ${{ github.repository }}
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           repository: charmbracelet/meta
           path: charmbracelet/meta
@@ -22,7 +22,7 @@ jobs:
           rm -rf ${{ github.repository }}/.golangci-soft.yml
       - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e
         with:
           commit-message: "ci: sync golangci-lint config"
           title: "ci: sync golangci-lint config"

@@ -30,13 +30,13 @@ jobs:
       GH_PAT: ${{ secrets.gh_pat }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - run: |
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmcli".insteadOf "https://github.com/charmcli"
         if: env.GH_PAT != null
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00
         with:
           go-version: ${{ inputs.go-version }}
           go-version-file: ${{ inputs.go-version-file }}
@@ -47,7 +47,7 @@ jobs:
       - name: Test
         run: go test -failfast -race -coverpkg=./... -covermode=atomic -coverprofile=coverage.txt ./... -timeout ${{ inputs.test-timeout }}
         working-directory: ${{ inputs.working-directory }}
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7
         with:
           file: ./coverage.txt
           token: ${{ secrets.codecov_token }}
