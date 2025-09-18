@@ -3,14 +3,6 @@ name: nightly
 on:
   workflow_call:
     inputs:
-      upload_artifacts:
-        required: false
-        type: boolean
-        default: true
-      upload_artifact:
-        required: false
-        type: boolean
-        default: true
       go_version:
         required: false
         type: string
@@ -51,6 +43,7 @@ jobs:
       contents: write
       id-token: write
       packages: write
+      attestations: write
     env:
       DOCKER_CLI_EXPERIMENTAL: enabled
       GH_PAT: ${{ secrets.gh_pat }}
@@ -102,10 +95,10 @@ jobs:
           MACOS_NOTARY_ISSUER_ID: ${{ secrets.macos_notary_issuer_id }}
           MACOS_NOTARY_KEY_ID: ${{ secrets.macos_notary_key_id }}
           MACOS_NOTARY_KEY: ${{ secrets.macos_notary_key }}
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        if: ${{ inputs.upload_artifact == true && always() }}
+      - uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a
         with:
-          retention-days: 30
-          name: dist
-          path: |
-            dist
+          subject-checksums: ./dist/checksums.txt
+      - uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a
+        if: startsWith(github.ref, 'refs/tags/v') # snapshots won't push docker images
+        with:
+          subject-checksums: ./dist/digests.txt
