@@ -15,11 +15,11 @@ jobs:
   soft-serve:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           fetch-depth: 0
       - name: Push to Soft-Serve
-        uses: charmbracelet/soft-serve-action@b30f78d8a8196e4641195a5211b85cafaca787f5
+        uses: charmbracelet/soft-serve-action@587fa24471792be19add5909e336ede12edad8cc # v1.0.0
         with:
           server: "${{ inputs.server }}"
           ssh-key: "${{ secrets.ssh-key }}"
