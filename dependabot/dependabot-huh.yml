@@ -15,6 +15,10 @@
       all:
         patterns:
           - "*"
+    ignore:
+      - dependency-name: github.com/charmbracelet/lipgloss/v2
+        versions:
+          - v2.0.0-beta1
 
   - package-ecosystem: "gomod"
     directory: "/spinner"
@@ -32,3 +36,7 @@
       all:
         patterns:
           - "*"
+    ignore:
+      - dependency-name: github.com/charmbracelet/lipgloss/v2
+        versions:
+          - v2.0.0-beta1
