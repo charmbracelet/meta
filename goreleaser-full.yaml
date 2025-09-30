@@ -7,8 +7,6 @@ variables:
   description: ""
   maintainer: ""
   homepage: "https://charm.land/"
-  brew_commit_author_name: ""
-  brew_commit_author_email: ""
   brew_owner: charmbracelet
   docker_io_registry_owner: charmcli
   ghcr_io_registry_owner: charmbracelet
@@ -26,6 +24,9 @@ metadata:
   description: "{{ .Var.description }}"
   maintainers:
     - "{{ .Var.maintainer }}"
+  commit_author:
+    name: "Charm"
+    email: "charmcli@users.noreply.github.com"
 
 before:
   hooks:
@@ -123,9 +124,6 @@ brews:
       owner: "{{ .Var.brew_owner }}"
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-    commit_author:
-      name: "{{ .Var.brew_commit_author_name }}"
-      email: "{{ .Var.brew_commit_author_email }}"
     goarm: 7
     install: |-
       bin.install "{{ with .Var.binary_name }}{{ . }}{{ else }}{{ .ProjectName }}{{ end }}"
@@ -139,9 +137,6 @@ scoops:
       owner: "{{ .Var.brew_owner }}"
       name: scoop-bucket
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-    commit_author:
-      name: "{{ .Var.brew_commit_author_name }}"
-      email: "{{ .Var.brew_commit_author_email }}"
     name: "{{ with .Var.scoop_name }}{{ . }}{{ end }}"
 
 aurs:
