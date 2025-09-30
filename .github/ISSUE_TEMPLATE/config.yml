@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Slack
+    about: Chat on our community Slack.
+    url: "https://charm.land/slack"
+  - name: Discord
+    about: Chat on our community Discord.
+    url: "https://charm.land/discord"

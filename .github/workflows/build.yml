@@ -26,8 +26,8 @@ jobs:
     env:
       GH_PAT: ${{ secrets.gh_pat }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: stable
           cache: true
@@ -39,6 +39,7 @@ jobs:
       - run: go install golang.org/x/vuln/cmd/govulncheck@latest
       - run: go mod tidy
       - run: govulncheck ./...
+
   build:
     strategy:
       matrix:
@@ -49,13 +50,13 @@ jobs:
       GH_PAT: ${{ secrets.gh_pat }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - run: |
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmcli".insteadOf "https://github.com/charmcli"
         if: env.GH_PAT != null
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: ${{ inputs.go_version || inputs.go-version }}
           go-version-file: ${{ inputs.go-version-file }}
@@ -69,6 +70,7 @@ jobs:
       - name: Test
         run: go test ./...
         working-directory: ${{ inputs.working-directory }}
+
   dependabot:
     needs: [build, govulncheck]
     runs-on: ubuntu-latest
@@ -83,7 +85,7 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - run: |
           gh pr review --approve "$PR_URL"
-          gh pr merge --squash "$PR_URL"
+          gh pr merge --squash --auto "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

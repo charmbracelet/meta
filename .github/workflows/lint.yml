@@ -37,15 +37,15 @@ jobs:
       # By default, the GitHub Action on Windows uses `core.autocrlf=true`.
       # LF is converted to CRLF, this produces reports from formatters (gofmt/gofumpt/etc.).
       - run: "git config --global core.autocrlf input"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           path: ${{ github.repository }}
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
-          repository: ${{ github.repository_owner }}/meta
-          path: ${{ github.repository_owner }}/meta
+          repository: charmbracelet/meta
+          path: charmbracelet/meta
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: stable
       - name: golangci-lint
@@ -54,4 +54,4 @@ jobs:
           working-directory: ${{ github.repository }}
           args: |
             --config="${{ inputs.golangci_path || format('{0}/{1}/meta/golangci.yml', github.workspace, github.repository_owner) }}" --timeout=${{ inputs.timeout || '5m' }} ${{ inputs.directory }}
-          version: ${{ inputs.golangci_version || 'v2.2' }}
+          version: ${{ inputs.golangci_version || 'v2.4' }}

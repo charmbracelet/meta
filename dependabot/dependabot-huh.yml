@@ -11,6 +11,14 @@
     commit-message:
       prefix: "chore"
       include: "scope"
+    groups:
+      all:
+        patterns:
+          - "*"
+    ignore:
+      - dependency-name: github.com/charmbracelet/bubbletea/v2
+        versions:
+          - v2.0.0-beta1
 
   - package-ecosystem: "gomod"
     directory: "/spinner"
@@ -24,3 +32,11 @@
     commit-message:
       prefix: "chore"
       include: "scope"
+    groups:
+      all:
+        patterns:
+          - "*"
+    ignore:
+      - dependency-name: github.com/charmbracelet/bubbletea/v2
+        versions:
+          - v2.0.0-beta1

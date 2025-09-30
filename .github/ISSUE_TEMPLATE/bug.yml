@@ -1,0 +1,22 @@
+name: Bug Report
+description: Report a bug you're experiencing.
+type: bug
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: "Examples: `v1.2.3` / `master` / `commit 1a2b3c`"
+
+  - type: input
+    id: os
+    attributes:
+      label: Environment
+      description: Operating system / terminal emulator / multiplexer / etc
