@@ -202,14 +202,20 @@ changelog:
       - "^docs:"
       - "^test:"
   groups:
-    - title: "New Features"
+    - title: "Deps"
+      regexp: "^.*\\(deps\\)*:+.*$"
+      order: 300
+    - title: "New!"
       regexp: "^.*feat[(\\w)]*:+.*$"
-      order: 0
-    - title: "Bug fixes"
+      order: 100
+    - title: "Fixed"
       regexp: "^.*fix[(\\w)]*:+.*$"
-      order: 10
-    - title: Others
-      order: 999
+      order: 200
+    - title: "Docs"
+      regexp: "^.*docs[(\\w)]*:+.*$"
+      order: 400
+    - title: "Other stuff"
+      order: 9999
 
 signs:
   - cmd: cosign
