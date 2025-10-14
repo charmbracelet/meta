@@ -64,12 +64,8 @@ jobs:
       - name: Tidy Go modules
         run: go mod tidy
         working-directory: ${{ inputs.working-directory }}
-      - run: |
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "Error: git status is not clean after go mod tidy"
-            git status
-            exit 1
-          fi
+      - name: Check for changes
+        run: git diff --exit-code
         working-directory: ${{ inputs.working-directory }}
       - name: Build
         run: go build ./...
