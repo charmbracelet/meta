@@ -69,7 +69,7 @@ jobs:
           go-version: ${{ inputs.go_version }}
           cache: true
           check-latest: true
-      - uses: sigstore/cosign-installer@v3.10.0
+      - uses: sigstore/cosign-installer@v4.0.0
       - uses: anchore/sbom-action/download-syft@v0.20.9
       - uses: docker/setup-qemu-action@v3
         if: env.DOCKER_ENABLED == 'true'
