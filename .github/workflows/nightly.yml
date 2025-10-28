@@ -102,7 +102,7 @@ jobs:
           MACOS_NOTARY_ISSUER_ID: ${{ secrets.macos_notary_issuer_id }}
           MACOS_NOTARY_KEY_ID: ${{ secrets.macos_notary_key_id }}
           MACOS_NOTARY_KEY: ${{ secrets.macos_notary_key }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: ${{ inputs.upload_artifact == true && always() }}
         with:
           retention-days: 30
