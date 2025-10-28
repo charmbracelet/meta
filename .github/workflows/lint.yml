@@ -51,7 +51,7 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v8
         with:
-          working-directory: ${{ github.repository }}
+          working-directory: ${{ format('{0}/{1}', github.repository, inputs.directory || '') }}
           args: |
-            --config="${{ inputs.golangci_path || format('{0}/{1}/meta/golangci.yml', github.workspace, github.repository_owner) }}" --timeout=${{ inputs.timeout || '5m' }} ${{ inputs.directory }}
+            --config="${{ inputs.golangci_path || format('{0}/{1}/meta/golangci.yml', github.workspace, github.repository_owner) }}" --timeout=${{ inputs.timeout || '5m' }} ./...
           version: ${{ inputs.golangci_version || 'v2.4' }}
