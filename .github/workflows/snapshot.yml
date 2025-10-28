@@ -48,7 +48,7 @@ jobs:
           args: release --clean --snapshot --skip=sign,sbom
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: ${{ inputs.upload_artifact == true && always() }}
         with:
           retention-days: 7
