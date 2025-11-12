@@ -25,7 +25,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_PAT: ${{ secrets.gh_pat }}
-      GOEXPERIMENT: jsonv2
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-go@v6
