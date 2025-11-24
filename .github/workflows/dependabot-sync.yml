@@ -24,13 +24,13 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           repository: ${{ github.repository_owner }}/${{ inputs.repo_name }}
           path: ${{ github.repository_owner }}/${{ inputs.repo_name }}
           token: ${{ secrets.gh_token || secrets.PERSONAL_ACCESS_TOKEN }}
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           repository: charmbracelet/meta
           path: charmbracelet/meta

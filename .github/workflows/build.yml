@@ -26,7 +26,7 @@ jobs:
     env:
       GH_PAT: ${{ secrets.gh_pat }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
         with:
           go-version: stable
@@ -50,7 +50,7 @@ jobs:
       GH_PAT: ${{ secrets.gh_pat }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - run: |
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmcli".insteadOf "https://github.com/charmcli"
