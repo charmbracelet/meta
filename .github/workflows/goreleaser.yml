@@ -72,6 +72,7 @@ on:
 
 jobs:
   release:
+    if: ${{ !contains(github.repository, '-internal') }}
     runs-on:
       # Use our own large runners with more CPU and RAM for faster builds
       group: releasers
