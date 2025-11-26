@@ -17,6 +17,10 @@ updates:
       - dependency-name: github.com/charmbracelet/bubbletea/v2
         versions:
           - v2.0.0-beta1
+    groups:
+      go:
+        patterns:
+          - "*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -30,6 +34,10 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    groups:
+      actions:
+        patterns:
+          - "*"
 
   - package-ecosystem: "docker"
     directory: "/"
@@ -43,3 +51,7 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    groups:
+      docker:
+        patterns:
+          - "*"
