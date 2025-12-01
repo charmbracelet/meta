@@ -3,10 +3,11 @@
 <details>
 <summary>Verifying the artifacts</summary>
 
-First, download the [`checksums.txt` file](https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Tag}}/checksums.txt), for example, with `wget`:
+First, download the [`checksums.txt` file](https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Tag}}/checksums.txt) and the [`checksums.txt.sigstore.json` file](https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Tag}}/checksums.txt.sigstore.json) files, for example, with `wget`:
 
 ```bash
 wget 'https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Tag}}/checksums.txt'
+wget 'https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Tag}}/checksums.txt.sigstore.json'
 ```
 
 Then, verify it using [`cosign`](https://github.com/sigstore/cosign):
@@ -15,8 +16,7 @@ Then, verify it using [`cosign`](https://github.com/sigstore/cosign):
 cosign verify-blob \
   --certificate-identity 'https://github.com/charmbracelet/meta/.github/workflows/goreleaser.yml@refs/heads/main' \
   --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
-  --cert 'https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Tag}}/checksums.txt.pem' \
-  --signature 'https://github.com/charmbracelet/{{.ProjectName}}/releases/download/{{.Tag}}/checksums.txt.sig' \
+  --bundle 'checksums.txt.sigstore.json' \
   ./checksums.txt
 ```
 
