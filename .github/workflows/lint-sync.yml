@@ -22,7 +22,7 @@ jobs:
           rm -rf ${{ github.repository }}/.golangci-soft.yml
       - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           commit-message: "ci: sync golangci-lint config"
           title: "ci: sync golangci-lint config"

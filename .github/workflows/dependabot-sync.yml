@@ -47,7 +47,7 @@ jobs:
 
       - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           commit-message: "ci: sync dependabot config"
           author: Charm <124303983+charmcli@users.noreply.github.com>
