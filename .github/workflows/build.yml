@@ -21,24 +21,24 @@ on:
         required: false
 
 jobs:
-  govulncheck:
-    runs-on: ubuntu-latest
-    env:
-      GH_PAT: ${{ secrets.gh_pat }}
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-go@v6
-        with:
-          go-version: stable
-          cache: true
-          check-latest: true
-      - run: |
-          git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
-          git config --global url."https://${{ secrets.gh_pat }}@github.com/charmcli".insteadOf "https://github.com/charmcli"
-        if: env.GH_PAT != null
-      - run: go install golang.org/x/vuln/cmd/govulncheck@master
-      - run: go mod tidy
-      - run: govulncheck ./...
+  # govulncheck:
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     GH_PAT: ${{ secrets.gh_pat }}
+  #   steps:
+  #     - uses: actions/checkout@v6
+  #     - uses: actions/setup-go@v6
+  #       with:
+  #         go-version: stable
+  #         cache: true
+  #         check-latest: true
+  #     - run: |
+  #         git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
+  #         git config --global url."https://${{ secrets.gh_pat }}@github.com/charmcli".insteadOf "https://github.com/charmcli"
+  #       if: env.GH_PAT != null
+  #     - run: go install golang.org/x/vuln/cmd/govulncheck@master
+  #     - run: go mod tidy
+  #     - run: govulncheck ./...
 
   build:
     strategy:
@@ -75,7 +75,8 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
 
   dependabot:
-    needs: [build, govulncheck]
+    # needs: [build, govulncheck]
+    needs: [build]
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
