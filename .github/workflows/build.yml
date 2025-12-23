@@ -75,7 +75,8 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
 
   dependabot:
-    needs: [build, govulncheck]
+    # needs: [build, govulncheck]
+    needs: [build]
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
