@@ -70,7 +70,7 @@ jobs:
           cache: true
           check-latest: true
       - uses: sigstore/cosign-installer@v4.0.0
-      - uses: anchore/sbom-action/download-syft@v0.20.11
+      - uses: anchore/sbom-action/download-syft@v0.21.0
       - uses: docker/setup-qemu-action@v3
         if: env.DOCKER_ENABLED == 'true'
       - uses: docker/setup-buildx-action@v3
