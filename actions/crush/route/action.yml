@@ -1,0 +1,226 @@
+name: "Crush Route"
+description: "Use Crush AI to route a request to the appropriate action"
+author: "Charm"
+
+inputs:
+  context_type:
+    description: "Context type: issue or pr"
+    required: true
+  context_number:
+    description: "Issue or PR number"
+    required: true
+  user_message:
+    description: "The user's message/request"
+    required: false
+    default: ""
+  title:
+    description: "Issue or PR title"
+    required: true
+  body:
+    description: "Issue or PR body (truncated)"
+    required: false
+    default: ""
+  has_reviews:
+    description: "Whether PR has pending reviews"
+    required: false
+    default: "false"
+  is_bot_pr:
+    description: "Whether this is the bot's own PR"
+    required: false
+    default: "false"
+  crush_dir:
+    description: "Crush working directory"
+    required: true
+  data_dir:
+    description: "Crush data directory"
+    required: true
+  custom_config:
+    description: "Path to custom config JSON file"
+    required: false
+    default: ""
+  available_actions:
+    description: "JSON describing available actions (merged with custom_config)"
+    required: false
+    default: |
+      {
+        "implement": {
+          "description": "Implement a feature, fix a bug, or complete a task described in an issue. Creates a branch, writes code, runs tests, and opens a PR.",
+          "context": ["issue"]
+        },
+        "review": {
+          "description": "Review a pull request for correctness, security, code quality, and test coverage. Provides constructive feedback.",
+          "context": ["pr"]
+        },
+        "fix": {
+          "description": "Address review feedback and requested changes on a pull request. Makes the necessary code changes and pushes updates.",
+          "context": ["pr"]
+        },
+        "ask": {
+          "description": "Answer a question about the codebase, explain how something works, or help understand code.",
+          "context": ["issue", "pr"]
+        }
+      }
+
+outputs:
+  action:
+    description: "The chosen action"
+    value: ${{ steps.route.outputs.action }}
+  custom_prompt:
+    description: "Path to custom prompt if action has one"
+    value: ${{ steps.route.outputs.custom_prompt }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Route with Crush
+      id: route
+      shell: bash
+      env:
+        CONTEXT_TYPE: ${{ inputs.context_type }}
+        CONTEXT_NUMBER: ${{ inputs.context_number }}
+        USER_MESSAGE: ${{ inputs.user_message }}
+        TITLE: ${{ inputs.title }}
+        BODY: ${{ inputs.body }}
+        HAS_REVIEWS: ${{ inputs.has_reviews }}
+        IS_BOT_PR: ${{ inputs.is_bot_pr }}
+        CRUSH_DIR: ${{ inputs.crush_dir }}
+        DATA_DIR: ${{ inputs.data_dir }}
+        AVAILABLE_ACTIONS: ${{ inputs.available_actions }}
+        CUSTOM_CONFIG: ${{ inputs.custom_config }}
+        CRUSH_DISABLE_METRICS: "1"
+        CRUSH_GLOBAL_CONFIG: ${{ inputs.crush_dir }}
+        CRUSH_GLOBAL_DATA: ${{ inputs.data_dir }}
+      run: |
+        set -euo pipefail
+        
+        # Merge built-in actions with custom actions from config
+        merged_actions=$(node -e "
+          const fs = require('fs');
+          const builtIn = JSON.parse(process.env.AVAILABLE_ACTIONS);
+          
+          let custom = {};
+          const configPath = process.env.CUSTOM_CONFIG;
+          if (configPath && fs.existsSync(configPath)) {
+            try {
+              const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+              custom = config.actions || {};
+            } catch (e) {
+              console.error('Failed to parse custom config:', e.message);
+            }
+          }
+          
+          // Merge: custom actions override built-in ones
+          const merged = { ...builtIn, ...custom };
+          console.log(JSON.stringify(merged));
+        ")
+        
+        # Save merged actions for later use
+        echo "$merged_actions" > "$CRUSH_DIR/merged-actions.json"
+        
+        # Build actions list for the prompt
+        actions_text=$(node -e "
+          const actions = JSON.parse('$merged_actions'.replace(/'/g, \"'\"));
+          const ctx = process.env.CONTEXT_TYPE;
+          let out = '';
+          for (const [name, config] of Object.entries(actions)) {
+            if (config.context && config.context.includes(ctx)) {
+              out += name + ': ' + config.description + '\n';
+            }
+          }
+          process.stdout.write(out);
+        ")
+        
+        # Build router prompt
+        cat > "$CRUSH_DIR/router.txt" << ROUTER
+        You are a router. Your job is to analyze the request and decide which action to take.
+
+        ## Available Actions
+
+        $actions_text
+
+        ## Current Context
+
+        Type: $CONTEXT_TYPE
+        Number: #$CONTEXT_NUMBER
+        Title: $TITLE
+        Body: ${BODY:-(empty)}
+        User message: ${USER_MESSAGE:-(no message, just triggered)}
+        Has pending reviews: $HAS_REVIEWS
+        Is bot's own PR: $IS_BOT_PR
+
+        ## Instructions
+
+        Based on the context and user's message, decide which action is most appropriate.
+
+        Consider:
+        - If the user is asking a question or wants explanation → ask
+        - If on an issue and user wants something done → implement  
+        - If on a PR and user wants feedback on the code → review
+        - If on a PR (especially bot's own) and there's feedback to address → fix
+
+        Respond with ONLY the action name. One word. Nothing else.
+        ROUTER
+
+        echo "=== Router Prompt ==="
+        cat "$CRUSH_DIR/router.txt"
+        echo ""
+        echo "=== Routing ==="
+        
+        # Call crush to route
+        raw_response=$(crush --data-dir "$DATA_DIR" run --quiet < "$CRUSH_DIR/router.txt")
+        echo "Raw response: $raw_response"
+        
+        # Extract action name - look for known actions in response
+        response_lower=$(echo "$raw_response" | tr '[:upper:]' '[:lower:]')
+        
+        # Get all action names from merged actions
+        all_actions=$(node -e "
+          const actions = JSON.parse('$merged_actions'.replace(/'/g, \"'\"));
+          console.log(Object.keys(actions).join(' '));
+        ")
+        
+        action=""
+        for a in $all_actions; do
+          if echo "$response_lower" | grep -qw "$a"; then
+            action="$a"
+            break
+          fi
+        done
+        
+        # Fallback: try to extract first word if no known action found
+        if [ -z "$action" ]; then
+          action=$(echo "$response_lower" | tr -d '\n' | grep -oE '^[a-z-]+' | head -1)
+        fi
+        echo "Extracted action: $action"
+        
+        # Validate it's a known action for this context
+        valid_action=$(node -e "
+          const actions = JSON.parse('$merged_actions'.replace(/'/g, \"'\"));
+          const ctx = process.env.CONTEXT_TYPE;
+          const action = '$action';
+          if (actions[action] && actions[action].context && actions[action].context.includes(ctx)) {
+            console.log(action);
+          } else {
+            // Fallback
+            console.log(ctx === 'issue' ? 'implement' : 'review');
+          }
+        ")
+        
+        echo "Final action: $valid_action"
+        echo "action=$valid_action" >> "$GITHUB_OUTPUT"
+        
+        # Check if action has a custom prompt
+        custom_prompt=$(node -e "
+          const actions = JSON.parse('$merged_actions'.replace(/'/g, \"'\"));
+          const action = '$valid_action';
+          if (actions[action] && actions[action].prompt) {
+            console.log(actions[action].prompt);
+          }
+        ")
+        
+        if [ -n "$custom_prompt" ]; then
+          echo "Custom prompt for action: $custom_prompt"
+          echo "custom_prompt=$custom_prompt" >> "$GITHUB_OUTPUT"
+        else
+          echo "custom_prompt=" >> "$GITHUB_OUTPUT"
+        fi

@@ -1,0 +1,226 @@
+name: "Crush Execute"
+description: "Execute a Crush action with the appropriate prompt"
+author: "Charm"
+
+inputs:
+  action:
+    description: "Action to execute: implement, review, fix, ask, or custom"
+    required: true
+  context_type:
+    description: "Context type: issue or pr"
+    required: true
+  context_number:
+    description: "Issue or PR number"
+    required: true
+  user_message:
+    description: "User's message/request"
+    required: false
+    default: ""
+  trigger_user:
+    description: "User who triggered the action"
+    required: true
+  branch_prefix:
+    description: "Branch prefix for implementations"
+    required: false
+    default: "crush"
+  review_state:
+    description: "Review state if applicable"
+    required: false
+    default: ""
+  review_body:
+    description: "Review body if applicable"
+    required: false
+    default: ""
+  crush_dir:
+    description: "Crush working directory"
+    required: true
+  data_dir:
+    description: "Crush data directory"
+    required: true
+  status_log:
+    description: "Status log file path"
+    required: true
+  gh_token:
+    description: "GitHub token"
+    required: true
+  custom_prompt:
+    description: "Path to custom prompt file (optional, overrides config)"
+    required: false
+    default: ""
+  custom_config:
+    description: "Path to custom config JSON file"
+    required: false
+    default: ""
+
+outputs:
+  success:
+    description: "Whether execution succeeded"
+    value: ${{ steps.execute.outputs.success }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Fetch Context Data
+      id: fetch
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.gh_token }}
+        CONTEXT_TYPE: ${{ inputs.context_type }}
+        CONTEXT_NUMBER: ${{ inputs.context_number }}
+        CRUSH_DIR: ${{ inputs.crush_dir }}
+      run: |
+        set -euo pipefail
+        
+        if [ "$CONTEXT_TYPE" = "issue" ]; then
+          gh issue view "$CONTEXT_NUMBER" --comments \
+            --json title,body,url,comments,labels,assignees,author \
+            > "$CRUSH_DIR/context.json"
+        else
+          gh pr view "$CONTEXT_NUMBER" --comments \
+            --json title,body,url,comments,reviews,reviewRequests,labels,assignees,author,baseRefName,headRefName \
+            > "$CRUSH_DIR/context.json"
+          gh pr diff "$CONTEXT_NUMBER" > "$CRUSH_DIR/diff.txt" 2>/dev/null || echo "" > "$CRUSH_DIR/diff.txt"
+        fi
+        
+        echo "Context data fetched"
+
+    - name: Build Prompt
+      id: build
+      shell: bash
+      env:
+        ACTION: ${{ inputs.action }}
+        CONTEXT_TYPE: ${{ inputs.context_type }}
+        CONTEXT_NUMBER: ${{ inputs.context_number }}
+        USER_MESSAGE: ${{ inputs.user_message }}
+        TRIGGER_USER: ${{ inputs.trigger_user }}
+        BRANCH_PREFIX: ${{ inputs.branch_prefix }}
+        REVIEW_STATE: ${{ inputs.review_state }}
+        REVIEW_BODY: ${{ inputs.review_body }}
+        CRUSH_DIR: ${{ inputs.crush_dir }}
+        CUSTOM_PROMPT: ${{ inputs.custom_prompt }}
+        CUSTOM_CONFIG: ${{ inputs.custom_config }}
+      run: |
+        set -euo pipefail
+        
+        echo "Building prompt for action: $ACTION"
+        
+        # Determine prompt template location (relative to this action)
+        PROMPTS_DIR="${GITHUB_ACTION_PATH}/../prompts"
+        TEMPLATE=""
+        
+        # Priority 1: Explicit custom_prompt input
+        if [ -n "$CUSTOM_PROMPT" ] && [ -f "$CUSTOM_PROMPT" ]; then
+          TEMPLATE="$CUSTOM_PROMPT"
+          echo "Using custom prompt from input: $TEMPLATE"
+        fi
+        
+        # Priority 2: Prompt from custom config
+        if [ -z "$TEMPLATE" ] && [ -n "$CUSTOM_CONFIG" ] && [ -f "$CUSTOM_CONFIG" ]; then
+          config_prompt=$(node -e "
+            const fs = require('fs');
+            try {
+              const config = JSON.parse(fs.readFileSync('$CUSTOM_CONFIG', 'utf8'));
+              const action = '$ACTION';
+              if (config.actions && config.actions[action] && config.actions[action].prompt) {
+                console.log(config.actions[action].prompt);
+              }
+            } catch (e) {}
+          ")
+          if [ -n "$config_prompt" ] && [ -f "$config_prompt" ]; then
+            TEMPLATE="$config_prompt"
+            echo "Using custom prompt from config: $TEMPLATE"
+          fi
+        fi
+        
+        # Priority 3: Built-in prompt
+        if [ -z "$TEMPLATE" ] && [ -f "$PROMPTS_DIR/${ACTION}.md" ]; then
+          TEMPLATE="$PROMPTS_DIR/${ACTION}.md"
+          echo "Using built-in prompt: $TEMPLATE"
+        fi
+        
+        # Fail if no template found
+        if [ -z "$TEMPLATE" ] || [ ! -f "$TEMPLATE" ]; then
+          echo "Error: No prompt found for action '$ACTION'" >&2
+          echo "Looked for:" >&2
+          echo "  - custom_prompt input" >&2
+          echo "  - prompt in custom config" >&2
+          echo "  - built-in prompt at $PROMPTS_DIR/${ACTION}.md" >&2
+          exit 1
+        fi
+        
+        # Copy template
+        cp "$TEMPLATE" "$CRUSH_DIR/prompt.txt"
+        
+        # Build review context for fix action
+        review_context=""
+        if [ "$ACTION" = "fix" ] && [ -n "$REVIEW_STATE" ]; then
+          review_context="### Latest Review
+        **State:** $REVIEW_STATE
+
+        $REVIEW_BODY"
+        fi
+        
+        # Export data for node script
+        export CONTEXT_DATA=$(cat "$CRUSH_DIR/context.json")
+        export DIFF=""
+        if [ -f "$CRUSH_DIR/diff.txt" ] && [ -s "$CRUSH_DIR/diff.txt" ]; then
+          export DIFF=$(head -c 100000 "$CRUSH_DIR/diff.txt")
+        fi
+        export REVIEW_CONTEXT="$review_context"
+        
+        # Variable substitution using node (handles multi-line values safely)
+        node -e "
+          const fs = require('fs');
+          const path = '$CRUSH_DIR/prompt.txt';
+          let prompt = fs.readFileSync(path, 'utf8');
+          
+          const vars = {
+            context_number: process.env.CONTEXT_NUMBER,
+            context_type: process.env.CONTEXT_TYPE,
+            branch_prefix: process.env.BRANCH_PREFIX,
+            trigger_user: process.env.TRIGGER_USER,
+            user_message: process.env.USER_MESSAGE || 'Execute this action.',
+            review_context: process.env.REVIEW_CONTEXT || '',
+            context_data: process.env.CONTEXT_DATA || '',
+            diff: process.env.DIFF || '(no changes)'
+          };
+          
+          for (const [key, value] of Object.entries(vars)) {
+            prompt = prompt.split('{{ ' + key + ' }}').join(value || '');
+          }
+          
+          fs.writeFileSync(path, prompt);
+        "
+        
+        echo "Prompt built: $(wc -l < "$CRUSH_DIR/prompt.txt") lines"
+
+    - name: Execute Crush
+      id: execute
+      shell: bash
+      env:
+        CRUSH_DIR: ${{ inputs.crush_dir }}
+        DATA_DIR: ${{ inputs.data_dir }}
+        STATUS_LOG: ${{ inputs.status_log }}
+        GH_TOKEN: ${{ inputs.gh_token }}
+        CRUSH_DISABLE_METRICS: "1"
+        CRUSH_GLOBAL_CONFIG: ${{ inputs.crush_dir }}
+        CRUSH_GLOBAL_DATA: ${{ inputs.data_dir }}
+        CRUSH_STATUS_LOG: ${{ inputs.status_log }}
+      run: |
+        set -euo pipefail
+        
+        # Initialize status log
+        : > "$STATUS_LOG"
+        echo "Status: starting" >> "$STATUS_LOG"
+        
+        # Tail log in background
+        tail -n +1 -f "$STATUS_LOG" &
+        tail_pid=$!
+        trap 'kill "$tail_pid" 2>/dev/null || true' EXIT
+        
+        # Run crush
+        if crush -d --data-dir "$DATA_DIR" run --quiet < "$CRUSH_DIR/prompt.txt" | tee "$CRUSH_DIR/output.txt"; then
+          echo "success=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "success=false" >> "$GITHUB_OUTPUT"
+        fi

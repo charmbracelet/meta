@@ -1,0 +1,362 @@
+name: crush
+
+on:
+  workflow_call:
+    inputs:
+      trigger:
+        type: string
+        required: false
+        default: "@charmcrush"
+        description: "Trigger word to activate Crush"
+      trigger_username:
+        type: string
+        required: false
+        default: "charmcrush"
+        description: "Bot username for assignments"
+      allow_external_triggers:
+        type: boolean
+        required: false
+        default: false
+      git_user_name:
+        type: string
+        required: false
+        default: "charmcrush"
+      git_user_email:
+        type: string
+        required: false
+        default: "charmcrush@users.noreply.github.com"
+      branch_prefix:
+        type: string
+        required: false
+        default: "crush"
+      provider:
+        type: string
+        required: false
+      model:
+        type: string
+        required: false
+      small_model:
+        type: string
+        required: false
+      agent_instructions:
+        type: string
+        required: false
+      config_json:
+        type: string
+        required: false
+        default: "{}"
+      timeout_minutes:
+        type: number
+        required: false
+        default: 30
+      artifact_retention_days:
+        type: number
+        required: false
+        default: 7
+    secrets:
+      gh_token:
+        required: false
+        description: "GitHub token (defaults to GITHUB_TOKEN if not provided)"
+      provider_api_key:
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  crush:
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout_minutes }}
+    env:
+      # Use provided gh_token or fall back to GITHUB_TOKEN
+      GH_TOKEN: ${{ secrets.gh_token || github.token }}
+    steps:
+      - name: Check Trigger
+        id: check
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_ACTION: ${{ github.event.action }}
+          COMMENT_BODY: ${{ github.event.comment.body || '' }}
+          COMMENT_AUTHOR_ASSOC: ${{ github.event.comment.author_association || '' }}
+          COMMENT_USER: ${{ github.event.comment.user.login || '' }}
+          ASSIGNEE_LOGIN: ${{ github.event.assignee.login || '' }}
+          ISSUE_NUMBER: ${{ github.event.issue.number || github.event.pull_request.number || '' }}
+          IS_PR: ${{ github.event.issue.pull_request != null || github.event_name == 'pull_request' || github.event_name == 'pull_request_review' }}
+          PR_USER: ${{ github.event.pull_request.user.login || '' }}
+          REVIEW_STATE: ${{ github.event.review.state || '' }}
+          REVIEW_BODY: ${{ github.event.review.body || '' }}
+          REVIEW_USER: ${{ github.event.review.user.login || '' }}
+          SENDER: ${{ github.event.sender.login || '' }}
+          TRIGGER: ${{ inputs.trigger }}
+          TRIGGER_USERNAME: ${{ inputs.trigger_username }}
+          ALLOW_EXTERNAL: ${{ inputs.allow_external_triggers }}
+        run: |
+          set -euo pipefail
+          
+          echo "should_run=false" >> "$GITHUB_OUTPUT"
+          
+          # Check authorization
+          is_authorized() {
+            if [ "$ALLOW_EXTERNAL" = "true" ]; then return 0; fi
+            case "$COMMENT_AUTHOR_ASSOC" in
+              MEMBER|OWNER|COLLABORATOR) return 0 ;;
+              *) return 1 ;;
+            esac
+          }
+          
+          echo "Event: $EVENT_NAME / $EVENT_ACTION"
+          
+          # Assignment trigger
+          if [ "$EVENT_NAME" = "issues" ] && [ "$EVENT_ACTION" = "assigned" ]; then
+            if [ -n "$TRIGGER_USERNAME" ] && [ "$ASSIGNEE_LOGIN" = "$TRIGGER_USERNAME" ]; then
+              echo "should_run=true" >> "$GITHUB_OUTPUT"
+              echo "context_type=issue" >> "$GITHUB_OUTPUT"
+              echo "context_number=$ISSUE_NUMBER" >> "$GITHUB_OUTPUT"
+              echo "user_message=" >> "$GITHUB_OUTPUT"
+              echo "trigger_user=$SENDER" >> "$GITHUB_OUTPUT"
+              echo "has_reviews=false" >> "$GITHUB_OUTPUT"
+              echo "is_bot_pr=false" >> "$GITHUB_OUTPUT"
+              echo "review_state=" >> "$GITHUB_OUTPUT"
+              echo "review_body=" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+          
+          if [ "$EVENT_NAME" = "pull_request" ] && [ "$EVENT_ACTION" = "assigned" ]; then
+            if [ -n "$TRIGGER_USERNAME" ] && [ "$ASSIGNEE_LOGIN" = "$TRIGGER_USERNAME" ]; then
+              echo "should_run=true" >> "$GITHUB_OUTPUT"
+              echo "context_type=pr" >> "$GITHUB_OUTPUT"
+              echo "context_number=$ISSUE_NUMBER" >> "$GITHUB_OUTPUT"
+              echo "user_message=" >> "$GITHUB_OUTPUT"
+              echo "trigger_user=$SENDER" >> "$GITHUB_OUTPUT"
+              echo "has_reviews=false" >> "$GITHUB_OUTPUT"
+              echo "is_bot_pr=false" >> "$GITHUB_OUTPUT"
+              echo "review_state=" >> "$GITHUB_OUTPUT"
+              echo "review_body=" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+          
+          # PR review on bot's PR
+          if [ "$EVENT_NAME" = "pull_request_review" ]; then
+            if [ -n "$TRIGGER_USERNAME" ] && [ "$PR_USER" = "$TRIGGER_USERNAME" ]; then
+              if [ "$REVIEW_USER" != "$TRIGGER_USERNAME" ]; then
+                echo "should_run=true" >> "$GITHUB_OUTPUT"
+                echo "context_type=pr" >> "$GITHUB_OUTPUT"
+                echo "context_number=$ISSUE_NUMBER" >> "$GITHUB_OUTPUT"
+                echo "user_message=Address the review feedback" >> "$GITHUB_OUTPUT"
+                echo "trigger_user=$REVIEW_USER" >> "$GITHUB_OUTPUT"
+                echo "has_reviews=true" >> "$GITHUB_OUTPUT"
+                echo "is_bot_pr=true" >> "$GITHUB_OUTPUT"
+                echo "review_state=$REVIEW_STATE" >> "$GITHUB_OUTPUT"
+                # Escape newlines in review body
+                echo "review_body<<BODY_EOF" >> "$GITHUB_OUTPUT"
+                echo "$REVIEW_BODY" >> "$GITHUB_OUTPUT"
+                echo "BODY_EOF" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+            fi
+          fi
+          
+          # Comment trigger
+          if [ "$EVENT_NAME" = "issue_comment" ] && [ "$EVENT_ACTION" = "created" ]; then
+            # Ignore bot's own comments
+            if [ -n "$TRIGGER_USERNAME" ] && [ "$COMMENT_USER" = "$TRIGGER_USERNAME" ]; then
+              echo "Ignoring bot's own comment"
+              exit 0
+            fi
+            
+            # Check if message contains trigger
+            if [[ "$COMMENT_BODY" == *"$TRIGGER"* ]]; then
+              if is_authorized; then
+                # Extract message after trigger
+                user_msg="${COMMENT_BODY#*$TRIGGER}"
+                user_msg=$(echo "$user_msg" | sed 's/^[[:space:]]*//')
+                
+                if [ "$IS_PR" = "true" ]; then
+                  context_type="pr"
+                else
+                  context_type="issue"
+                fi
+                
+                echo "should_run=true" >> "$GITHUB_OUTPUT"
+                echo "context_type=$context_type" >> "$GITHUB_OUTPUT"
+                echo "context_number=$ISSUE_NUMBER" >> "$GITHUB_OUTPUT"
+                echo "user_message<<MSG_EOF" >> "$GITHUB_OUTPUT"
+                echo "$user_msg" >> "$GITHUB_OUTPUT"
+                echo "MSG_EOF" >> "$GITHUB_OUTPUT"
+                echo "trigger_user=$COMMENT_USER" >> "$GITHUB_OUTPUT"
+                echo "has_reviews=false" >> "$GITHUB_OUTPUT"
+                echo "is_bot_pr=false" >> "$GITHUB_OUTPUT"
+                echo "review_state=" >> "$GITHUB_OUTPUT"
+                echo "review_body=" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+            fi
+          fi
+
+      - name: Checkout
+        if: steps.check.outputs.should_run == 'true'
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+          token: ${{ env.GH_TOKEN }}
+
+      - name: Setup Crush
+        if: steps.check.outputs.should_run == 'true'
+        id: setup
+        uses: charmbracelet/meta/actions/crush/setup@main
+        with:
+          provider: ${{ inputs.provider || vars.CRUSH_PROVIDER }}
+          provider_api_key: ${{ secrets.provider_api_key }}
+          model: ${{ inputs.model || vars.CRUSH_MODEL }}
+          small_model: ${{ inputs.small_model || vars.CRUSH_SMALL_MODEL }}
+          git_user_name: ${{ inputs.git_user_name }}
+          git_user_email: ${{ inputs.git_user_email }}
+          agent_instructions: ${{ inputs.agent_instructions }}
+          config_json: ${{ inputs.config_json }}
+          gh_token: ${{ env.GH_TOKEN }}
+
+      - name: Get Context Info
+        if: steps.check.outputs.should_run == 'true'
+        id: context
+        env:
+          CONTEXT_TYPE: ${{ steps.check.outputs.context_type }}
+          CONTEXT_NUMBER: ${{ steps.check.outputs.context_number }}
+        run: |
+          if [ "$CONTEXT_TYPE" = "issue" ]; then
+            title=$(gh issue view "$CONTEXT_NUMBER" --json title -q .title)
+            body=$(gh issue view "$CONTEXT_NUMBER" --json body -q .body | head -c 500)
+          else
+            title=$(gh pr view "$CONTEXT_NUMBER" --json title -q .title)
+            body=$(gh pr view "$CONTEXT_NUMBER" --json body -q .body | head -c 500)
+          fi
+          
+          echo "title<<TITLE_EOF" >> "$GITHUB_OUTPUT"
+          echo "$title" >> "$GITHUB_OUTPUT"
+          echo "TITLE_EOF" >> "$GITHUB_OUTPUT"
+          
+          echo "body<<BODY_EOF" >> "$GITHUB_OUTPUT"
+          echo "$body" >> "$GITHUB_OUTPUT"
+          echo "BODY_EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Load Custom Config
+        if: steps.check.outputs.should_run == 'true'
+        id: config
+        run: |
+          CONFIG_FILE=".github/crush.yml"
+          if [ -f "$CONFIG_FILE" ]; then
+            echo "Found custom config at $CONFIG_FILE"
+            # Convert YAML to JSON for easier processing
+            # Use node since yq might not be available
+            node -e "
+              const fs = require('fs');
+              const yaml = require('${{ steps.setup.outputs.crush_dir }}/node_modules/yaml');
+              const content = fs.readFileSync('$CONFIG_FILE', 'utf8');
+              const config = yaml.parse(content);
+              console.log(JSON.stringify(config));
+            " > "${{ steps.setup.outputs.crush_dir }}/custom-config.json" 2>/dev/null || {
+              # Fallback: simple inline YAML parsing with node
+              node -e "
+                const fs = require('fs');
+                const content = fs.readFileSync('.github/crush.yml', 'utf8');
+                
+                // Simple YAML parser for our specific format
+                const lines = content.split('\n');
+                const config = { actions: {} };
+                let currentAction = null;
+                let currentKey = null;
+                
+                for (const line of lines) {
+                  const trimmed = line.trim();
+                  if (!trimmed || trimmed.startsWith('#')) continue;
+                  
+                  // Top level: actions:
+                  if (line === 'actions:') continue;
+                  
+                  // Action name (2 spaces indent)
+                  const actionMatch = line.match(/^  ([a-z0-9-]+):$/);
+                  if (actionMatch) {
+                    currentAction = actionMatch[1];
+                    config.actions[currentAction] = {};
+                    continue;
+                  }
+                  
+                  // Action properties (4 spaces indent)
+                  if (currentAction && line.startsWith('    ')) {
+                    const propMatch = trimmed.match(/^([a-z]+):\s*(.*)$/);
+                    if (propMatch) {
+                      const [, key, value] = propMatch;
+                      if (key === 'context') {
+                        // Parse array: [issue, pr] or [pr]
+                        const arrMatch = value.match(/\[([^\]]+)\]/);
+                        if (arrMatch) {
+                          config.actions[currentAction][key] = arrMatch[1].split(',').map(s => s.trim());
+                        }
+                      } else {
+                        // Remove quotes if present
+                        config.actions[currentAction][key] = value.replace(/^[\"']|[\"']$/g, '');
+                      }
+                    }
+                  }
+                }
+                
+                console.log(JSON.stringify(config));
+              " > "${{ steps.setup.outputs.crush_dir }}/custom-config.json"
+            }
+            
+            echo "custom_config_exists=true" >> "$GITHUB_OUTPUT"
+            echo "Custom config loaded:"
+            cat "${{ steps.setup.outputs.crush_dir }}/custom-config.json"
+          else
+            echo "No custom config found"
+            echo "custom_config_exists=false" >> "$GITHUB_OUTPUT"
+            echo '{}' > "${{ steps.setup.outputs.crush_dir }}/custom-config.json"
+          fi
+
+      - name: Route Request
+        if: steps.check.outputs.should_run == 'true'
+        id: route
+        uses: charmbracelet/meta/actions/crush/route@main
+        with:
+          context_type: ${{ steps.check.outputs.context_type }}
+          context_number: ${{ steps.check.outputs.context_number }}
+          user_message: ${{ steps.check.outputs.user_message }}
+          title: ${{ steps.context.outputs.title }}
+          body: ${{ steps.context.outputs.body }}
+          has_reviews: ${{ steps.check.outputs.has_reviews }}
+          is_bot_pr: ${{ steps.check.outputs.is_bot_pr }}
+          crush_dir: ${{ steps.setup.outputs.crush_dir }}
+          data_dir: ${{ steps.setup.outputs.data_dir }}
+          custom_config: ${{ steps.setup.outputs.crush_dir }}/custom-config.json
+
+      - name: Execute Action
+        if: steps.check.outputs.should_run == 'true'
+        uses: charmbracelet/meta/actions/crush/execute@main
+        with:
+          action: ${{ steps.route.outputs.action }}
+          context_type: ${{ steps.check.outputs.context_type }}
+          context_number: ${{ steps.check.outputs.context_number }}
+          user_message: ${{ steps.check.outputs.user_message }}
+          trigger_user: ${{ steps.check.outputs.trigger_user }}
+          branch_prefix: ${{ inputs.branch_prefix }}
+          review_state: ${{ steps.check.outputs.review_state }}
+          review_body: ${{ steps.check.outputs.review_body }}
+          crush_dir: ${{ steps.setup.outputs.crush_dir }}
+          data_dir: ${{ steps.setup.outputs.data_dir }}
+          status_log: ${{ steps.setup.outputs.status_log }}
+          gh_token: ${{ env.GH_TOKEN }}
+          custom_config: ${{ steps.setup.outputs.crush_dir }}/custom-config.json
+
+      - name: Upload Artifacts
+        if: always() && steps.check.outputs.should_run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: crush-${{ steps.check.outputs.context_type }}-${{ steps.check.outputs.context_number }}-${{ github.run_id }}
+          path: |
+            ${{ steps.setup.outputs.crush_dir }}
+            ${{ steps.setup.outputs.data_dir }}
+          retention-days: ${{ inputs.artifact_retention_days }}

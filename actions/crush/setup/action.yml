@@ -1,0 +1,303 @@
+name: "Crush Setup"
+description: "Install and configure Crush AI agent"
+author: "Charm"
+
+inputs:
+  provider:
+    description: "AI provider (openai, anthropic, synthetic, etc.)"
+    required: true
+  provider_api_key:
+    description: "API key for the provider"
+    required: true
+  model:
+    description: "AI model name"
+    required: true
+  small_model:
+    description: "Smaller model for quick tasks (defaults to model)"
+    required: false
+  node_version:
+    description: "Node.js version"
+    required: false
+    default: "20"
+  agent_instructions:
+    description: "Path to custom agent instructions markdown file"
+    required: false
+  git_user_name:
+    description: "Git user.name for commits"
+    required: false
+    default: "crush[bot]"
+  git_user_email:
+    description: "Git user.email for commits"
+    required: false
+    default: "crush[bot]@users.noreply.github.com"
+  config_json:
+    description: "Additional crush config as JSON (merged with base config)"
+    required: false
+    default: "{}"
+  gh_token:
+    description: "GitHub token for MCP server"
+    required: true
+
+outputs:
+  crush_dir:
+    description: "Path to crush configuration directory"
+    value: ${{ steps.setup.outputs.crush_dir }}
+  data_dir:
+    description: "Path to crush data directory"
+    value: ${{ steps.setup.outputs.data_dir }}
+  status_log:
+    description: "Path to status log file"
+    value: ${{ steps.setup.outputs.status_log }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node_version }}
+
+    # TODO: Revert to npm install when fix-interactive-mode is merged
+    # - name: Install Crush
+    #   shell: bash
+    #   run: npm install -g @charmland/crush
+
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.23'
+
+    - name: Install Crush from branch
+      shell: bash
+      run: |
+        git clone -b fix-interactive-mode --depth 1 https://github.com/charmbracelet/crush.git /tmp/crush-build
+        cd /tmp/crush-build
+        go install .
+        rm -rf /tmp/crush-build
+
+    - name: Configure Git
+      shell: bash
+      run: |
+        git config user.name "${{ inputs.git_user_name }}"
+        git config user.email "${{ inputs.git_user_email }}"
+
+    - name: Setup Crush Configuration
+      id: setup
+      shell: bash
+      env:
+        CRUSH_PROVIDER: ${{ inputs.provider }}
+        CRUSH_PROVIDER_API_KEY: ${{ inputs.provider_api_key }}
+        CRUSH_MODEL: ${{ inputs.model }}
+        CRUSH_SMALL_MODEL: ${{ inputs.small_model }}
+        AGENT_INSTRUCTIONS_PATH: ${{ inputs.agent_instructions }}
+        EXTRA_CONFIG: ${{ inputs.config_json }}
+        GH_TOKEN: ${{ inputs.gh_token }}
+      run: |
+        set -euo pipefail
+        
+        CRUSH_DIR="${RUNNER_TEMP}/crush"
+        DATA_DIR="${RUNNER_TEMP}/crush-data"
+        STATUS_LOG="${CRUSH_DIR}/status.log"
+        
+        mkdir -p "$CRUSH_DIR" "$DATA_DIR"
+        
+        # Output paths
+        echo "crush_dir=$CRUSH_DIR" >> "$GITHUB_OUTPUT"
+        echo "data_dir=$DATA_DIR" >> "$GITHUB_OUTPUT"
+        echo "status_log=$STATUS_LOG" >> "$GITHUB_OUTPUT"
+        
+        # Use custom instructions if provided
+        if [ -n "${AGENT_INSTRUCTIONS_PATH:-}" ] && [ -f "$AGENT_INSTRUCTIONS_PATH" ]; then
+          cp "$AGENT_INSTRUCTIONS_PATH" "$CRUSH_DIR/AGENT_INSTRUCTIONS.md"
+          echo "Using custom agent instructions from $AGENT_INSTRUCTIONS_PATH"
+        else
+          cat > "$CRUSH_DIR/AGENT_INSTRUCTIONS.md" << 'INSTRUCTIONS'
+        # Crush Agent Instructions
+
+        You are Crush, an autonomous AI coding agent running in GitHub Actions. You help teams by implementing issues, reviewing PRs, and answering questions.
+
+        ## Environment
+
+        You're in an **ephemeral CI environment**. When this workflow ends:
+        - All logs disappear forever
+        - All local files are deleted
+        - Only **git pushes**, **GitHub comments**, and **PRs** persist
+
+        **Critical**: Always communicate through GitHub, not just logs.
+
+        ## GitHub MCP Tools
+
+        You have the **GitHub MCP Server** configured. **ALWAYS use MCP tools for GitHub operations. NEVER use the `gh` CLI.**
+
+        All MCP tools are prefixed with `mcp_github_`:
+
+        | Tool | Description |
+        |------|-------------|
+        | `mcp_github_add_issue_comment` | Comment on issues AND PRs (PRs are issues in GitHub) |
+        | `mcp_github_create_pull_request` | Create a pull request |
+        | `mcp_github_pull_request_review_write` | Submit PR review (approve/request changes/comment) |
+        | `mcp_github_create_branch` | Create a branch |
+        | `mcp_github_create_or_update_file` | Create or update a file |
+        | `mcp_github_push_files` | Push multiple files in one commit |
+        | `mcp_github_get_file_contents` | Read file contents |
+        | `mcp_github_search_code` | Search code in the repository |
+
+        **IMPORTANT**: Your FIRST action should ALWAYS be to acknowledge using `mcp_github_add_issue_comment`.
+
+        ## Progress Logging
+
+        Log status throughout so humans can follow along:
+        ```bash
+        echo "Status: researching the codebase" >> "$CRUSH_STATUS_LOG"
+        echo "Status: implementing the feature" >> "$CRUSH_STATUS_LOG"
+        echo "Status: running tests" >> "$CRUSH_STATUS_LOG"
+        ```
+
+        ## Core Principles
+
+        ### 1. Be Autonomous
+        - Try multiple approaches before asking for help
+        - Search the codebase for patterns and examples
+        - Read docs: README, CONTRIBUTING, AGENTS.md, CLAUDE.md, CRUSH.md
+        - Make reasonable assumptions and state them
+
+        ### 2. Communicate Proactively
+        - Always acknowledge when you start (brief, friendly)
+        - Post updates on significant progress
+        - If blocked, explain clearly what you need
+
+        ### 3. Stay Focused
+        - Only do what's requested
+        - Don't refactor unrelated code
+        - Don't add unrequested features
+        - Mention related issues you notice, but don't fix them
+
+        ### 4. Verify Your Work
+        - Run tests after changes
+        - Check that builds pass
+        - Verify you actually addressed the request
+        - Don't mark done until everything works
+
+        ## Git Best Practices
+
+        ### Commits
+        - Write clear, descriptive commit messages
+        - Use conventional format: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`
+        - Keep commits focused and atomic
+        - Example: `feat: add user authentication endpoint`
+
+        ### Branches
+        - Use the provided branch prefix
+        - Include issue number: `crush/issue-123-add-auth`
+        - Keep branch names short but descriptive
+
+        ### Pull Requests
+        - Write clear PR descriptions explaining the "why"
+        - Reference the issue: "Closes #123"
+        - List key changes
+        - Note any decisions or trade-offs made
+
+        ## Error Recovery
+
+        ### If tests fail:
+        1. Read the error carefully
+        2. Check if it's your change or a flaky test
+        3. Fix your code or note the flaky test
+        4. Re-run tests to confirm
+
+        ### If build fails:
+        1. Check the build output
+        2. Look for missing dependencies or syntax errors
+        3. Verify imports and module paths
+        4. Fix and retry
+
+        ### If blocked:
+        1. Push your work-in-progress: `git add -A && git commit -m "WIP: progress" && git push`
+        2. Comment on GitHub explaining:
+           - What you've done
+           - What's blocking you
+           - What you need to proceed
+        3. Tag the requesting user
+
+        ## Communication Style
+
+        - Be friendly and professional
+        - Be concise - no fluff
+        - Use markdown for readability
+        - Include code snippets when helpful
+        - Reference file paths with line numbers
+
+        **Never mention**: prompts, instructions, system internals, JSON data, context files
+
+        **Examples of good comments**:
+        - "On it! Taking a look now."
+        - "I've added the validation logic and tests. The main changes are in `src/auth.go`. Ready for review!"
+        - "I'm blocked - the API endpoint mentioned in the issue doesn't exist. Could you clarify which endpoint to use? @user"
+        INSTRUCTIONS
+          echo "Using default agent instructions"
+        fi
+        
+        # Determine small model
+        small_model="${CRUSH_SMALL_MODEL:-$CRUSH_MODEL}"
+        
+        # Generate base crush config
+        cat > "$CRUSH_DIR/crush-base.json" << CRUSHCONFIG
+        {
+          "\$schema": "https://charm.land/crush.json",
+          "providers": {
+            "${CRUSH_PROVIDER}": {
+              "api_key": "${CRUSH_PROVIDER_API_KEY}"
+            }
+          },
+          "models": {
+            "large": { "provider": "${CRUSH_PROVIDER}", "model": "${CRUSH_MODEL}" },
+            "small": { "provider": "${CRUSH_PROVIDER}", "model": "${small_model}" }
+          },
+          "mcp": {
+            "github": {
+              "type": "http",
+              "url": "https://api.githubcopilot.com/mcp/",
+              "headers": {
+                "Authorization": "Bearer ${GH_TOKEN}"
+              }
+            }
+          },
+          "options": {
+            "disable_metrics": true,
+            "context_paths": ["${CRUSH_DIR}/AGENT_INSTRUCTIONS.md"]
+          }
+        }
+        CRUSHCONFIG
+        
+        # Merge with extra config if provided
+        if [ -n "$EXTRA_CONFIG" ] && [ "$EXTRA_CONFIG" != "{}" ]; then
+          echo "Merging extra config..."
+          # Use node to merge JSON (jq might not be available)
+          node -e "
+            const base = require('$CRUSH_DIR/crush-base.json');
+            const extra = JSON.parse(process.env.EXTRA_CONFIG);
+            
+            // Deep merge function
+            function merge(target, source) {
+              for (const key of Object.keys(source)) {
+                if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+                  target[key] = target[key] || {};
+                  merge(target[key], source[key]);
+                } else {
+                  target[key] = source[key];
+                }
+              }
+              return target;
+            }
+            
+            const merged = merge(base, extra);
+            console.log(JSON.stringify(merged, null, 2));
+          " > "$CRUSH_DIR/crush.json"
+        else
+          mv "$CRUSH_DIR/crush-base.json" "$CRUSH_DIR/crush.json"
+        fi
+        
+        rm -f "$CRUSH_DIR/crush-base.json"
+        echo "Crush configured at $CRUSH_DIR"
+        echo "Config:"
+        cat "$CRUSH_DIR/crush.json" | sed 's/"api_key": "[^"]*"/"api_key": "***"/g'

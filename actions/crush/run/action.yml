@@ -1,0 +1,94 @@
+name: "Crush Run"
+description: "Execute Crush with a prompt"
+author: "Charm"
+
+inputs:
+  prompt:
+    description: "The prompt text to send to Crush (optional if prompt_file exists)"
+    required: false
+    default: ""
+  prompt_file:
+    description: "Path to prompt file (defaults to crush_dir/prompt.txt)"
+    required: false
+    default: ""
+  crush_dir:
+    description: "Path to crush configuration directory"
+    required: true
+  data_dir:
+    description: "Path to crush data directory"
+    required: true
+  status_log:
+    description: "Path to status log file"
+    required: true
+  gh_token:
+    description: "GitHub token for API operations"
+    required: true
+
+outputs:
+  output_file:
+    description: "Path to crush output file"
+    value: ${{ steps.run.outputs.output_file }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Prepare Prompt
+      shell: bash
+      env:
+        PROMPT: ${{ inputs.prompt }}
+        PROMPT_FILE: ${{ inputs.prompt_file }}
+        CRUSH_DIR: ${{ inputs.crush_dir }}
+      run: |
+        # Determine prompt file location
+        if [ -n "$PROMPT_FILE" ]; then
+          target_file="$PROMPT_FILE"
+        else
+          target_file="$CRUSH_DIR/prompt.txt"
+        fi
+        
+        # Write prompt if provided, otherwise expect file to exist
+        if [ -n "$PROMPT" ]; then
+          echo "$PROMPT" > "$target_file"
+          echo "Prompt written to $target_file"
+        elif [ ! -f "$target_file" ]; then
+          echo "Error: No prompt provided and $target_file does not exist" >&2
+          exit 1
+        else
+          echo "Using existing prompt file: $target_file"
+        fi
+
+    - name: Run Crush
+      id: run
+      shell: bash
+      env:
+        CRUSH_DISABLE_METRICS: "1"
+        CRUSH_GLOBAL_CONFIG: ${{ inputs.crush_dir }}
+        CRUSH_GLOBAL_DATA: ${{ inputs.data_dir }}
+        CRUSH_DIR: ${{ inputs.crush_dir }}
+        CRUSH_STATUS_LOG: ${{ inputs.status_log }}
+        GH_TOKEN: ${{ inputs.gh_token }}
+        PROMPT_FILE: ${{ inputs.prompt_file }}
+      run: |
+        set -euo pipefail
+        
+        OUTPUT_FILE="$CRUSH_DIR/output.txt"
+        echo "output_file=$OUTPUT_FILE" >> "$GITHUB_OUTPUT"
+        
+        # Determine prompt file
+        if [ -n "$PROMPT_FILE" ]; then
+          prompt_file="$PROMPT_FILE"
+        else
+          prompt_file="$CRUSH_DIR/prompt.txt"
+        fi
+        
+        # Initialize status log
+        : > "$CRUSH_STATUS_LOG"
+        printf 'Status: starting run\n' >> "$CRUSH_STATUS_LOG"
+        
+        # Tail log in background for CI visibility
+        tail -n +1 -f "$CRUSH_STATUS_LOG" &
+        tail_pid=$!
+        trap 'kill "$tail_pid" 2>/dev/null || true' EXIT
+        
+        # Run crush
+        crush -d --data-dir "$CRUSH_GLOBAL_DATA" run --quiet < "$prompt_file" | tee "$OUTPUT_FILE"
