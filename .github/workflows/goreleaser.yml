@@ -7,6 +7,10 @@ on:
         required: false
         type: string
         default: stable
+      goreleaser_version:
+        required: false
+        type: string
+        default: latest
       upload_artifact:
         required: false
         type: boolean
@@ -124,7 +128,7 @@ jobs:
       - uses: samuelmeuli/action-snapcraft@v3
       - uses: goreleaser/goreleaser-action@v6
         with:
-          version: latest
+          version: ${{ inputs.goreleaser_version }}
           distribution: goreleaser-pro
           args: release --clean
         env:
