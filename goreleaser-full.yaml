@@ -168,6 +168,7 @@ nix:
       owner: "{{ .Var.brew_owner }}"
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
       name: nur
+    formatter: nixfmt
     extra_install: |-
       installManPage ./manpages/{{.ProjectName}}.1.gz
       installShellCompletion ./completions/*
