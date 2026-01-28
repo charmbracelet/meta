@@ -103,6 +103,7 @@ jobs:
       - uses: cachix/install-nix-action@v31
         with:
           github_access_token: ${{ secrets.gh_pat }}
+      - run: nix profile install nixpkgs#nixfmt-rfc-style
       - uses: anchore/sbom-action/download-syft@v0.22.0
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
