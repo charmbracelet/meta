@@ -102,7 +102,7 @@ jobs:
         with:
           github_access_token: ${{ secrets.gh_pat }}
       - run: nix profile install nixpkgs#nixfmt-rfc-style
-      - uses: anchore/sbom-action/download-syft@v0.22.1
+      - uses: anchore/sbom-action/download-syft@v0.22.2
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
       - uses: docker/login-action@v3
@@ -120,7 +120,7 @@ jobs:
           echo "$NFPM_GPG_KEY" > ${{ runner.temp }}/gpg.key
         env:
           NFPM_GPG_KEY: ${{ secrets.nfpm_gpg_key }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
