@@ -125,7 +125,7 @@ jobs:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
       - uses: samuelmeuli/action-snapcraft@v3
-      - uses: goreleaser/goreleaser-action@v6
+      - uses: goreleaser/goreleaser-action@v7
         with:
           version: ${{ inputs.goreleaser_version }}
           distribution: goreleaser-pro
