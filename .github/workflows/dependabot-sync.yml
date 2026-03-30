@@ -23,6 +23,7 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    if: inputs.repo_name != 'hyper'
     steps:
       - uses: actions/checkout@v6
         with:
