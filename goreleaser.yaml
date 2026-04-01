@@ -115,6 +115,7 @@ nix:
       owner: "{{ .Var.brew_owner }}"
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
       name: nur
+    formatter: nixfmt
 
 winget:
   - publisher: charmbracelet
