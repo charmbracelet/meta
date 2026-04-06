@@ -18,6 +18,10 @@ on:
         type: string
         required: false
         description: Timeout for golangci-lint.
+      pre-run:
+        type: string
+        required: false
+        description: Command to run before golangci-lint, e.g. to generate code.
 
 permissions:
   # Required: allow read access to the content for analysis.
@@ -48,6 +52,9 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: stable
+      - name: Pre-run command
+        if: ${{ inputs.pre-run != '' }}
+        run: ${{ inputs.pre-run }}
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
