@@ -54,6 +54,7 @@ jobs:
           go-version: stable
       - name: Pre-run command
         if: ${{ inputs.pre-run != '' }}
+        working-directory: ${{ format('{0}/{1}', github.repository, inputs.directory || '') }}
         run: ${{ inputs.pre-run }}
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v9
