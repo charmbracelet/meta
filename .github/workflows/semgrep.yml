@@ -21,8 +21,8 @@ jobs:
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmbracelet".insteadOf "https://github.com/charmbracelet"
           git config --global url."https://${{ secrets.gh_pat }}@github.com/charmcli".insteadOf "https://github.com/charmcli"
         if: env.GH_PAT != null
-      - uses: actions/checkout@v6
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           repository: dgryski/semgrep-go
           path: rules
