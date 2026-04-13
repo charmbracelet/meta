@@ -25,13 +25,13 @@ jobs:
     runs-on: ubuntu-latest
     if: inputs.repo_name != 'hyper'
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           repository: ${{ github.repository_owner }}/${{ inputs.repo_name }}
           path: ${{ github.repository_owner }}/${{ inputs.repo_name }}
           token: ${{ secrets.gh_token || secrets.PERSONAL_ACCESS_TOKEN }}
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           repository: charmbracelet/meta
           path: charmbracelet/meta
@@ -48,7 +48,7 @@ jobs:
 
       - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@v8
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           commit-message: "ci: sync dependabot config"
           author: Charm <124303983+charmcli@users.noreply.github.com>
