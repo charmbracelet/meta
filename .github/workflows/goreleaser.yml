@@ -98,7 +98,7 @@ jobs:
           cache: true
           check-latest: true
       - uses: sigstore/cosign-installer@cad07c2e89fa2edd6e2d7bab4c1aa38e53f76003 # v4.1.1
-      - uses: cachix/install-nix-action@616559265b40713947b9c190a8ff4b507b5df49b # v31
+      - uses: cachix/install-nix-action@ab739621df7a23f52766f9ccc97f38da6b7af14f # v31.10.5
         with:
           github_access_token: ${{ secrets.gh_pat }}
       - run: nix profile install nixpkgs#nixfmt-rfc-style
@@ -125,7 +125,7 @@ jobs:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
       - uses: samuelmeuli/action-snapcraft@fceeb3c308e76f3487e72ef608618de625fb7fe8 # v3.0.1
-      - uses: goreleaser/goreleaser-action@e24998b8b67b290c2fa8b7c14fcfa7de2c5c9b8c # v7
+      - uses: goreleaser/goreleaser-action@1a80836c5c9d9e5755a25cb59ec6f45a3b5f41a8 # v7
         with:
           version: ${{ inputs.goreleaser_version }}
           distribution: goreleaser-pro
