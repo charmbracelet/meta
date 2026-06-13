@@ -20,6 +20,11 @@ on:
         type: boolean
         default: false
         description: Whether to download Git-LFS files
+      gcp_enabled:
+        required: false
+        type: boolean
+        default: false
+        description: Authenticate to GCP and configure Docker for Artifact Registry
     secrets:
       docker_username:
         required: false
@@ -30,6 +35,10 @@ on:
       gh_pat:
         required: false
       fury_token:
+        required: false
+      gcp_wif_provider:
+        required: false
+      gcp_service_account:
         required: false
       macos_sign_p12:
         required: false
@@ -90,6 +99,18 @@ jobs:
         with:
           username: ${{ secrets.docker_username }}
           password: ${{ secrets.docker_token }}
+      - uses: google-github-actions/auth@c200f3691d83b41bf9bbd8638997a462592937ed # v2.1.13
+        name: gcp auth
+        if: ${{ inputs.gcp_enabled }}
+        with:
+          workload_identity_provider: ${{ secrets.gcp_wif_provider }}
+          service_account: ${{ secrets.gcp_service_account }}
+      - uses: google-github-actions/setup-gcloud@77e7a554d41e2ee56fc945c52dfd3f33d12def9a # v2.1.4
+        name: setup gcloud
+        if: ${{ inputs.gcp_enabled }}
+      - run: gcloud auth configure-docker us-east1-docker.pkg.dev --quiet
+        name: configure docker for artifact registry
+        if: ${{ inputs.gcp_enabled }}
       - uses: goreleaser/goreleaser-action@5daf1e915a5f0af01ddbcd89a43b8061ff4f1a89 # v7
         with:
           version: latest
