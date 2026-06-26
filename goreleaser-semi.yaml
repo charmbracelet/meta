@@ -58,6 +58,7 @@ builds:
       - arm64
       - "386"
       - arm
+      - riscv64
     goarm:
       - "7"
     ignore:
@@ -67,12 +68,18 @@ builds:
         goarm: "7"
       - goos: windows
         goarch: "386"
+      - goos: windows
+        goarch: riscv64
       - goos: freebsd
         goarch: arm64
       - goos: freebsd
         goarch: "386"
       - goos: freebsd
         goarm: "7"
+      - goos: freebsd
+        goarch: riscv64
+      - goos: darwin
+        goarch: riscv64
 
 archives:
   - format_overrides:
@@ -290,6 +297,37 @@ dockers:
       - --label=org.opencontainers.image.licenses=MIT
     dockerfile: Dockerfile
     use: buildx
+  - image_templates:
+      - "{{ if not .IsNightly }}docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-riscv64{{ end }}"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-riscv64"
+    goarch: riscv64
+    build_flag_templates:
+      - --platform=linux/riscv64
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .Var.description }}
+      - --label=org.opencontainers.image.source={{ .GitURL }}
+      - --label=org.opencontainers.image.version=v{{ .Version }}
+      - --label=org.opencontainers.image.created={{ .Date }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=MIT
+    dockerfile: Dockerfile
+    use: buildx
+  - image_templates:
+      - "{{ if not .IsNightly }}docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-riscv64{{ end }}"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-riscv64"
+    goarch: riscv64
+    build_flag_templates:
+      - --platform=linux/riscv64
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .Var.description }}
+      - --label=org.opencontainers.image.source={{ .GitURL }}
+      - --label=org.opencontainers.image.version=v{{ .Version }}
+      - --label=org.opencontainers.image.created={{ .Date }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=MIT
+    dockerfile: Dockerfile
+    use: buildx
+
 
 docker_manifests:
   - name_template: "{{ if not .IsNightly }}docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:latest{{ end }}"
@@ -297,31 +335,37 @@ docker_manifests:
       - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
       - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
       - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
+      - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-riscv64"
   - name_template: "{{ if not .IsNightly }}ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:latest{{ end }}"
     image_templates:
       - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
       - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
       - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-riscv64"
   - name_template: "{{ if not .IsNightly }}docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}{{ end }}"
     image_templates:
       - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
       - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
       - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
+      - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-riscv64"
   - name_template: "{{ if not .IsNightly }}ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}{{ end }}"
     image_templates:
       - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
       - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
       - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-riscv64"
   - name_template: "{{ if not .IsNightly }}docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}{{ end }}"
     image_templates:
       - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
       - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
       - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
+      - "docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-riscv64"
   - name_template: "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}"
     image_templates:
       - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
       - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
       - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-armv7"
+      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-riscv64"
 
 docker_signs:
   - cmd: cosign
