@@ -333,22 +333,6 @@ dockers:
       - --label=org.opencontainers.image.licenses=MIT
     dockerfile: Dockerfile
     use: buildx
-  - image_templates:
-      - "{{ if not .IsNightly }}docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-riscv64{{ end }}"
-      - "ghcr.io/{{ .Var.ghcr_io_registry_owner }}/{{ .ProjectName }}:v{{ .Version }}-riscv64"
-    goarch: riscv64
-    build_flag_templates:
-      - --platform=linux/riscv64
-      - --label=org.opencontainers.image.title={{ .ProjectName }}
-      - --label=org.opencontainers.image.description={{ .Var.description }}
-      - --label=org.opencontainers.image.source={{ .GitURL }}
-      - --label=org.opencontainers.image.version=v{{ .Version }}
-      - --label=org.opencontainers.image.created={{ .Date }}
-      - --label=org.opencontainers.image.revision={{ .FullCommit }}
-      - --label=org.opencontainers.image.licenses=MIT
-    dockerfile: Dockerfile
-    use: buildx
-
 
 docker_manifests:
   - name_template: "{{ if not .IsNightly }}docker.io/{{ .Var.docker_io_registry_owner }}/{{ .ProjectName }}:latest{{ end }}"
