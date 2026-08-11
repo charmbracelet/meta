@@ -327,19 +327,19 @@ release:
     from_url:
       url: https://raw.githubusercontent.com/charmbracelet/meta/main/footer.md
 
-snapcrafts:
-  - publish: true
-    summary: "{{ .Var.description }}"
-    description: |
-      Glow is a terminal based markdown reader designed from the ground up to bring out the beauty—and power—of the CLI.
-      Use it to discover markdown files, read documentation directly on the command line and stash markdown files to your own private collection so you can read them anywhere. Glow will find local markdown files in subdirectories or a local Git repository.
-      By the way, all data stashed is encrypted end-to-end: only you can decrypt it. More on that below.
-    grade: stable # TODO: '{{ if or .IsNightly .IsSnapshot }}devel{{ else }}stable{{ end }}'
-    confinement: strict
-    license: MIT
-    base: core20
+# snapcrafts:
+#   - publish: true
+#     summary: "{{ .Var.description }}"
+#     description: |
+#       Glow is a terminal based markdown reader designed from the ground up to bring out the beauty—and power—of the CLI.
+#       Use it to discover markdown files, read documentation directly on the command line and stash markdown files to your own private collection so you can read them anywhere. Glow will find local markdown files in subdirectories or a local Git repository.
+#       By the way, all data stashed is encrypted end-to-end: only you can decrypt it. More on that below.
+#     grade: stable # TODO: '{{ if or .IsNightly .IsSnapshot }}devel{{ else }}stable{{ end }}'
+#     confinement: strict
+#     license: MIT
+#     base: core20
 
-    apps:
-      glow:
-        command: glow
-        plugs: ["home", "network", "removable-media"]
+#     apps:
+#       glow:
+#         command: glow
+#         plugs: ["home", "network", "removable-media"]
