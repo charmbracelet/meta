@@ -56,7 +56,10 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          go-version: stable
+          # Use the Go version declared in the repo's go.mod instead of the
+          # latest stable release, so golangci-lint (built against an older
+          # Go) doesn't panic when a new Go version is released.
+          go-version-file: ${{ format('{0}/{1}/go.mod', github.repository, inputs.directory || '') }}
       - name: Pre-run command
         if: ${{ inputs.pre-run != '' }}
         working-directory: ${{ format('{0}/{1}', github.repository, inputs.directory || '') }}
