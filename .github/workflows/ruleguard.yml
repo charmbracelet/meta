@@ -51,6 +51,13 @@ jobs:
         run: |
           # needs to be outside of the workspace for some reason
           mv rules ../
-          go install github.com/quasilyte/go-ruleguard/cmd/ruleguard@latest
+          # Build ruleguard from source with x/tools bumped: the released
+          # go-ruleguard@latest pins x/tools v0.30.0, which cannot read the
+          # Go 1.27 export data format and fails with "internal error:
+          # package X without types was imported". Drop once go-ruleguard
+          # ships an x/tools >= v0.49.
+          git clone --depth 1 https://github.com/quasilyte/go-ruleguard /tmp/go-ruleguard
+          go -C /tmp/go-ruleguard get golang.org/x/tools@latest
+          go -C /tmp/go-ruleguard install ./cmd/ruleguard
           go get -u github.com/quasilyte/go-ruleguard/dsl@latest
           ruleguard -c=0 -rules ../rules/ruleguard.rules.go ${{ inputs.args }} ./...
