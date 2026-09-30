@@ -61,8 +61,6 @@ builds:
       - "7"
     ignore:
       - goos: windows
-        goarch: arm64
-      - goos: windows
         goarm: "7"
 
 archives:
@@ -75,6 +73,7 @@ archives:
       {{- title .Os }}_
       {{- if eq .Arch "amd64" }}x86_64
       {{- else if eq .Arch "386" }}i386
+      {{- else if eq .Arch "arm64" }}arm64
       {{- else }}{{ .Arch }}{{ end }}
     wrap_in_directory: true
     files:
