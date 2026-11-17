@@ -53,7 +53,9 @@ on:
 
 jobs:
   nightly:
-    runs-on: blacksmith-16vcpu-ubuntu-2404
+    runs-on:
+      # Use our own large runners with more CPU and RAM for faster builds
+      group: releasers
     # dependabot-created PRs cant see any secrets, so this workflow wont work anyway https://github.com/dependabot/dependabot-core/issues/3253
     if: ${{ github.actor != 'dependabot[bot]' }}
     permissions:
