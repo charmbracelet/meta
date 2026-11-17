@@ -74,9 +74,7 @@ on:
 
 jobs:
   release:
-    runs-on:
-      # Use our own large runners with more CPU and RAM for faster builds
-      group: releasers
+    runs-on: blacksmith-16vcpu-ubuntu-2404
     if: ${{ !contains(github.repository, '-internal') }}
     permissions:
       contents: write
