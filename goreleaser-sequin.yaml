@@ -58,6 +58,7 @@ builds:
       - arm64
       - "386"
       - arm
+      - riscv64
     goarm:
       - "7"
     ignore:
@@ -65,6 +66,16 @@ builds:
         goarch: arm64
       - goos: windows
         goarm: "7"
+      - goos: windows
+        goarch: riscv64
+      - goos: darwin
+        goarch: riscv64
+      - goos: freebsd
+        goarch: riscv64
+      - goos: openbsd
+        goarch: riscv64
+      - goos: netbsd
+        goarch: riscv64
 
 archives:
   - format_overrides:
