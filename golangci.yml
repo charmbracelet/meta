@@ -4,8 +4,11 @@ run:
 linters:
   enable:
     - bodyclose
+    - copyloopvar
     - exhaustive
+    - forbidigo
     - goconst
+    - gocritic
     - godot
     - gomoddirectives
     - goprintffuncname
